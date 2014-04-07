@@ -1,8 +1,12 @@
-﻿<div id="main">
-    <ul class="left">
-        <li ui-sref-active="active" ng-repeat="conv in Conversations | orderBy:Id">
-            <a ui-sref="Main.TextConversation({convId:conv.Id,conv:conv})">{{conv.Receiver.FullName}}</a>
-        </li>
-    </ul>
+﻿<link rel="stylesheet" type="text/css" href="Styles/Main.css" />
+<div id="main">
+    <div class="pa-sidebar well well-small">
+        <ul class="left nav nav-list">
+            <li class="nav-header">Conversations</li>
+            <li ui-sref-active="active" ng-repeat="conv in Conversations | orderBy:Id">
+                <a ui-sref="Main.TextConversation({convId:conv.Id})">{{conv.Receiver.FullName}}</a>
+            </li>
+        </ul>
+    </div>
     <div class="right" ui-view="subView"></div>
 </div>
