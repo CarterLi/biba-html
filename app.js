@@ -108,7 +108,8 @@ var Managers;
 /// <reference path="External/angular-ui/angular-ui-router.d.ts" />
 /// <reference path="Controllers/MainController.ts" />
 /// <reference path="Controllers/LoginController.ts" />
-angular.module("BibaApp", ['ui.router']).config(function ($stateProvider) {
+angular.module("BibaApp", ['ui.router']).config(function ($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
     $stateProvider.state('Login', {
         url: '/Login',
         controller: 'Controllers.LoginController',

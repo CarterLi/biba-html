@@ -24,6 +24,15 @@ footer {
 }
 #content {
     flex: 1;
+    position: relative;
+}
+#content > * {
+    /* Workaround Chrome flex bug */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 #login {
     margin: 0 auto;
@@ -55,6 +64,11 @@ footer {
 }
 #main > ul.left:hover {
     overflow-y: auto;
+   /**
+    *   Workaround Chrome bug too
+    *   See: http://stackoverflow.com/questions/15917759/auto-hiding-vertical-scrollbars-using-css-overflow
+    **/
+    padding-right: 1px;
 }
 #main > ul.left > li {
     padding: 0 5px;
