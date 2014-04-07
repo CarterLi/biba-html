@@ -1,4 +1,65 @@
-﻿var Managers;
+﻿/// <reference path="../External/angularjs/angular.d.ts" />
+/// <reference path="../External/angular-ui/angular-ui-router.d.ts" />
+var Controllers;
+(function (Controllers) {
+    function ConversationController($scope, $http, $stateParams) {
+        $scope.ConversationId = $stateParams['convId'];
+
+        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + $scope.ConversationId + "/text_messages").success(function (data) {
+            $scope.Messages = data.map(function (x) {
+                return new Models.TextMessage(x);
+            });
+        });
+    }
+    Controllers.ConversationController = ConversationController;
+})(Controllers || (Controllers = {}));
+/// <reference path="../External/angularjs/angular.d.ts" />
+var Controllers;
+(function (Controllers) {
+    function LoginController($scope, $location, $http) {
+        $http.defaults.headers.common.Accept = "application/json";
+
+        $scope.Login = function () {
+            $scope.LoginWithAuthorization(btoa($scope.UserName + ":" + $scope.Password));
+        };
+
+        $scope.LoginWithAuthorization = function (authorization) {
+            $http.defaults.headers.common.Authorization = "Basic " + authorization;
+            $http.post(Managers.Constants.RelayUrl + "/sessions", null).success(function (session) {
+                window.sessionStorage.setItem("LoginInfo", authorization);
+                Managers.UserManager.Session = new Models.Profile(session);
+                $location.path("/");
+            });
+        };
+        (function () {
+            var authorization = window.sessionStorage.getItem("LoginInfo");
+            if (authorization)
+                $scope.LoginWithAuthorization(authorization);
+        })();
+    }
+    Controllers.LoginController = LoginController;
+})(Controllers || (Controllers = {}));
+/// <reference path="../External/angularjs/angular.d.ts" />
+/// <reference path="../External/angularjs/angular-route.d.ts" />
+var Controllers;
+(function (Controllers) {
+    function MainController($scope, $location, $http) {
+        if (!Managers.UserManager.Session) {
+            $location.path("/Login");
+            return;
+        }
+
+        $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(function (data) {
+            $scope.Conversations = data.map(function (x) {
+                return new Models.TextConversation(x);
+            }).filter(function (x) {
+                return !x.IsGroupChat;
+            });
+        });
+    }
+    Controllers.MainController = MainController;
+})(Controllers || (Controllers = {}));
+var Managers;
 (function (Managers) {
     var Ajax = (function () {
         function Ajax() {
@@ -43,71 +104,29 @@
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-var Ajax = Managers.Ajax;
-
-function main() {
-    Ajax.Get("/text_conversations", function (obj) {
-        var main = document.querySelector("#main");
-        var convList = main.querySelector("div.left");
-        var convView = main.querySelector("div.right");
-        obj.map(function (x) {
-            return new Models.TextConversation(x);
-        }).filter(function (x) {
-            return !x.IsGroupChat;
-        }).forEach(function (x) {
-            var divConv = document.createElement("div");
-            var divMsg = document.createElement("div");
-            divMsg.appendChild(document.createTextNode(x.GetRawModel().last_message.content));
-            divConv.appendChild(divMsg);
-            convView.appendChild(divConv);
-
-            var divProfile = document.createElement("div");
-            divProfile.appendChild(document.createTextNode(x.Receiver.FullName));
-            divProfile.addEventListener("click", function (e) {
-                var oldSelected = convList.querySelector("div.selected");
-                if (oldSelected != null)
-                    oldSelected.classList.remove("selected");
-                divProfile.classList.add("selected");
-                oldSelected = convView.querySelector("div.selected");
-                if (oldSelected != null)
-                    oldSelected.classList.remove("selected");
-                divConv.classList.add("selected");
-
-                Ajax.Get("/text_conversations/" + x.Id + "/text_messages", function (obj) {
-                    while (divConv.lastChild)
-                        divConv.removeChild(divConv.lastChild);
-                    obj.map(function (x) {
-                        return new Models.TextMessage(x);
-                    }).forEach(function (x) {
-                        var divMsg = document.createElement("div");
-                        divMsg.appendChild(document.createTextNode(x.Content));
-                        divConv.appendChild(divMsg);
-                    });
-                    divConv.lastElementChild.scrollIntoView();
-                });
-            });
-            convList.appendChild(divProfile);
-        });
-    }, function (status, text) {
-        return console.log("Error loading conversations..." + text);
-    });
-}
-
-window.onload = function () {
-    var loginForm = document.querySelector("#login");
-    loginForm.querySelector("input[type=submit]").addEventListener("click", function (arg) {
-        if (!loginForm.checkValidity()) {
-            return;
+/// <reference path="External/angularjs/angular.d.ts" />
+/// <reference path="External/angular-ui/angular-ui-router.d.ts" />
+/// <reference path="Controllers/MainController.ts" />
+/// <reference path="Controllers/LoginController.ts" />
+angular.module("BibaApp", ['ui.router']).config(function ($stateProvider) {
+    $stateProvider.state('Login', {
+        url: '/Login',
+        controller: 'Controllers.LoginController',
+        templateUrl: 'Views/Login.html'
+    }).state('Main', {
+        url: '/',
+        controller: 'Controllers.MainController',
+        templateUrl: 'Views/Main.html'
+    }).state('Main.TextConversation', {
+        url: '/TextConversations/:convId',
+        views: {
+            subView: {
+                controller: 'Controllers.ConversationController',
+                templateUrl: 'Views/Conversation.html'
+            }
         }
-
-        var username = loginForm["username"].value;
-        var password = loginForm["password"].value;
-        Managers.UserManager.Login(username, password, function () {
-            document.querySelector("body").classList.remove("login");
-            main();
-        });
     });
-};
+});
 var Managers;
 (function (Managers) {
     Managers.Constants = {
@@ -271,6 +290,8 @@ var Models;
     })(Models.BibaModel);
     Models.Profile = Profile;
 })(Models || (Models = {}));
+/// <reference path="../External/angularjs/angular.d.ts" />
+/// <reference path="../External/angularjs/angular-route.d.ts" />
 var Models;
 (function (Models) {
     var TextConversation = (function (_super) {

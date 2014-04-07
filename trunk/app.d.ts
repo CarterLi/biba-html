@@ -1,4 +1,29 @@
-﻿declare module Managers {
+﻿/// <reference path="External/angularjs/angular.d.ts" />
+/// <reference path="External/angular-ui/angular-ui-router.d.ts" />
+/// <reference path="External/angularjs/angular-route.d.ts" />
+declare module Controllers {
+    interface IConversationScope extends ng.IScope {
+        Messages: Models.TextMessage[];
+        ConversationId: number;
+    }
+    function ConversationController($scope: IConversationScope, $http: ng.IHttpService, $stateParams: ng.ui.IStateParamsService): void;
+}
+declare module Controllers {
+    interface ILoginScope extends ng.IScope {
+        Login(): void;
+        LoginWithAuthorization(authorization: string): void;
+        UserName: string;
+        Password: string;
+    }
+    function LoginController($scope: ILoginScope, $location: ng.ILocationService, $http: ng.IHttpService): void;
+}
+declare module Controllers {
+    interface IMainScope extends ng.IScope {
+        Conversations: Models.TextConversation[];
+    }
+    function MainController($scope: IMainScope, $location: ng.ILocationService, $http: ng.IHttpService): void;
+}
+declare module Managers {
     class Ajax {
         private static authorization;
         static GenerateAuthorization(user: string, pass: string): void;
@@ -7,7 +32,6 @@
         static Post(url: string, ok: (obj: Object) => void, err?: (status: number, responseText: string) => void): void;
     }
 }
-declare function main(): void;
 declare module Managers {
     var Constants: {
         "RelayUrl": string;

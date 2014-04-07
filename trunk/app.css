@@ -12,9 +12,6 @@ body {
     bottom: 0;
     left: 0;
 }
-body:not(.login) #login {
-    display: none;
-}
 span {
     font-style: italic;
 }
@@ -43,26 +40,23 @@ footer {
 #login input[type=submit] {
     margin-top: 20px;
 }
-body.login #main {
-    display: none;
-}
 #main {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
 }
-#main > div.left {
+#main > ul.left {
     width: 300px;
     position: relative;
     height: 100%;
     border: 1px solid;
     overflow: hidden;
 }
-#main > div.left:hover {
+#main > ul.left:hover {
     overflow-y: auto;
 }
-#main > div.left > div {
+#main > ul.left > li {
     padding: 0 5px;
     width: 100%;
     border-bottom: 1px solid;
@@ -70,10 +64,10 @@ body.login #main {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-#main > div.left > div:last-of-type {
+#main > ul.left > li:last-of-type {
     border-bottom: none;
 }
-#main > div.left > div.selected {
+#main > ul.left > li.selected {
     background: rgba(0, 0, 0, .1);
 }
 #main > div.right {

@@ -1,33 +1,24 @@
 ﻿<!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" ng-app="BibaApp">
     <head>
         <meta charset="utf-8" />
         <title>Biba</title>
-        <link rel="stylesheet" href="app.css" type="text/css" />
+
+        <link type="text/css" rel="stylesheet" href="External/bootstrap/css/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="app.css" />
+
+        <script type="text/javascript" src="External/angularjs/angular.js"></script>
+        <script type="text/javascript" src="External/angularjs/angular-route.js"></script>
+        <script type="text/javascript" src="External/angularjs/angular-resource.js"></script>
+        <script type="text/javascript" src="External/angular-ui/angular-ui-router.js"></script>
         <script type="text/javascript" src="app.js"></script>
     </head>
-    <body class="login">
+    <body>
         <header>
             <h1>Biba</h1>
         </header>
-        <div id="content" class="container">
-            <form id="login" action="javascript:;" method="post">
-                <label>
-                    <span>User name: </span>
-                    <input type="email" name="username" required="required" />
-                </label>
-                <label>
-                    <span>Password: </span>
-                    <input type="password" name="password" required="required" />
-                </label>
-                <input type="submit" value="Login" />
-            </form>
-            <div id="main">
-                <div class="left"></div>
-                <div class="right"></div>
-            </div>
-        </div>
+        <div id="content" class="container" ui-view></div>
         <footer>
             <span>Published in GPL3 licence, <b>NO</b> commercial use</span>
         </footer>

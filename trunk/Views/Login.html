@@ -1,0 +1,18 @@
+﻿<form id="login" name="loginForm">
+    <div class="control-group" ng-class="{error: loginForm.UserName.$invalid}">
+        <label>
+            <span>User name: </span>
+            <input type="email" name="UserName" ng-model="UserName" required />
+        </label>
+        <span ng-show="loginForm.UserName.$error.required" class="help-inline">Required</span>
+        <span ng-show="loginForm.UserName.$error.email" class="help-inline">Not an email address</span>
+    </div>
+    <div class="control-group" ng-class="{error: loginForm.Password.$invalid}">
+        <label>
+            <span>Password: </span>
+            <input type="password" name="Password" ng-model="Password" required />
+        </label>
+        <span ng-show="loginForm.Password.$error.required" class="help-inline">Required</span>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Login" ng-click="Login()" ng-disabled="loginForm.$invalid" />
+</form>
