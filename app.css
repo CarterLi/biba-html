@@ -10,8 +10,8 @@ body {
     bottom: 0;
     left: 0;
 }
-header {
-    text-align: center;
+header.navbar {
+    margin-bottom: 10px;
 }
 footer {
     text-align: center;
