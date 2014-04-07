@@ -5,7 +5,8 @@
 /// <reference path="Controllers/LoginController.ts" />
 
 angular.module("BibaApp", ['ui.router'])
-    .config(($stateProvider: ng.ui.IStateProvider) => {
+    .config(($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
+        $urlRouterProvider.otherwise('/');
         $stateProvider.state('Login', {
             url: '/Login',
             controller: 'Controllers.LoginController',
