@@ -4,24 +4,25 @@
 declare module Controllers {
     interface IConversationScope extends ng.IScope {
         Messages: Models.TextMessage[];
-        ConversationId: number;
+        Conversation: Models.TextConversation;
+        ChatInput: string;
+        Send(): void;
     }
     function ConversationController($scope: IConversationScope, $http: ng.IHttpService, $stateParams: ng.ui.IStateParamsService): void;
 }
 declare module Controllers {
     interface ILoginScope extends ng.IScope {
-        Login(): void;
-        LoginWithAuthorization(authorization: string): void;
+        Submit(): void;
         UserName: string;
         Password: string;
     }
-    function LoginController($scope: ILoginScope, $location: ng.ILocationService, $http: ng.IHttpService): void;
+    function LoginController($scope: ILoginScope, $state: ng.ui.IStateService, $http: ng.IHttpService): void;
 }
 declare module Controllers {
     interface IMainScope extends ng.IScope {
         Conversations: Models.TextConversation[];
     }
-    function MainController($scope: IMainScope, $location: ng.ILocationService, $http: ng.IHttpService): void;
+    function MainController($scope: IMainScope, $state: ng.ui.IStateService, $http: ng.IHttpService): void;
 }
 declare module Managers {
     class Ajax {

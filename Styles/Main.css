@@ -12,7 +12,7 @@
     overflow-y: auto;
 }
 #main .left {
-    width: 300px;
+    width: 260px;
     position: relative;
 }
 #main .left > li {
@@ -23,13 +23,8 @@
     text-overflow: ellipsis;
 }
 #main .right {
-    border: 1px solid;
-    border-left: none;
+    margin-left: 10px;
     flex: 1;
-}
-#main .right > div {
-    display: none;
-    width: 100%;
-    height: 100%;
     overflow: hidden;
+    position: relative;
 }

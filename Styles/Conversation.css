@@ -1,7 +1,35 @@
-﻿#main .right ul.messages:hover {
-    overflow-y: auto;
+﻿#conversation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
-#main .right ul.messages > li {
-    width: 100%;
+#conversation ul.messages {
+    flex: 1;
+    overflow: hidden;
+    margin-right: 25px;
+}
+#conversation ul.messages:hover {
+    overflow-y: auto;
+    /* Chrome bug */
+    padding-right: 2px;
+}
+#conversation ul.messages > li {
     word-wrap: break-word;
+}
+#conversation form[name=convForm] {
+    display: flex;
+    margin: 5px;
+}
+#conversation form[name=convForm] > input[type=submit] {
+    height: 25px;
+    align-self: flex-end;
+}
+#conversation form[name=convForm] > textarea {
+    flex: 1;
+    margin: 0 10px 0 0;
 }

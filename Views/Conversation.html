@@ -1,4 +1,14 @@
-﻿<link type="text/css" rel="stylesheet" href="../Styles/Conversation.css" />
-<ul class="messages">
-    <li ng-repeat="msg in Messages"><i>{{msg.Profile.FullName}}</i> says: {{msg.Content}}</li>
-</ul>
+﻿<section id="conversation">
+    <link type="text/css" rel="stylesheet" href="Styles/Conversation.css" />
+    <h2>{{Conversation.Receiver.FullName}}</h2>
+    <ul class="messages">
+        <li ng-repeat="msg in Messages">
+            <label><i>{{msg.Profile.FullName}}</i> says: </label>
+            <pre>{{msg.Content}}</pre>
+        </li>
+    </ul>
+    <form name="convForm">
+        <textarea ng-model="ChatInput" required></textarea>
+        <input class="btn btn-small" type="submit" value="Send" ng-click="Send()" ng-disabled="convForm.$invalid" />
+    </form>
+</section>

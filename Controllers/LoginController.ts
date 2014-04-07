@@ -2,32 +2,32 @@
 
 module Controllers {
     export interface ILoginScope extends ng.IScope {
-        Login(): void;
-        LoginWithAuthorization(authorization: string): void;
+        Submit(): void;
         UserName: string;
         Password: string;
     }
 
-    export function LoginController($scope: ILoginScope, $location: ng.ILocationService, $http: ng.IHttpService) {
+    export function LoginController($scope: ILoginScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
         $http.defaults.headers.common.Accept = "application/json";
 
-        $scope.Login = () => {
-            $scope.LoginWithAuthorization(btoa($scope.UserName + ":" + $scope.Password));
-        };
-
-        $scope.LoginWithAuthorization = authorization=> {
+        var Login = (authorization: string) => {
             $http.defaults.headers.common.Authorization = "Basic " + authorization;
             $http.post(Managers.Constants.RelayUrl + "/sessions", null)
                 .success((session: Models.IJsProfile) => {
                     window.sessionStorage.setItem("LoginInfo", authorization);
                     Managers.UserManager.Session = new Models.Profile(session);
-                    $location.path("/");
+                    $state.go("Main");
                 });
         };
+
+        $scope.Submit = () => {
+            Login(btoa($scope.UserName + ":" + $scope.Password));
+        };
+
         (()=> {
             var authorization = window.sessionStorage.getItem("LoginInfo");
             if (authorization)
-                $scope.LoginWithAuthorization(authorization);
+                Login(authorization);
         })();
     }
 }

@@ -7,9 +7,9 @@ module Controllers {
         Conversations: Array<Models.TextConversation>;
     }
 
-    export function MainController($scope: IMainScope, $location: ng.ILocationService, $http: ng.IHttpService) {
+    export function MainController($scope: IMainScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
         if (!Managers.UserManager.Session) {
-            $location.path("/Login");
+            $state.go("Login");
             return;
         }
 
