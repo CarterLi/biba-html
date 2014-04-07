@@ -1,3 +1,4 @@
-﻿<ul ng-repeat="msg in Messages">
-    <li>{{msg.Content}}</li>
+﻿<link type="text/css" rel="stylesheet" href="../Styles/Conversation.css" />
+<ul class="messages">
+    <li ng-repeat="msg in Messages"><i>{{msg.Profile.FullName}}</i> says: {{msg.Content}}</li>
 </ul>

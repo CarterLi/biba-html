@@ -1,0 +1,7 @@
+﻿#main .right ul.messages:hover {
+    overflow-y: auto;
+}
+#main .right ul.messages > li {
+    width: 100%;
+    word-wrap: break-word;
+}

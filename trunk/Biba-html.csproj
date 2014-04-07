@@ -296,6 +296,9 @@
     <Content Include="External\jQuery\jquery-2.1.0.js" />
     <Content Include="External\jQuery\jquery-2.1.0.min.js" />
     <Content Include="index.html" />
+    <Content Include="Styles\Conversation.css" />
+    <Content Include="Styles\Login.css" />
+    <Content Include="Styles\Main.css" />
     <Content Include="Views\Conversation.html" />
     <Content Include="Views\Login.html" />
     <Content Include="Views\Main.html" />
