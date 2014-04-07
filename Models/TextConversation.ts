@@ -1,4 +1,7 @@
-﻿module Models {
+﻿/// <reference path="../External/angularjs/angular.d.ts" />
+/// <reference path="../External/angularjs/angular-route.d.ts" />
+
+module Models {
 
     export interface IJsTextConversation extends IJsBibaModel {
         text_messages_attributes: Array<IJsTextMessage>;

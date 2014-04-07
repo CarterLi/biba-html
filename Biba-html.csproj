@@ -18,6 +18,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="External\angular-ui\angular-ui-router.js" />
+    <Content Include="External\angular-ui\angular-ui-router.min.js" />
     <Content Include="External\angularjs\angular-animate.js" />
     <Content Include="External\angularjs\angular-animate.min.js" />
     <Content Include="External\angularjs\angular-cookies.js" />
@@ -283,12 +285,27 @@
     <Content Include="External\angularjs\i18n\angular-locale_zu-za.js" />
     <Content Include="External\angularjs\i18n\angular-locale_zu.js" />
     <Content Include="External\angularjs\version.txt" />
+    <Content Include="External\bootstrap\css\bootstrap-responsive.css" />
+    <Content Include="External\bootstrap\css\bootstrap-responsive.min.css" />
+    <Content Include="External\bootstrap\css\bootstrap.css" />
+    <Content Include="External\bootstrap\css\bootstrap.min.css" />
+    <Content Include="External\bootstrap\img\glyphicons-halflings-white.png" />
+    <Content Include="External\bootstrap\img\glyphicons-halflings.png" />
+    <Content Include="External\bootstrap\js\bootstrap.js" />
+    <Content Include="External\bootstrap\js\bootstrap.min.js" />
     <Content Include="External\jQuery\jquery-2.1.0.js" />
     <Content Include="External\jQuery\jquery-2.1.0.min.js" />
     <Content Include="index.html" />
+    <Content Include="Views\Conversation.html" />
+    <Content Include="Views\Login.html" />
+    <Content Include="Views\Main.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Controllers\ConversationController.ts" />
+    <TypeScriptCompile Include="Controllers\LoginController.ts" />
+    <TypeScriptCompile Include="Controllers\MainController.ts" />
+    <TypeScriptCompile Include="External\angular-ui\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-cookies.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-mocks.d.ts" />

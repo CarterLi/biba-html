@@ -1,0 +1,8 @@
+﻿<div id="main">
+    <ul class="left">
+        <li ui-sref-active="active" ng-repeat="conv in Conversations | orderBy:Id">
+            <a ui-sref="Main.TextConversation({convId:conv.Id,conv:conv})">{{conv.Receiver.FullName}}</a>
+        </li>
+    </ul>
+    <div class="right" ui-view="subView"></div>
+</div>
