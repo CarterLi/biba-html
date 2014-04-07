@@ -3,38 +3,56 @@
 var Controllers;
 (function (Controllers) {
     function ConversationController($scope, $http, $stateParams) {
-        $scope.ConversationId = $stateParams['convId'];
-
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + $scope.ConversationId + "/text_messages").success(function (data) {
+        var convId = $stateParams['convId'];
+        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(function (data) {
+            $scope.Conversation = new Models.TextConversation(data);
+        });
+        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
             $scope.Messages = data.map(function (x) {
                 return new Models.TextMessage(x);
             });
         });
+
+        $scope.Send = function () {
+            // Code used: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+            $http.post(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages", {
+                text_message: {
+                    client_uuid: uuid,
+                    content: $scope.ChatInput
+                }
+            });
+            $scope.ChatInput = "";
+        };
     }
     Controllers.ConversationController = ConversationController;
 })(Controllers || (Controllers = {}));
 /// <reference path="../External/angularjs/angular.d.ts" />
 var Controllers;
 (function (Controllers) {
-    function LoginController($scope, $location, $http) {
+    function LoginController($scope, $state, $http) {
         $http.defaults.headers.common.Accept = "application/json";
 
-        $scope.Login = function () {
-            $scope.LoginWithAuthorization(btoa($scope.UserName + ":" + $scope.Password));
-        };
-
-        $scope.LoginWithAuthorization = function (authorization) {
+        var Login = function (authorization) {
             $http.defaults.headers.common.Authorization = "Basic " + authorization;
             $http.post(Managers.Constants.RelayUrl + "/sessions", null).success(function (session) {
                 window.sessionStorage.setItem("LoginInfo", authorization);
                 Managers.UserManager.Session = new Models.Profile(session);
-                $location.path("/");
+                $state.go("Main");
             });
         };
+
+        $scope.Submit = function () {
+            Login(btoa($scope.UserName + ":" + $scope.Password));
+        };
+
         (function () {
             var authorization = window.sessionStorage.getItem("LoginInfo");
             if (authorization)
-                $scope.LoginWithAuthorization(authorization);
+                Login(authorization);
         })();
     }
     Controllers.LoginController = LoginController;
@@ -43,9 +61,9 @@ var Controllers;
 /// <reference path="../External/angularjs/angular-route.d.ts" />
 var Controllers;
 (function (Controllers) {
-    function MainController($scope, $location, $http) {
+    function MainController($scope, $state, $http) {
         if (!Managers.UserManager.Session) {
-            $location.path("/Login");
+            $state.go("Login");
             return;
         }
 

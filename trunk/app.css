@@ -10,10 +10,11 @@ body {
     bottom: 0;
     left: 0;
 }
-header.navbar {
-    margin-bottom: 10px;
+header {
+    margin-bottom: 10px !important;
 }
 footer {
+    margin-top: 5px;
     text-align: center;
     font-size: small;
 }
