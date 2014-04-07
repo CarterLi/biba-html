@@ -1,6 +1,4 @@
-﻿/// <reference path="../External/angularjs/angular.d.ts" />
-/// <reference path="../External/angular-ui/angular-ui-router.d.ts" />
-var Controllers;
+﻿var Controllers;
 (function (Controllers) {
     function ConversationController($scope, $http, $stateParams) {
         var convId = $stateParams['convId'];
@@ -14,7 +12,6 @@ var Controllers;
         });
 
         $scope.Send = function () {
-            // Code used: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
             var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
@@ -30,7 +27,6 @@ var Controllers;
     }
     Controllers.ConversationController = ConversationController;
 })(Controllers || (Controllers = {}));
-/// <reference path="../External/angularjs/angular.d.ts" />
 var Controllers;
 (function (Controllers) {
     function LoginController($scope, $state, $http) {
@@ -57,8 +53,6 @@ var Controllers;
     }
     Controllers.LoginController = LoginController;
 })(Controllers || (Controllers = {}));
-/// <reference path="../External/angularjs/angular.d.ts" />
-/// <reference path="../External/angularjs/angular-route.d.ts" />
 var Controllers;
 (function (Controllers) {
     function MainController($scope, $state, $http) {
@@ -122,10 +116,6 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-/// <reference path="External/angularjs/angular.d.ts" />
-/// <reference path="External/angular-ui/angular-ui-router.d.ts" />
-/// <reference path="Controllers/MainController.ts" />
-/// <reference path="Controllers/LoginController.ts" />
 angular.module("BibaApp", ['ui.router']).config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
     $stateProvider.state('Login', {
@@ -309,8 +299,6 @@ var Models;
     })(Models.BibaModel);
     Models.Profile = Profile;
 })(Models || (Models = {}));
-/// <reference path="../External/angularjs/angular.d.ts" />
-/// <reference path="../External/angularjs/angular-route.d.ts" />
 var Models;
 (function (Models) {
     var TextConversation = (function (_super) {
