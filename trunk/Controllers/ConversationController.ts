@@ -10,7 +10,6 @@ module Controllers {
 
         convForm: ng.IFormController;
 
-        ChooseFile(): void;
         FileSelected($files: Array<File>): void;
         Send(): void;
     }
@@ -28,10 +27,6 @@ module Controllers {
             (data: Array<Models.IJsTextMessage>) => {
                 $scope.Messages = data.map(x=> new Models.TextMessage(x));
             });
-
-        $scope.ChooseFile = ()=> {
-            console.log(<any>$scope.convForm['inputFile']);
-        };
 
         $scope.FileSelected = $files=> {
             if ($files.length > 1) {
