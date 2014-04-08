@@ -11,10 +11,6 @@
             });
         });
 
-        $scope.ChooseFile = function () {
-            console.log($scope.convForm['inputFile']);
-        };
-
         $scope.FileSelected = function ($files) {
             if ($files.length > 1) {
                 alert("Only one file is allowed");
