@@ -8,7 +8,12 @@
         </li>
     </ul>
     <form name="convForm">
-        <textarea ng-model="ChatInput" required></textarea>
+        <button class="btn btn-small" type="button" onclick="document.getElementById('inputFile').click()">
+            <img src="Images/Files-Upload-File-icon.png" />
+            <span ng-show="Attachment">{{Attachment.name}}</span>
+        </button>
+        <input id="inputFile" type="file" ng-file-select="FileSelected($files)" hidden />
+        <textarea ng-file-drop="FileSelected($files)" ng-model="ChatInput" required></textarea>
         <input class="btn btn-small" type="submit" value="Send" ng-click="Send()" ng-disabled="convForm.$invalid" />
-    </form>
+</form>
 </section>

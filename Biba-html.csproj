@@ -18,6 +18,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="External\angular-file-upload\angular-file-upload-html5-shim.js" />
+    <Content Include="External\angular-file-upload\angular-file-upload-html5-shim.min.js" />
+    <Content Include="External\angular-file-upload\angular-file-upload-shim.js" />
+    <Content Include="External\angular-file-upload\angular-file-upload-shim.min.js" />
+    <Content Include="External\angular-file-upload\angular-file-upload.js" />
+    <Content Include="External\angular-file-upload\angular-file-upload.min.js" />
+    <Content Include="External\angular-file-upload\FileAPI.flash.swf" />
+    <Content Include="External\angular-file-upload\FileAPI.min.js" />
     <Content Include="External\angular-ui\angular-ui-router.js" />
     <Content Include="External\angular-ui\angular-ui-router.min.js" />
     <Content Include="External\angularjs\angular-animate.js" />
@@ -295,6 +303,20 @@
     <Content Include="External\bootstrap\js\bootstrap.min.js" />
     <Content Include="External\jQuery\jquery-2.1.0.js" />
     <Content Include="External\jQuery\jquery-2.1.0.min.js" />
+    <Content Include="External\socket.io\index.js" />
+    <Content Include="External\socket.io\lib\index.js" />
+    <Content Include="External\socket.io\lib\manager.js" />
+    <Content Include="External\socket.io\lib\on.js" />
+    <Content Include="External\socket.io\lib\socket.js" />
+    <Content Include="External\socket.io\lib\url.js" />
+    <Content Include="External\socket.io\socket.io.js" />
+    <Content Include="External\socket.io\support\browserify.js" />
+    <Content Include="External\socket.io\test\connection.js" />
+    <Content Include="External\socket.io\test\index.js" />
+    <Content Include="External\socket.io\test\support\env.js" />
+    <Content Include="External\socket.io\test\support\server.js" />
+    <Content Include="External\socket.io\test\url.js" />
+    <Content Include="Images\Files-Upload-File-icon.png" />
     <Content Include="index.html" />
     <Content Include="Styles\Conversation.css" />
     <Content Include="Styles\Login.css" />
@@ -318,6 +340,7 @@
     <TypeScriptCompile Include="External\angularjs\angular-scenario.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="External\jQuery\jquery.d.ts" />
+    <TypeScriptCompile Include="External\socket.io\socket.io-client.d.ts" />
     <TypeScriptCompile Include="Managers\Ajax.ts" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Managers\Constants.ts" />
@@ -340,6 +363,15 @@
     <Content Include="External\angularjs\README.md" />
     <Content Include="External\angularjs\version.json" />
     <Content Include="External\jQuery\jquery-2.1.0.min.map" />
+    <Content Include="External\socket.io\.gitignore" />
+    <Content Include="External\socket.io\.npmignore" />
+    <Content Include="External\socket.io\.travis.yml" />
+    <Content Include="External\socket.io\.zuul.yml" />
+    <Content Include="External\socket.io\History.md" />
+    <Content Include="External\socket.io\Makefile" />
+    <Content Include="External\socket.io\package.json" />
+    <Content Include="External\socket.io\README.md" />
+    <Content Include="External\socket.io\support\browserify.sh" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

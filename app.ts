@@ -23,7 +23,7 @@
 /// <reference path="Controllers/MainController.ts" />
 /// <reference path="Controllers/LoginController.ts" />
 
-angular.module("BibaApp", ['ui.router'])
+angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
     .config(($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
         $urlRouterProvider.otherwise('/');
         $stateProvider.state('Login', {

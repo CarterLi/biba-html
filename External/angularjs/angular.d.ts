@@ -168,6 +168,8 @@ declare module ng {
         $removeControl(control: ng.INgModelController): void;
         $setDirty(): void;
         $setPristine(): void;
+
+        [key: string]: any;
     }
 
     ///////////////////////////////////////////////////////////////////////////
