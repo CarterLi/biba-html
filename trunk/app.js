@@ -1,6 +1,6 @@
 ﻿var Controllers;
 (function (Controllers) {
-    function ConversationController($scope, $http, $stateParams) {
+    function ConversationController($scope, $http, $upload, $stateParams) {
         var convId = $stateParams['convId'];
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(function (data) {
             $scope.Conversation = new Models.TextConversation(data);
@@ -10,6 +10,18 @@
                 return new Models.TextMessage(x);
             });
         });
+
+        $scope.ChooseFile = function () {
+            console.log($scope.convForm['inputFile']);
+        };
+
+        $scope.FileSelected = function ($files) {
+            if ($files.length > 1) {
+                alert("Only one file is allowed");
+                return;
+            }
+            $scope.Attachment = $files[0];
+        };
 
         $scope.Send = function () {
             var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -21,8 +33,12 @@
                     client_uuid: uuid,
                     content: $scope.ChatInput
                 }
+            }).success(function (data) {
+                $scope.Messages.push(new Models.TextMessage(data));
             });
+
             $scope.ChatInput = "";
+            $scope.Attachment = null;
         };
     }
     Controllers.ConversationController = ConversationController;
@@ -33,8 +49,12 @@ var Controllers;
         $http.defaults.headers.common.Accept = "application/json";
 
         var Login = function (authorization) {
-            $http.defaults.headers.common.Authorization = "Basic " + authorization;
-            $http.post(Managers.Constants.RelayUrl + "/sessions", null).success(function (session) {
+            $http({
+                method: 'POST',
+                url: Managers.Constants.RelayUrl + "/sessions",
+                data: null,
+                headers: { Authorization: "Basic " + authorization }
+            }).success(function (session) {
                 window.sessionStorage.setItem("LoginInfo", authorization);
                 Managers.UserManager.Session = new Models.Profile(session);
                 $state.go("Main");
@@ -116,7 +136,7 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router']).config(function ($stateProvider, $urlRouterProvider) {
+angular.module("BibaApp", ['ui.router', 'angularFileUpload']).config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
     $stateProvider.state('Login', {
         url: '/Login',
