@@ -9,8 +9,12 @@ module Controllers {
 
     export function MainController($scope: IMainScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
         if (!Managers.UserManager.Session) {
-            $state.go("Login");
-            return;
+            var session: Models.IJsProfile = JSON.parse(window.sessionStorage.getItem("Session"));
+            if (session && session.id) {
+                Managers.UserManager.Session = new Models.Profile(session);
+            } else {
+                $state.go("Login");
+            }
         }
 
         $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(
