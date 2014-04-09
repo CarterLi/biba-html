@@ -47,7 +47,7 @@ module Controllers {
 
         $scope.KeyPress = $event=> {
             if ($event.keyCode == 13 /* ENTER */ && !$event.shiftKey) {
-                if ($scope.convForm.$valid) {
+                if ($scope.convForm.$valid || $scope.Attachment) {
                     $scope.Send();
                 }
                 $event.preventDefault();
@@ -65,7 +65,7 @@ module Controllers {
                 url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
                 data: {
                     "text_message[client_uuid]": uuid,
-                    "text_message[content]": $scope.ChatInput
+                    "text_message[content]": $scope.ChatInput || null
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: $scope.Attachment
