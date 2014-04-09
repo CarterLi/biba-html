@@ -316,7 +316,7 @@
     <Content Include="External\socket.io\test\support\env.js" />
     <Content Include="External\socket.io\test\support\server.js" />
     <Content Include="External\socket.io\test\url.js" />
-    <Content Include="Images\Files-Upload-File-icon.png" />
+    <Content Include="Images\attachment-icon.png" />
     <Content Include="index.html" />
     <Content Include="Styles\Conversation.css" />
     <Content Include="Styles\Login.css" />
@@ -339,6 +339,7 @@
     <TypeScriptCompile Include="External\angularjs\angular-sanitize.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-scenario.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="External\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="External\jQuery\jquery.d.ts" />
     <TypeScriptCompile Include="External\socket.io\socket.io-client.d.ts" />
     <TypeScriptCompile Include="Managers\Ajax.ts" />

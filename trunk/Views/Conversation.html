@@ -9,11 +9,11 @@
     </ul>
     <form name="convForm">
         <button class="btn btn-small" type="button" onclick="document.getElementById('inputFile').click()">
-            <img src="Images/Files-Upload-File-icon.png" />
+            <img src="Images/attachment-icon.png" />
             <span ng-show="Attachment">{{Attachment.name}}</span>
         </button>
         <input id="inputFile" type="file" ng-file-select="FileSelected($files)" hidden />
-        <textarea ng-file-drop="FileSelected($files)" ng-model="ChatInput" required></textarea>
-        <input class="btn btn-small" type="submit" value="Send" ng-click="Send()" ng-disabled="convForm.$invalid" />
-</form>
+        <textarea ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" rows="1" required></textarea>
+        <button class="btn btn-primary btn-small" type="submit" ng-click="Send()" ng-disabled="convForm.$invalid">Send</button>
+    </form>
 </section>
