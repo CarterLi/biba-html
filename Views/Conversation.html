@@ -5,7 +5,7 @@
         <li ng-repeat="msg in Messages">
             <label><i>{{msg.Profile.FullName}}</i> says: </label>
             <div>
-                <pre><a ng-if="msg.Attachment" href="{{msg.Attachment.Url}}" download="{{msg.Attachment.GetRawModel().filename}}">{{msg.Attachment.GetRawModel().filename}}</a><br ng-if="msg.Attachment&&!msg.GetRawModel().attachment_only" />{{msg.Content}}</pre>
+                <pre><a ng-if="msg.Attachment" href="{{msg.Attachment.Url}}" download="{{msg.Attachment.GetRawModel().filename}}">{{msg.Attachment.GetRawModel().filename}}</a><br ng-if="msg.Attachment&&!msg.GetRawModel().attachment_only" />{{msg.Attachment&&!msg.GetRawModel().attachment_only?msg.Content:''}}</pre>
                 <img ng-if="msg.Attachment.GetRawModel().preview" src="{{msg.Attachment.GetRawModel().preview}}" />
             </div>
         </li>
@@ -17,6 +17,6 @@
         </button>
         <input id="inputFile" type="file" ng-file-select="FileSelected($files)" hidden />
         <textarea ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" rows="1" required></textarea>
-        <button class="btn btn-primary btn-small" type="submit" ng-click="Send()" ng-disabled="convForm.$invalid">Send</button>
+        <button class="btn btn-primary btn-small" type="submit" ng-click="Send()" ng-disabled="convForm.$invalid && !Attachment">Send</button>
     </form>
 </section>
