@@ -1,24 +1,27 @@
 ﻿module Models {
 
-    export interface IJsTextMessage extends IJsBibaModel {
-        text_conversation: IJsTextConversation;
-        profile: IJsProfile;
+    export interface IRawTextMessage extends IRawBibaModel {
+        text_conversation: IRawTextConversation;
+        profile: IRawProfile;
         client_uuid: string;
         content: string;
         state: string;
+
+        attachment: IRawAttachment;
+        attachment_only: boolean;
     }
 
     export class TextMessage extends BibaModel {
 
-        constructor(model: IJsTextMessage = null) {
+        constructor(model: IRawTextMessage = null) {
             super(model);
         }
 
-        GetRawModel(): IJsTextMessage {
-            return <IJsTextMessage>super.GetRawModel();
+        GetRawModel(): IRawTextMessage {
+            return <IRawTextMessage>super.GetRawModel();
         }
 
-        private get Model(): IJsTextMessage {
+        private get Model(): IRawTextMessage {
             return this.GetRawModel();
         }
 
@@ -33,6 +36,15 @@
 
         get IsOwnMessage(): boolean {
             return this.Profile.IsCurrentUser;
+        }
+
+        attachment: Attachment;
+        get Attachment(): Attachment {
+            if (this.attachment === undefined) {
+                this.attachment = this.Model.attachment ? new Attachment(this.Model.attachment) : null;
+            }
+
+            return this.attachment;
         }
 
     }

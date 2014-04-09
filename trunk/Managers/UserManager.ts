@@ -7,7 +7,7 @@
             Ajax.GenerateAuthorization(user, pass);
             Ajax.Post("/sessions", session=> {
                 console.log("Login successfully");
-                this.Session = new Models.Profile(<Models.IJsProfile>session);
+                this.Session = new Models.Profile(<Models.IRawProfile>session);
                 ok();
             }, err=> {
                 console.log("Error login..." + err);

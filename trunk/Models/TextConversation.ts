@@ -3,24 +3,24 @@
 
 module Models {
 
-    export interface IJsTextConversation extends IJsBibaModel {
-        text_messages_attributes: Array<IJsTextMessage>;
-        last_message: IJsTextMessage;
-        profiles: Array<IJsProfile>;
+    export interface IRawTextConversation extends IRawBibaModel {
+        text_messages_attributes: Array<IRawTextMessage>;
+        last_message: IRawTextMessage;
+        profiles: Array<IRawProfile>;
         unread_counts: Object;
     }
 
     export class TextConversation extends BibaModel {
 
-        constructor(model: IJsTextConversation = null) {
+        constructor(model: IRawTextConversation = null) {
             super(model);
         }
 
-        GetRawModel(): IJsTextConversation {
-            return <IJsTextConversation>super.GetRawModel();
+        GetRawModel(): IRawTextConversation {
+            return <IRawTextConversation>super.GetRawModel();
         }
 
-        private get Model(): IJsTextConversation {
+        private get Model(): IRawTextConversation {
             return this.GetRawModel();
         }
 

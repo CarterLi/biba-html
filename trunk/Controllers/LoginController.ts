@@ -14,7 +14,7 @@ module Controllers {
                 method: 'POST',
                 url: Managers.Constants.RelayUrl + "/sessions",
                 headers: { Authorization: "Basic " + btoa($scope.UserName + ":" + $scope.Password) }
-            }).success((session: Models.IJsProfile) => {
+            }).success((session: Models.IRawProfile) => {
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
                 Managers.UserManager.Session = new Models.Profile(session);
                 $state.go("Main");

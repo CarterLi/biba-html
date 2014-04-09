@@ -22,11 +22,11 @@ module Controllers {
                                            $stateParams: ng.ui.IStateParamsService) {
         var convId = $stateParams['convId'];
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(
-            (data: Models.IJsTextConversation)=> {
+            (data: Models.IRawTextConversation)=> {
                 $scope.Conversation = new Models.TextConversation(data);
             });
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
-            (data: Array<Models.IJsTextMessage>) => {
+            (data: Array<Models.IRawTextMessage>) => {
                 $scope.Messages = data.map(x=> new Models.TextMessage(x));
             });
 
@@ -71,7 +71,7 @@ module Controllers {
                 file: $scope.Attachment
             }).progress((evt: ProgressEvent)=> {
                 console.log('percent: ' + (100.0 * evt.loaded / evt.total));
-            }).success((data: Models.IJsTextMessage)=> {
+            }).success((data: Models.IRawTextMessage)=> {
                 // file is uploaded successfully
                 $scope.Messages.push(new Models.TextMessage(data));
             });

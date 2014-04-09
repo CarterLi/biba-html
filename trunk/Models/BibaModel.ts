@@ -1,6 +1,6 @@
 ﻿module Models {
 
-    export interface IJsBibaModel {
+    export interface IRawBibaModel {
         id: number;
         uuid: string;
         lock_version: number;
@@ -10,9 +10,9 @@
 
     export class BibaModel {
 
-        constructor(private model: IJsBibaModel = null) {}
+        constructor(private model: IRawBibaModel = null) {}
 
-        GetRawModel(): IJsBibaModel {
+        GetRawModel(): IRawBibaModel {
             return this.model;
         }
 

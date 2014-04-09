@@ -21,6 +21,17 @@
 #conversation ul.messages > li {
     word-wrap: break-word;
 }
+#conversation ul.messages > li > div {
+    display: flex;
+}
+#conversation ul.messages > li > div > pre {
+    flex: 1;
+}
+#conversation ul.messages > li > div > img {
+    margin-left: 10px;
+    max-width: 150px;
+    align-self: flex-end;
+}
 #conversation form[name=convForm] {
     display: flex;
     margin: 5px;

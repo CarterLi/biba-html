@@ -346,6 +346,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Managers\Constants.ts" />
     <TypeScriptCompile Include="Managers\UserManager.ts" />
+    <TypeScriptCompile Include="Models\Attachment.ts" />
     <TypeScriptCompile Include="Models\BibaModel.ts" />
     <TypeScriptCompile Include="Models\Profile.ts" />
     <TypeScriptCompile Include="Models\TextConversation.ts" />
