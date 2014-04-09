@@ -43,4 +43,4 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
                 }
             }
         });
-});
+    });

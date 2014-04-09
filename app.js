@@ -19,20 +19,41 @@
             $scope.Attachment = $files[0];
         };
 
+        $scope.KeyDown = function ($event) {
+            if ($event.keyCode == 27) {
+                $scope.Attachment = null;
+                $event.preventDefault();
+            }
+        };
+
+        $scope.KeyPress = function ($event) {
+            if ($event.keyCode == 13 && !$event.shiftKey) {
+                if ($scope.convForm.$valid) {
+                    $scope.Send();
+                }
+                $event.preventDefault();
+            }
+        };
+
         $scope.Send = function () {
             var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
-            $http.post(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages", {
-                text_message: {
-                    client_uuid: uuid,
-                    content: $scope.ChatInput
-                }
+
+            $upload.upload({
+                url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
+                data: {
+                    "text_message[client_uuid]": uuid,
+                    "text_message[content]": $scope.ChatInput
+                },
+                fileFormDataName: "text_message[attachment]",
+                file: $scope.Attachment
+            }).progress(function (evt) {
+                console.log('percent: ' + (100.0 * evt.loaded / evt.total));
             }).success(function (data) {
                 $scope.Messages.push(new Models.TextMessage(data));
             });
-
             $scope.ChatInput = "";
             $scope.Attachment = null;
         };
