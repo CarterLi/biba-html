@@ -63,30 +63,17 @@
 var Controllers;
 (function (Controllers) {
     function LoginController($scope, $state, $http) {
-        $http.defaults.headers.common.Accept = "application/json";
-
-        var Login = function (authorization) {
+        $scope.Submit = function () {
             $http({
                 method: 'POST',
                 url: Managers.Constants.RelayUrl + "/sessions",
-                data: null,
-                headers: { Authorization: "Basic " + authorization }
+                headers: { Authorization: "Basic " + btoa($scope.UserName + ":" + $scope.Password) }
             }).success(function (session) {
-                window.sessionStorage.setItem("LoginInfo", authorization);
+                window.sessionStorage.setItem("Session", JSON.stringify(session));
                 Managers.UserManager.Session = new Models.Profile(session);
                 $state.go("Main");
             });
         };
-
-        $scope.Submit = function () {
-            Login(btoa($scope.UserName + ":" + $scope.Password));
-        };
-
-        (function () {
-            var authorization = window.sessionStorage.getItem("LoginInfo");
-            if (authorization)
-                Login(authorization);
-        })();
     }
     Controllers.LoginController = LoginController;
 })(Controllers || (Controllers = {}));
@@ -94,8 +81,12 @@ var Controllers;
 (function (Controllers) {
     function MainController($scope, $state, $http) {
         if (!Managers.UserManager.Session) {
-            $state.go("Login");
-            return;
+            var session = JSON.parse(window.sessionStorage.getItem("Session"));
+            if (session && session.id) {
+                Managers.UserManager.Session = new Models.Profile(session);
+            } else {
+                $state.go("Login");
+            }
         }
 
         $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(function (data) {
@@ -153,7 +144,8 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'angularFileUpload']).config(function ($stateProvider, $urlRouterProvider) {
+angular.module("BibaApp", ['ui.router', 'angularFileUpload']).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    $httpProvider.defaults.headers.common.Accept = "application/json";
     $urlRouterProvider.otherwise('/');
     $stateProvider.state('Login', {
         url: '/Login',
@@ -164,7 +156,7 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload']).config(function ($
         controller: 'Controllers.MainController',
         templateUrl: 'Views/Main.html'
     }).state('Main.TextConversation', {
-        url: '/TextConversations/:convId',
+        url: 'TextConversations/:convId',
         views: {
             subView: {
                 controller: 'Controllers.ConversationController',

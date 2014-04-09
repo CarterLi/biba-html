@@ -9,16 +9,13 @@ module Controllers {
     }
 
     export function LoginController($scope: ILoginScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
-        $http.defaults.headers.common.Accept = "application/json";
-
-        var Login = (authorization: string) => {
+        $scope.Submit = () => {
             $http({
                 method: 'POST',
                 url: Managers.Constants.RelayUrl + "/sessions",
-                data: null,
-                headers: { Authorization: "Basic " + authorization }
+                headers: { Authorization: "Basic " + btoa($scope.UserName + ":" + $scope.Password) }
             }).success((session: Models.IJsProfile) => {
-                window.sessionStorage.setItem("LoginInfo", authorization);
+                window.sessionStorage.setItem("Session", JSON.stringify(session));
                 Managers.UserManager.Session = new Models.Profile(session);
                 $state.go("Main");
 
@@ -32,18 +29,7 @@ module Controllers {
                 //    .on('message', (msg: any) => {
                 //        console.log(msg);
                 //    });
-
             });
         };
-
-        $scope.Submit = () => {
-            Login(btoa($scope.UserName + ":" + $scope.Password));
-        };
-
-        (()=> {
-            var authorization = window.sessionStorage.getItem("LoginInfo");
-            if (authorization)
-                Login(authorization);
-        })();
     }
 }

@@ -24,7 +24,8 @@
 /// <reference path="Controllers/LoginController.ts" />
 
 angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
-    .config(($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
+    .config(($httpProvider: ng.IHttpProvider, $stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
+        $httpProvider.defaults.headers.common.Accept = "application/json";
         $urlRouterProvider.otherwise('/');
         $stateProvider.state('Login', {
             url: '/Login',
@@ -35,7 +36,7 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
             controller: 'Controllers.MainController',
             templateUrl: 'Views/Main.html'
         }).state('Main.TextConversation', {
-            url: '/TextConversations/:convId',
+            url: 'TextConversations/:convId',
             views: {
                 subView: {
                     controller: 'Controllers.ConversationController',
