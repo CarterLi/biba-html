@@ -194,6 +194,35 @@ var Managers;
 })(Managers || (Managers = {}));
 var Models;
 (function (Models) {
+    var Attachment = (function () {
+        function Attachment(model) {
+            this.model = model;
+        }
+        Attachment.prototype.GetRawModel = function () {
+            return this.model;
+        };
+
+        Object.defineProperty(Attachment.prototype, "IsImage", {
+            get: function () {
+                return this.model.content_type.substr(0, 6) == 'image/';
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Attachment.prototype, "Url", {
+            get: function () {
+                return Managers.Constants.RelayUrl + this.model.url;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Attachment;
+    })();
+    Models.Attachment = Attachment;
+})(Models || (Models = {}));
+var Models;
+(function (Models) {
     var BibaModel = (function () {
         function BibaModel(model) {
             if (typeof model === "undefined") { model = null; }
@@ -421,6 +450,18 @@ var Models;
         Object.defineProperty(TextMessage.prototype, "IsOwnMessage", {
             get: function () {
                 return this.Profile.IsCurrentUser;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TextMessage.prototype, "Attachment", {
+            get: function () {
+                if (this.attachment === undefined) {
+                    this.attachment = this.Model.attachment ? new Models.Attachment(this.Model.attachment) : null;
+                }
+
+                return this.attachment;
             },
             enumerable: true,
             configurable: true

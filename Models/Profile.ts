@@ -1,6 +1,6 @@
 ﻿module Models {
 
-    export interface IJsProfile extends IJsBibaModel {
+    export interface IRawProfile extends IRawBibaModel {
         email: string;
         full_name: string;
         "registered?": boolean;
@@ -9,15 +9,15 @@
 
     export class Profile extends BibaModel {
 
-        constructor(model: IJsProfile) {
+        constructor(model: IRawProfile) {
             super(model);
         }
 
-        GetRawModel(): IJsProfile {
-            return <IJsProfile>super.GetRawModel();
+        GetRawModel(): IRawProfile {
+            return <IRawProfile>super.GetRawModel();
         }
 
-        private get Model(): IJsProfile {
+        private get Model(): IRawProfile {
             return this.GetRawModel();
         }
 
