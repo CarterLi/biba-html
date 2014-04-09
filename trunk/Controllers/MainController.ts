@@ -14,6 +14,7 @@ module Controllers {
                 Managers.UserManager.Session = new Models.Profile(session);
             } else {
                 $state.go("Login");
+                return;
             }
         }
 
