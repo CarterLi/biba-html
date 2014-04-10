@@ -13,12 +13,12 @@
             super(model);
         }
 
-        GetRawModel(): IRawProfile {
-            return <IRawProfile>super.GetRawModel();
+        Raw(): IRawProfile {
+            return <IRawProfile>super.Raw();
         }
 
         private get Model(): IRawProfile {
-            return this.GetRawModel();
+            return this.Raw();
         }
 
         get Email(): string {
