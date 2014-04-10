@@ -24,7 +24,21 @@
 /// <reference path="Controllers/LoginController.ts" />
 
 angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
+    .directive('emoji', () => ({
+        restrict: 'E',
+        template: '<span>{{html}}</span>',
+        replace: true,
+        link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+            $attrs.$observe('text', (value: string) => {
+                $elem.text(value);
+                window['emojify'].run($elem[0]);
+                (<any>$scope).html = $elem.html();
+            });
+        }
+    }))
     .config(($httpProvider: ng.IHttpProvider, $stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
+        window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+
         $httpProvider.defaults.headers.common.Accept = "application/json";
         $urlRouterProvider.otherwise('/');
         $stateProvider.state('Login', {

@@ -150,7 +150,22 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'angularFileUpload']).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
+    return ({
+        restrict: 'E',
+        template: '<span>{{html}}</span>',
+        replace: true,
+        link: function ($scope, $elem, $attrs) {
+            $attrs.$observe('text', function (value) {
+                $elem.text(value);
+                window['emojify'].run($elem[0]);
+                $scope.html = $elem.html();
+            });
+        }
+    });
+}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+
     $httpProvider.defaults.headers.common.Accept = "application/json";
     $urlRouterProvider.otherwise('/');
     $stateProvider.state('Login', {

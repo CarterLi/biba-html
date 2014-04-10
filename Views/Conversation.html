@@ -5,8 +5,8 @@
         <li ng-repeat="msg in Messages">
             <label><i>{{msg.Profile.FullName}}</i> says: </label>
             <div>
-                <pre><a ng-if="msg.Attachment" href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" />{{msg.Raw().attachment_only?'':msg.Content}}</pre>
-                <img ng-if="msg.Attachment.Raw().preview" src="{{msg.Attachment.Raw().preview}}" />
+                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><emoji ng-if="!msg.Raw().attachment_only" data-text="{{msg.Content}}" /></pre>
+                <img ng-if="msg.Attachment.Raw().preview" ng-src="{{msg.Attachment.Raw().preview}}" />
             </div>
         </li>
     </ul>
