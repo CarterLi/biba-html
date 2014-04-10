@@ -16,12 +16,12 @@ module Models {
             super(model);
         }
 
-        GetRawModel(): IRawTextConversation {
-            return <IRawTextConversation>super.GetRawModel();
+        Raw(): IRawTextConversation {
+            return <IRawTextConversation>super.Raw();
         }
 
         private get Model(): IRawTextConversation {
-            return this.GetRawModel();
+            return this.Raw();
         }
 
         get IsGroupChat(): boolean {

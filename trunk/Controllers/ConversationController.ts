@@ -56,16 +56,21 @@ module Controllers {
 
         $scope.Send = () => {
             // Code used: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c=> {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
+            var msg = new Models.TextMessage(<Models.IRawTextMessage>{
+                client_uuid: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c=> {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                }),
+                content: $scope.ChatInput || null,
+                profile: Managers.UserManager.Session.Raw()
             });
+            var idx = $scope.Messages.push(msg) - 1;
 
             $upload.upload({
                 url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
                 data: {
-                    "text_message[client_uuid]": uuid,
-                    "text_message[content]": $scope.ChatInput || null
+                    "text_message[client_uuid]": msg.Raw().client_uuid,
+                    "text_message[content]": msg.Content
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: $scope.Attachment
@@ -73,7 +78,7 @@ module Controllers {
                 console.log('percent: ' + (100.0 * evt.loaded / evt.total));
             }).success((data: Models.IRawTextMessage)=> {
                 // file is uploaded successfully
-                $scope.Messages.push(new Models.TextMessage(data));
+                $scope.Messages[idx] = new Models.TextMessage(data);
             });
             $scope.ChatInput = "";
             $scope.Attachment = null;

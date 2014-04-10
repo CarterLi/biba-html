@@ -17,12 +17,12 @@
             super(model);
         }
 
-        GetRawModel(): IRawTextMessage {
-            return <IRawTextMessage>super.GetRawModel();
+        Raw(): IRawTextMessage {
+            return <IRawTextMessage>super.Raw();
         }
 
         private get Model(): IRawTextMessage {
-            return this.GetRawModel();
+            return this.Raw();
         }
 
         private _profile: Profile;

@@ -12,7 +12,7 @@
 
         constructor(private model: IRawBibaModel = null) {}
 
-        GetRawModel(): IRawBibaModel {
+        Raw(): IRawBibaModel {
             return this.model;
         }
 

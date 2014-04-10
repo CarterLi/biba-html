@@ -36,23 +36,28 @@
         };
 
         $scope.Send = function () {
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
+            var msg = new Models.TextMessage({
+                client_uuid: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                }),
+                content: $scope.ChatInput || null,
+                profile: Managers.UserManager.Session.Raw()
             });
+            var idx = $scope.Messages.push(msg) - 1;
 
             $upload.upload({
                 url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
                 data: {
-                    "text_message[client_uuid]": uuid,
-                    "text_message[content]": $scope.ChatInput || null
+                    "text_message[client_uuid]": msg.Raw().client_uuid,
+                    "text_message[content]": msg.Content
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: $scope.Attachment
             }).progress(function (evt) {
                 console.log('percent: ' + (100.0 * evt.loaded / evt.total));
             }).success(function (data) {
-                $scope.Messages.push(new Models.TextMessage(data));
+                $scope.Messages[idx] = new Models.TextMessage(data);
             });
             $scope.ChatInput = "";
             $scope.Attachment = null;
@@ -198,7 +203,7 @@ var Models;
         function Attachment(model) {
             this.model = model;
         }
-        Attachment.prototype.GetRawModel = function () {
+        Attachment.prototype.Raw = function () {
             return this.model;
         };
 
@@ -228,7 +233,7 @@ var Models;
             if (typeof model === "undefined") { model = null; }
             this.model = model;
         }
-        BibaModel.prototype.GetRawModel = function () {
+        BibaModel.prototype.Raw = function () {
             return this.model;
         };
 
@@ -288,13 +293,13 @@ var Models;
         function Profile(model) {
             _super.call(this, model);
         }
-        Profile.prototype.GetRawModel = function () {
-            return _super.prototype.GetRawModel.call(this);
+        Profile.prototype.Raw = function () {
+            return _super.prototype.Raw.call(this);
         };
 
         Object.defineProperty(Profile.prototype, "Model", {
             get: function () {
-                return this.GetRawModel();
+                return this.Raw();
             },
             enumerable: true,
             configurable: true
@@ -366,13 +371,13 @@ var Models;
             if (typeof model === "undefined") { model = null; }
             _super.call(this, model);
         }
-        TextConversation.prototype.GetRawModel = function () {
-            return _super.prototype.GetRawModel.call(this);
+        TextConversation.prototype.Raw = function () {
+            return _super.prototype.Raw.call(this);
         };
 
         Object.defineProperty(TextConversation.prototype, "Model", {
             get: function () {
-                return this.GetRawModel();
+                return this.Raw();
             },
             enumerable: true,
             configurable: true
@@ -419,13 +424,13 @@ var Models;
             if (typeof model === "undefined") { model = null; }
             _super.call(this, model);
         }
-        TextMessage.prototype.GetRawModel = function () {
-            return _super.prototype.GetRawModel.call(this);
+        TextMessage.prototype.Raw = function () {
+            return _super.prototype.Raw.call(this);
         };
 
         Object.defineProperty(TextMessage.prototype, "Model", {
             get: function () {
-                return this.GetRawModel();
+                return this.Raw();
             },
             enumerable: true,
             configurable: true

@@ -12,7 +12,7 @@
 
         constructor(private model: IRawAttachment) {}
 
-        GetRawModel(): IRawAttachment {
+        Raw(): IRawAttachment {
             return this.model;
         }
 
