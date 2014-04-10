@@ -38,6 +38,10 @@ footer {
     font-size: small;
     font-style: italic;
 }
+img.emoji {
+    height: 20px;
+    vertical-align: text-bottom;
+}
 #content {
     flex: 1;
     position: relative;
