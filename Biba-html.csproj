@@ -26,6 +26,8 @@
     <Content Include="External\angular-file-upload\angular-file-upload.min.js" />
     <Content Include="External\angular-file-upload\FileAPI.flash.swf" />
     <Content Include="External\angular-file-upload\FileAPI.min.js" />
+    <Content Include="External\angular-ui-bootstrap\ui-bootstrap-tpls-0.8.0.js" />
+    <Content Include="External\angular-ui-bootstrap\ui-bootstrap-tpls-0.8.0.min.js" />
     <Content Include="External\angular-ui\angular-ui-router.js" />
     <Content Include="External\angular-ui\angular-ui-router.min.js" />
     <Content Include="External\angularjs\angular-animate.js" />
@@ -1208,6 +1210,7 @@
     <TypeScriptCompile Include="Controllers\ConversationController.ts" />
     <TypeScriptCompile Include="Controllers\LoginController.ts" />
     <TypeScriptCompile Include="Controllers\MainController.ts" />
+    <TypeScriptCompile Include="External\angular-ui-bootstrap\angular-ui-bootstrap.d.ts" />
     <TypeScriptCompile Include="External\angular-ui\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-cookies.d.ts" />

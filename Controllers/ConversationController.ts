@@ -20,11 +20,17 @@ module Controllers {
     export function ConversationController($scope: IConversationScope,
                                            $http: ng.IHttpService,
                                            $upload: any,
+                                           $state: ng.ui.IStateService,
                                            $stateParams: ng.ui.IStateParamsService) {
-        var convId = $stateParams['convId'];
+        var convId: number = parseInt($stateParams['convId'], 10);
+        if ('Conversations' in $scope.$parent) {
+            $scope.Conversation = (<IMainScope>$scope.$parent).Conversations.filter(x=> x.Id === convId)[0];
+        }
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(
             (data: Models.IRawTextConversation)=> {
                 $scope.Conversation = new Models.TextConversation(data);
+            }).error(e=> {
+                $state.go('Main');
             });
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
             (data: Array<Models.IRawTextMessage>) => {
@@ -71,7 +77,7 @@ module Controllers {
                     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                     return v.toString(16);
                 }),
-                content: $scope.ChatInput || null,
+                content: $scope.ChatInput || '',
                 profile: Managers.UserManager.Session.Raw()
             });
             var idx = $scope.Messages.push(msg) - 1;
