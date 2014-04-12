@@ -26,6 +26,15 @@
             }
         };
 
+        $scope.AttachClick = function ($event) {
+            if ($event.which == 2) {
+                $scope.Attachment = null;
+                $event.preventDefault();
+            } else {
+                $('#inputFile').click();
+            }
+        };
+
         $scope.KeyPress = function ($event) {
             if ($event.keyCode == 13 && !$event.shiftKey) {
                 if ($scope.convForm.$valid || $scope.Attachment) {
