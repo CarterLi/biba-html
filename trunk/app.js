@@ -166,7 +166,7 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
+angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
     return ({
         restrict: 'E',
         template: '<span>{{html}}</span>',
