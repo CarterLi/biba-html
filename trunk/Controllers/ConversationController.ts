@@ -46,14 +46,14 @@ module Controllers {
             }
         };
 
-        $scope.AttachClick = $event => {
-            if ($event.which == 2) {
+        $scope.AttachClick = $event=> {
+            if ($event.which == 2 /* Middle */) {
                 $scope.Attachment = null;
                 $event.preventDefault();
             } else {
                 $('#inputFile').click();
             }
-        }
+        };
 
         $scope.KeyPress = $event=> {
             if ($event.keyCode == 13 /* ENTER */ && !$event.shiftKey) {
