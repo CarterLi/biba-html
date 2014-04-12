@@ -11,7 +11,7 @@
         </li>
     </ul>
     <form name="convForm">
-        <button class="btn btn-small" type="button" onclick="document.getElementById('inputFile').click()">
+        <button class="btn btn-small" type="button" ng-click="AttachClick($event)">
             <img src="Images/attachment-icon.png" />
             <span ng-show="Attachment">{{Attachment.name}}</span>
         </button>
