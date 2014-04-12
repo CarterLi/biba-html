@@ -33,7 +33,7 @@
         }
 
         get IsNew(): boolean {
-            return !!this.Id;
+            return !this.Id;
         }
 
     }

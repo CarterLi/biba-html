@@ -1,5 +1,81 @@
 ﻿var Controllers;
 (function (Controllers) {
+    function MainController($scope, $state, $http) {
+        if (!Managers.UserManager.Session) {
+            var session = JSON.parse(window.sessionStorage.getItem("Session"));
+            if (session && session.id) {
+                Managers.UserManager.Session = new Models.Profile(session);
+            } else {
+                $state.go("Login");
+                return;
+            }
+        }
+
+        $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(function (data) {
+            $scope.Conversations = data.map(function (x) {
+                return new Models.TextConversation(x);
+            }).filter(function (x) {
+                return !x.IsGroupChat;
+            });
+        });
+    }
+    Controllers.MainController = MainController;
+})(Controllers || (Controllers = {}));
+var Controllers;
+(function (Controllers) {
+    function LoginController($scope, $state, $http) {
+        $scope.Submit = function () {
+            $http({
+                method: 'POST',
+                url: Managers.Constants.RelayUrl + "/sessions",
+                headers: { Authorization: "Basic " + btoa($scope.UserName + ":" + $scope.Password) }
+            }).success(function (session) {
+                window.sessionStorage.setItem("Session", JSON.stringify(session));
+                Managers.UserManager.Session = new Models.Profile(session);
+                $state.go("Main");
+            });
+        };
+    }
+    Controllers.LoginController = LoginController;
+})(Controllers || (Controllers = {}));
+angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
+    return ({
+        restrict: 'E',
+        template: '<span>{{html}}</span>',
+        replace: true,
+        link: function ($scope, $elem, $attrs) {
+            $attrs.$observe('text', function (value) {
+                $elem.text(value);
+                window['emojify'].run($elem[0]);
+                $scope.html = $elem.html();
+            });
+        }
+    });
+}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+
+    $httpProvider.defaults.headers.common.Accept = "application/json";
+    $urlRouterProvider.otherwise('/');
+    $stateProvider.state('Login', {
+        url: '/Login',
+        controller: 'Controllers.LoginController',
+        templateUrl: 'Views/Login.html'
+    }).state('Main', {
+        url: '/',
+        controller: 'Controllers.MainController',
+        templateUrl: 'Views/Main.html'
+    }).state('Main.TextConversation', {
+        url: 'TextConversations/:convId',
+        views: {
+            subView: {
+                controller: 'Controllers.ConversationController',
+                templateUrl: 'Views/Conversation.html'
+            }
+        }
+    });
+});
+var Controllers;
+(function (Controllers) {
     function ConversationController($scope, $http, $upload, $stateParams) {
         var convId = $stateParams['convId'];
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(function (data) {
@@ -74,46 +150,6 @@
     }
     Controllers.ConversationController = ConversationController;
 })(Controllers || (Controllers = {}));
-var Controllers;
-(function (Controllers) {
-    function LoginController($scope, $state, $http) {
-        $scope.Submit = function () {
-            $http({
-                method: 'POST',
-                url: Managers.Constants.RelayUrl + "/sessions",
-                headers: { Authorization: "Basic " + btoa($scope.UserName + ":" + $scope.Password) }
-            }).success(function (session) {
-                window.sessionStorage.setItem("Session", JSON.stringify(session));
-                Managers.UserManager.Session = new Models.Profile(session);
-                $state.go("Main");
-            });
-        };
-    }
-    Controllers.LoginController = LoginController;
-})(Controllers || (Controllers = {}));
-var Controllers;
-(function (Controllers) {
-    function MainController($scope, $state, $http) {
-        if (!Managers.UserManager.Session) {
-            var session = JSON.parse(window.sessionStorage.getItem("Session"));
-            if (session && session.id) {
-                Managers.UserManager.Session = new Models.Profile(session);
-            } else {
-                $state.go("Login");
-                return;
-            }
-        }
-
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(function (data) {
-            $scope.Conversations = data.map(function (x) {
-                return new Models.TextConversation(x);
-            }).filter(function (x) {
-                return !x.IsGroupChat;
-            });
-        });
-    }
-    Controllers.MainController = MainController;
-})(Controllers || (Controllers = {}));
 var Managers;
 (function (Managers) {
     var Ajax = (function () {
@@ -159,42 +195,6 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
-    return ({
-        restrict: 'E',
-        template: '<span>{{html}}</span>',
-        replace: true,
-        link: function ($scope, $elem, $attrs) {
-            $attrs.$observe('text', function (value) {
-                $elem.text(value);
-                window['emojify'].run($elem[0]);
-                $scope.html = $elem.html();
-            });
-        }
-    });
-}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
-
-    $httpProvider.defaults.headers.common.Accept = "application/json";
-    $urlRouterProvider.otherwise('/');
-    $stateProvider.state('Login', {
-        url: '/Login',
-        controller: 'Controllers.LoginController',
-        templateUrl: 'Views/Login.html'
-    }).state('Main', {
-        url: '/',
-        controller: 'Controllers.MainController',
-        templateUrl: 'Views/Main.html'
-    }).state('Main.TextConversation', {
-        url: 'TextConversations/:convId',
-        views: {
-            subView: {
-                controller: 'Controllers.ConversationController',
-                templateUrl: 'Views/Conversation.html'
-            }
-        }
-    });
-});
 var Managers;
 (function (Managers) {
     Managers.Constants = {
@@ -295,7 +295,7 @@ var Models;
 
         Object.defineProperty(BibaModel.prototype, "IsNew", {
             get: function () {
-                return !!this.Id;
+                return !this.Id;
             },
             enumerable: true,
             configurable: true

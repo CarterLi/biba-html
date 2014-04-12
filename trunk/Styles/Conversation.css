@@ -25,7 +25,26 @@
     display: flex;
 }
 #conversation ul.messages > li > div > pre {
+    position: relative;
+    min-height: 41px;
     flex: 1;
+}
+#conversation ul.messages > li.sending > div > pre::before {
+    content: '';
+    border-radius: inherit;
+    z-index: 1000;
+    position: absolute;
+    display: block;
+    top: 1px;
+    left: 1px;
+    bottom: 1px;
+    right: 1px;
+    opacity: 0.5;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #999;
+    background-image: url(../Images/loading.gif);
+    background-size: 22px;
 }
 #conversation ul.messages > li > div > img {
     margin-left: 10px;
