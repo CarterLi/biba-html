@@ -1,15 +1,6 @@
-﻿#login {
+﻿#login table {
     margin: 0 auto;
-    width: 290px;
 }
-#login > label {
-    display: block;
-    text-align: right;
-    width: auto;
-}
-#login label input {
-    width: 200px;
-}
-#login input[type=submit] {
-    margin-top: 20px;
+#login table [colspan] {
+    text-align: center;
 }
