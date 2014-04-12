@@ -1194,6 +1194,7 @@
     <Content Include="External\socket.io\test\support\server.js" />
     <Content Include="External\socket.io\test\url.js" />
     <Content Include="Images\attachment-icon.png" />
+    <Content Include="Images\loading.gif" />
     <Content Include="index.html" />
     <Content Include="Styles\Conversation.css" />
     <Content Include="Styles\Login.css" />

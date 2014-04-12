@@ -2,7 +2,7 @@
     <link type="text/css" rel="stylesheet" href="Styles/Conversation.css" />
     <h2>{{Conversation.Receiver.FullName}}</h2>
     <ul class="messages">
-        <li ng-repeat="msg in Messages">
+        <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}">
             <label><i>{{msg.Profile.FullName}}</i> says: </label>
             <div>
                 <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><emoji ng-if="!msg.Raw().attachment_only" data-text="{{msg.Content}}" /></pre>
