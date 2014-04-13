@@ -10,6 +10,7 @@
     margin: 14px;
 }
 #account form {
+    margin: 0 20px;
     padding: 14px;
 
     background-color: #EDEDED;
@@ -21,6 +22,9 @@
 }
 #account table tr > * {
     vertical-align: text-bottom;
+}
+#account table th {
+    width: 110px;
 }
 #account table th + td > input {
     height: 30px;
