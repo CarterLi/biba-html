@@ -22,30 +22,34 @@
 
 angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
     .directive('emoji', () => ({
-        restrict: 'E',
-        template: '<span>{{html}}</span>',
-        replace: true,
+        priority: 10,
+        restrict: 'A',
         link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
-            $attrs.$observe('text', (value: string) => {
-                $elem.text(value);
-                window['emojify'].run($elem[0]);
-                (<any>$scope).html = $elem.html();
-            });
+            $scope.$watch($attrs['ngBind'], ()=> window['emojify'].run($elem[0]));
+        }
+    }))
+    .directive('autolink', () => ({
+        priority: 5,
+        restrict: 'A',
+        link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+            $scope.$watch($attrs['ngBind'], ()=> $elem.html($elem.text()['autoLink']({ target: "_blank" })));
         }
     }))
     .directive('autofocus', ()=> {
         return {
+            priority: 500,
             restrict: 'A', // only activate on element attribute
             link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
                 $elem.focus();
             }
         };
     })
-    .directive('autoscrollintoview', ($timeout: ng.ITimeoutService) => {
+    .directive('autoscrollintoview', () => {
         return {
+            priority: 500,
             restrict: 'A', // only activate on element attribute
             link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
-                $timeout(()=> $elem[0].scrollIntoView(true));
+                $scope.$watch($attrs['ngBind'], ()=> $elem[0].scrollIntoView(true));
             }
         };
     })
