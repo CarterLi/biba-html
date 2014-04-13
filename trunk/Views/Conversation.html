@@ -2,7 +2,7 @@
     <link type="text/css" rel="stylesheet" href="Styles/Conversation.css" />
     <h2>{{Conversation.Receiver.FullName}}</h2>
     <ul class="messages">
-        <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}">
+        <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}" autoscrollintoview>
             <label><i>{{msg.Profile.FullName}}</i> says: </label>
             <div>
                 <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><emoji ng-if="!msg.Raw().attachment_only" data-text="{{msg.Content}}" /></pre>
@@ -16,7 +16,7 @@
             <span ng-show="Attachment">{{Attachment.name}}</span>
         </button>
         <input id="inputFile" type="file" ng-file-select="FileSelected($files)" hidden />
-        <textarea ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" rows="1" required></textarea>
+        <textarea autofocus ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" rows="1" required></textarea>
         <button class="btn btn-primary btn-small" type="submit" ng-click="Send()" ng-disabled="convForm.$invalid && !Attachment">Send</button>
     </form>
 </section>
