@@ -3,11 +3,11 @@
 
 module Controllers {
 
-    export interface IMainScope extends ng.IScope {
+    export interface IHomeScope extends ng.IScope {
         Conversations: Array<Models.TextConversation>;
     }
 
-    export function MainController($scope: IMainScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
+    export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
         if (!Managers.UserManager.Session) {
             var session: Models.IRawProfile = JSON.parse(window.sessionStorage.getItem("Session"));
             if (session && session.id) {

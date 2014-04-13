@@ -24,13 +24,13 @@ module Controllers {
                                            $stateParams: ng.ui.IStateParamsService) {
         var convId: number = parseInt($stateParams['convId'], 10);
         if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = (<IMainScope>$scope.$parent).Conversations.filter(x=> x.Id === convId)[0];
+            $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.filter(x=> x.Id === convId)[0];
         }
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(
             (data: Models.IRawTextConversation)=> {
                 $scope.Conversation = new Models.TextConversation(data);
             }).error(e=> {
-                $state.go('Main');
+                $state.go('Home');
             });
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
             (data: Array<Models.IRawTextMessage>) => {

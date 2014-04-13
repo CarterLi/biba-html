@@ -1,4 +1,91 @@
-﻿var Controllers;
+﻿angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
+    return ({
+        restrict: 'E',
+        template: '<span>{{html}}</span>',
+        replace: true,
+        link: function ($scope, $elem, $attrs) {
+            $attrs.$observe('text', function (value) {
+                $elem.text(value);
+                window['emojify'].run($elem[0]);
+                $scope.html = $elem.html();
+            });
+        }
+    });
+}).directive('autofocus', function () {
+    return {
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $elem.focus();
+        }
+    };
+}).directive('autoscrollintoview', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $timeout(function () {
+                return $elem[0].scrollIntoView(true);
+            });
+        }
+    };
+}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+
+    $httpProvider.defaults.headers.common.Accept = "application/json";
+    $urlRouterProvider.otherwise('/');
+    $stateProvider.state('Account', {
+        url: '/Account',
+        controller: 'Controllers.AccountController',
+        templateUrl: 'Views/Account.html'
+    }).state('Home', {
+        url: '/',
+        controller: 'Controllers.HomeController',
+        templateUrl: 'Views/Home.html'
+    }).state('Home.TextConversation', {
+        url: 'TextConversations/:convId',
+        views: {
+            subView: {
+                controller: 'Controllers.ConversationController',
+                templateUrl: 'Views/Conversation.html'
+            }
+        }
+    });
+});
+var Controllers;
+(function (Controllers) {
+    function AccountController($scope, $state, $http) {
+        $scope.RelayUrl = Managers.Constants.RelayUrl;
+
+        var doSignIn = function (account) {
+            $http({
+                method: 'POST',
+                url: Managers.Constants.RelayUrl + "/sessions",
+                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
+            }).success(function (session) {
+                window.sessionStorage.setItem("Session", JSON.stringify(session));
+                Managers.UserManager.Session = new Models.Profile(session);
+                $state.go("Home");
+            });
+        };
+
+        $scope.OnSignIn = function () {
+            if ($scope.SignInForm.$valid) {
+                doSignIn($scope.SignIn);
+            }
+        };
+
+        $scope.OnCreateAccount = function () {
+            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
+                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
+                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
+                    doSignIn($scope.CreateAccount);
+                }).error(function (err) {
+                });
+            }
+        };
+    }
+    Controllers.AccountController = AccountController;
+})(Controllers || (Controllers = {}));
+var Controllers;
 (function (Controllers) {
     function ConversationController($scope, $http, $upload, $state, $stateParams) {
         var convId = parseInt($stateParams['convId'], 10);
@@ -10,7 +97,7 @@
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(function (data) {
             $scope.Conversation = new Models.TextConversation(data);
         }).error(function (e) {
-            $state.go('Main');
+            $state.go('Home');
         });
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
             $scope.Messages = data.map(function (x) {
@@ -83,42 +170,7 @@
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
-    function AccountController($scope, $state, $http) {
-        $scope.RelayUrl = Managers.Constants.RelayUrl;
-
-        var doSignIn = function (account) {
-            $http({
-                method: 'POST',
-                url: Managers.Constants.RelayUrl + "/sessions",
-                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
-            }).success(function (session) {
-                window.sessionStorage.setItem("Session", JSON.stringify(session));
-                Managers.UserManager.Session = new Models.Profile(session);
-                $state.go("Main");
-            });
-        };
-
-        $scope.OnSignIn = function () {
-            if ($scope.SignInForm.$valid) {
-                doSignIn($scope.SignIn);
-            }
-        };
-
-        $scope.OnCreateAccount = function () {
-            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
-                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
-                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
-                    doSignIn($scope.CreateAccount);
-                }).error(function (err) {
-                });
-            }
-        };
-    }
-    Controllers.AccountController = AccountController;
-})(Controllers || (Controllers = {}));
-var Controllers;
-(function (Controllers) {
-    function MainController($scope, $state, $http) {
+    function HomeController($scope, $state, $http) {
         if (!Managers.UserManager.Session) {
             var session = JSON.parse(window.sessionStorage.getItem("Session"));
             if (session && session.id) {
@@ -137,7 +189,7 @@ var Controllers;
             });
         });
     }
-    Controllers.MainController = MainController;
+    Controllers.HomeController = HomeController;
 })(Controllers || (Controllers = {}));
 var Managers;
 (function (Managers) {
@@ -184,58 +236,6 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
-    return ({
-        restrict: 'E',
-        template: '<span>{{html}}</span>',
-        replace: true,
-        link: function ($scope, $elem, $attrs) {
-            $attrs.$observe('text', function (value) {
-                $elem.text(value);
-                window['emojify'].run($elem[0]);
-                $scope.html = $elem.html();
-            });
-        }
-    });
-}).directive('autofocus', function () {
-    return {
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $elem.focus();
-        }
-    };
-}).directive('autoscrollintoview', function ($timeout) {
-    return {
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $timeout(function () {
-                return $elem[0].scrollIntoView(true);
-            });
-        }
-    };
-}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
-
-    $httpProvider.defaults.headers.common.Accept = "application/json";
-    $urlRouterProvider.otherwise('/');
-    $stateProvider.state('Account', {
-        url: '/Account',
-        controller: 'Controllers.AccountController',
-        templateUrl: 'Views/Account.html'
-    }).state('Main', {
-        url: '/',
-        controller: 'Controllers.MainController',
-        templateUrl: 'Views/Main.html'
-    }).state('Main.TextConversation', {
-        url: 'TextConversations/:convId',
-        views: {
-            subView: {
-                controller: 'Controllers.ConversationController',
-                templateUrl: 'Views/Conversation.html'
-            }
-        }
-    });
-});
 var Managers;
 (function (Managers) {
     Managers.Constants = {
