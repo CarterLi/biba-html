@@ -42,6 +42,10 @@ img.emoji {
     height: 20px;
     vertical-align: text-bottom;
 }
+.container {
+    width: calc(100% - 160px) !important;
+    min-width: 940px !important;
+}
 #content {
     flex: 1;
     position: relative;
