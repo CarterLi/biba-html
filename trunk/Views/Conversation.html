@@ -5,7 +5,7 @@
         <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}">
             <label><i ng-bind="msg.Profile.FullName"></i> says: </label>
             <div>
-                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}" ng-bind="msg.Attachment.Raw().filename"></a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><span ng-if="!msg.Raw().attachment_only" emoji autolink autoscrollintoview ng-bind="msg.Content"></span></pre>
+                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" title="Click to download" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename+' ( '+msg.Attachment.Filesize+' )'}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><span ng-if="!msg.Raw().attachment_only" emoji autolink autoscrollintoview ng-bind="msg.Content"></span></pre>
                 <img ng-if="msg.Attachment.Raw().preview" ng-src="{{msg.Attachment.Raw().preview}}" />
             </div>
         </li>

@@ -23,6 +23,10 @@
         get Url(): string {
             return Managers.Constants.RelayUrl + this.model.url;
         }
+
+        get Filesize(): string {
+            return window['filesize'](this.Raw().size);
+        }
     }
 
 }

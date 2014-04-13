@@ -1182,6 +1182,8 @@
     <Content Include="External\emoji.js\images\emoji\zap.png" />
     <Content Include="External\emoji.js\images\emoji\zero.png" />
     <Content Include="External\emoji.js\images\emoji\zzz.png" />
+    <Content Include="External\filesize.js\filesize.js" />
+    <Content Include="External\filesize.js\filesize.min.js" />
     <Content Include="External\jQuery\jquery-2.1.0.js" />
     <Content Include="External\jQuery\jquery-2.1.0.min.js" />
     <Content Include="External\socket.io\index.js" />
