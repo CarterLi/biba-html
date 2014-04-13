@@ -1,0 +1,24 @@
+﻿<section id="ImagePreviewer">
+    <script type="text/javascript">
+        function onImageLoaded(img) {
+            img.previousElementSibling.style.display = 'none';
+            img.style.display = 'inline-block';
+        }
+    </script>
+    <div class="modal-header">
+        <h4 ng-bind="Attachment.Raw().filename"></h4>
+    </div>
+    <div class="modal-body" style="text-align: center">
+        <div class="floatingBarsG">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <img ng-src="{{Attachment.Url}}" style="display:none" onload="onImageLoaded(this)" />
+    </div>
+</section>

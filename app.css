@@ -58,3 +58,112 @@ img.emoji {
     right: 0;
     bottom: 0;
 }
+
+/* Generated from: http://cssload.net/ */
+div.floatingBarsG {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 51px;
+}
+
+div.floatingBarsG > div {
+    position: absolute;
+    background-color: #FFFFFF;
+    width: 6px;
+    height: 16px;
+    -webkit-border-radius: 6px 6px 0 0;
+    -webkit-transform: scale(0.4);
+    -webkit-animation-name: fadeG;
+    -webkit-animation-duration: 1.04s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: linear;
+    border-radius: 6px 6px 0 0;
+    transform: scale(0.4);
+    animation-name: fadeG;
+    animation-duration: 1.04s;
+    animation-iteration-count: infinite;
+    animation-direction: linear;
+}
+
+div.floatingBarsG > div:nth-child(1) {
+    left: 0;
+    top: 19px;
+    -webkit-animation-delay: 0.39s;
+    -webkit-transform: rotate(-90deg);
+    animation-delay: 0.39s;
+    transform: rotate(-90deg);
+}
+
+div.floatingBarsG > div:nth-child(2) {
+    left: 5px;
+    top: 7px;
+    -webkit-animation-delay: 0.52s;
+    -webkit-transform: rotate(-45deg);
+    animation-delay: 0.52s;
+    transform: rotate(-45deg);
+}
+
+div.floatingBarsG > div:nth-child(3) {
+    left: 17px;
+    top: 2px;
+    -webkit-animation-delay: 0.65s;
+    -webkit-transform: rotate(0deg);
+    animation-delay: 0.65s;
+    transform: rotate(0deg);
+}
+
+div.floatingBarsG > div:nth-child(4) {
+    right: 5px;
+    top: 7px;
+    -webkit-animation-delay: 0.78s;
+    -webkit-transform: rotate(45deg);
+    animation-delay: 0.78s;
+    transform: rotate(45deg);
+}
+
+div.floatingBarsG > div:nth-child(5) {
+    right: 0;
+    top: 19px;
+    -webkit-animation-delay: 0.9099999999999999s;
+    -webkit-transform: rotate(90deg);
+    animation-delay: 0.9099999999999999s;
+    transform: rotate(90deg);
+}
+
+div.floatingBarsG > div:nth-child(6) {
+    right: 5px;
+    bottom: 5px;
+    -webkit-animation-delay: 1.04s;
+    -webkit-transform: rotate(135deg);
+    animation-delay: 1.04s;
+    transform: rotate(135deg);
+}
+
+div.floatingBarsG > div:nth-child(7) {
+    bottom: 0;
+    left: 17px;
+    -webkit-animation-delay: 1.1700000000000002s;
+    -webkit-transform: rotate(180deg);
+    animation-delay: 1.1700000000000002s;
+    transform: rotate(180deg);
+}
+
+div.floatingBarsG > div:nth-child(8) {
+    left: 5px;
+    bottom: 5px;
+    -webkit-animation-delay: 1.3s;
+    -webkit-transform: rotate(-135deg);
+    animation-delay: 1.3s;
+    transform: rotate(-135deg);
+}
+
+@-webkit-keyframes fadeG {
+    from { background-color: #000000; }
+    to { background-color: #FFFFFF; }
+}
+
+@keyframes fadeG {
+    from { background-color: #000000; }
+    to { background-color: #FFFFFF; }
+}

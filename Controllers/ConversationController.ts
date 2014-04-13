@@ -1,5 +1,6 @@
 ﻿/// <reference path="../External/angularjs/angular.d.ts" />
 /// <reference path="../External/angular-ui/angular-ui-router.d.ts" />
+/// <reference path="../external/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
 
 module Controllers {
     export interface IConversationScope extends ng.IScope {
@@ -14,6 +15,7 @@ module Controllers {
         AttachClick($event: JQueryMouseEventObject): void;
         KeyDown($event: JQueryKeyEventObject): void;
         KeyPress($event: JQueryKeyEventObject): void;
+        Preview(attachment: Models.Attachment): void;
         Send(): void;
     }
 
@@ -21,7 +23,8 @@ module Controllers {
                                            $http: ng.IHttpService,
                                            $upload: any,
                                            $state: ng.ui.IStateService,
-                                           $stateParams: ng.ui.IStateParamsService) {
+                                           $stateParams: ng.ui.IStateParamsService,
+                                           $modal: ng.ui.bootstrap.IModalService) {
         var convId: number = parseInt($stateParams['convId'], 10);
         if ('Conversations' in $scope.$parent) {
             $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.filter(x=> x.Id === convId)[0];
@@ -68,6 +71,16 @@ module Controllers {
                 }
                 $event.preventDefault();
             }
+        };
+
+        $scope.Preview = attachment=> {
+            $modal.open({
+                templateUrl: 'Views/ImagePreviewer.html',
+                scope: $scope,
+                controller: ($scope: any)=> {
+                    $scope.Attachment = attachment;
+                }
+            });
         };
 
         $scope.Send = () => {

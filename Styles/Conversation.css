@@ -49,7 +49,8 @@
 #conversation ul.messages > li > div > img {
     margin-left: 10px;
     max-width: 150px;
-    align-self: flex-end;
+    align-self: flex-start;
+    margin: 0 0 10px;
 }
 #conversation form[name=convForm] {
     display: flex;

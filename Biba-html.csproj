@@ -1208,6 +1208,7 @@
     <Content Include="Views\Conversation.html" />
     <Content Include="Views\Account.html" />
     <Content Include="Views\Home.html" />
+    <Content Include="Views\ImagePreviewer.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>

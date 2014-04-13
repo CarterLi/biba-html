@@ -20,7 +20,7 @@
 /// <reference path="External/angularjs/angular.d.ts" />
 /// <reference path="External/angular-ui/angular-ui-router.d.ts" />
 
-angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
+angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
     .directive('emoji', () => ({
         priority: 10,
         restrict: 'A',
