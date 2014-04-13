@@ -1199,16 +1199,16 @@
     <Content Include="Images\loading.gif" />
     <Content Include="index.html" />
     <Content Include="Styles\Conversation.css" />
-    <Content Include="Styles\Login.css" />
+    <Content Include="Styles\Account.css" />
     <Content Include="Styles\Main.css" />
     <Content Include="Views\Conversation.html" />
-    <Content Include="Views\Login.html" />
+    <Content Include="Views\Account.html" />
     <Content Include="Views\Main.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Controllers\ConversationController.ts" />
-    <TypeScriptCompile Include="Controllers\LoginController.ts" />
+    <TypeScriptCompile Include="Controllers\AccountController.ts" />
     <TypeScriptCompile Include="Controllers\MainController.ts" />
     <TypeScriptCompile Include="External\angular-ui-bootstrap\angular-ui-bootstrap.d.ts" />
     <TypeScriptCompile Include="External\angular-ui\angular-ui-router.d.ts" />
@@ -1227,6 +1227,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Managers\Constants.ts" />
     <TypeScriptCompile Include="Managers\UserManager.ts" />
+    <TypeScriptCompile Include="Models\Account.ts" />
     <TypeScriptCompile Include="Models\Attachment.ts" />
     <TypeScriptCompile Include="Models\BibaModel.ts" />
     <TypeScriptCompile Include="Models\Profile.ts" />

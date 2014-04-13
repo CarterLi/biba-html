@@ -20,9 +20,6 @@
 /// <reference path="External/angularjs/angular.d.ts" />
 /// <reference path="External/angular-ui/angular-ui-router.d.ts" />
 
-/// <reference path="Controllers/MainController.ts" />
-/// <reference path="Controllers/LoginController.ts" />
-
 angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
     .directive('emoji', () => ({
         restrict: 'E',
@@ -41,10 +38,10 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
 
         $httpProvider.defaults.headers.common.Accept = "application/json";
         $urlRouterProvider.otherwise('/');
-        $stateProvider.state('Login', {
-            url: '/Login',
-            controller: 'Controllers.LoginController',
-            templateUrl: 'Views/Login.html'
+        $stateProvider.state('Account', {
+            url: '/Account',
+            controller: 'Controllers.AccountController',
+            templateUrl: 'Views/Account.html'
         }).state('Main', {
             url: '/',
             controller: 'Controllers.MainController',
