@@ -1,11 +1,11 @@
 ﻿<section id="conversation">
     <link type="text/css" rel="stylesheet" href="Styles/Conversation.css" />
-    <h2>{{Conversation.Receiver.FullName}}</h2>
+    <h2 ng-bind="Conversation.Receiver.FullName"></h2>
     <ul class="messages">
-        <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}" autoscrollintoview>
-            <label><i>{{msg.Profile.FullName}}</i> says: </label>
+        <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}">
+            <label><i ng-bind="msg.Profile.FullName"></i> says: </label>
             <div>
-                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><emoji ng-if="!msg.Raw().attachment_only" data-text="{{msg.Content}}" /></pre>
+                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" download="{{msg.Attachment.Raw().filename}}" ng-bind="msg.Attachment.Raw().filename"></a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><span ng-if="!msg.Raw().attachment_only" emoji autolink autoscrollintoview ng-bind="msg.Content"></span></pre>
                 <img ng-if="msg.Attachment.Raw().preview" ng-src="{{msg.Attachment.Raw().preview}}" />
             </div>
         </li>
@@ -13,7 +13,7 @@
     <form name="convForm">
         <button class="btn btn-small" type="button" ng-click="AttachClick($event)">
             <img src="Images/attachment-icon.png" />
-            <span ng-show="Attachment">{{Attachment.name}}</span>
+            <span ng-show="Attachment" ng-bind="Attachment.name"></span>
         </button>
         <input id="inputFile" type="file" ng-file-select="FileSelected($files)" hidden />
         <textarea autofocus ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" rows="1" required></textarea>

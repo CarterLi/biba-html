@@ -295,6 +295,8 @@
     <Content Include="External\angularjs\i18n\angular-locale_zu-za.js" />
     <Content Include="External\angularjs\i18n\angular-locale_zu.js" />
     <Content Include="External\angularjs\version.txt" />
+    <Content Include="External\autolink-js\autolink-min.js" />
+    <Content Include="External\autolink-js\autolink.js" />
     <Content Include="External\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="External\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="External\bootstrap\css\bootstrap.css" />
@@ -1257,6 +1259,9 @@
     <Content Include="External\socket.io\README.md" />
     <Content Include="External\socket.io\support\browserify.sh" />
     <Content Include="External\emoji.js\update.sh" />
+    <Content Include="External\autolink-js\autolink.coffee" />
+    <Content Include="External\autolink-js\autolink.map" />
+    <Content Include="External\autolink-js\LICENSE" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
