@@ -58,11 +58,11 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
             url: '/Account',
             controller: 'Controllers.AccountController',
             templateUrl: 'Views/Account.html'
-        }).state('Main', {
+        }).state('Home', {
             url: '/',
-            controller: 'Controllers.MainController',
-            templateUrl: 'Views/Main.html'
-        }).state('Main.TextConversation', {
+            controller: 'Controllers.HomeController',
+            templateUrl: 'Views/Home.html'
+        }).state('Home.TextConversation', {
             url: 'TextConversations/:convId',
             views: {
                 subView: {

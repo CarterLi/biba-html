@@ -3,11 +3,6 @@
     width: 100%;
 
     overflow-y: auto;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
 }
 #account > fieldset {
     flex: 1;
@@ -43,4 +38,10 @@
 #account table [colspan] {
     padding-bottom: 10px;
     text-align: center;
+}
+#account table input[type=checkbox] {
+    margin: 0;
+}
+#account table [colspan] > :not(:first-child) {
+    margin-left: 5px;
 }

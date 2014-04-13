@@ -26,7 +26,7 @@ module Controllers {
             }).success((session: Models.IRawProfile) => {
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
                 Managers.UserManager.Session = new Models.Profile(session);
-                $state.go("Main");
+                $state.go("Home");
 
                 //io.connect("https://push-stage.biba.com/socket.io/1/websocket/1")
                 //    .on('connect', ()=> {
