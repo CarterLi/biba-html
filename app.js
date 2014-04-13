@@ -296,6 +296,14 @@ var Models;
             enumerable: true,
             configurable: true
         });
+
+        Object.defineProperty(Attachment.prototype, "Filesize", {
+            get: function () {
+                return window['filesize'](this.Raw().size);
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Attachment;
     })();
     Models.Attachment = Attachment;
