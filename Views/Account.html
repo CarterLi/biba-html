@@ -1,61 +1,67 @@
 ﻿<section id="account">
     <link rel="stylesheet" type="text/css" href="Styles/Account.css" />
-    <form name="CreateAccountForm">
-        <table>
-            <caption>Create Account</caption>
-            <tbody>
-                <tr>
-                    <th><label for="caFirstName">First name</label></th>
-                    <td><input id="caFirstName" type="text" name="FirstName" ng-model="CreateAccount.first_name" required /></td>
-                </tr>
-                <tr>
-                    <th><label for="caLastName">Last name</label></th>
-                    <td><input id="caLastName" type="text" name="LastName" ng-model="CreateAccount.last_name" required /></td>
-                </tr>
-                <tr>
-                    <th><label for="caEmail">E-mail</label></th>
-                    <td><input id="caEmail" type="email" name="Email" ng-model="CreateAccount.email" required /></td>
-                </tr>
-                <tr>
-                    <th><label for="caPassword">Password</label></th>
-                    <td><input id="caPassword" type="password" name="Password" ng-model="CreateAccount.password" required /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label>
-                            <input type="checkbox" name="Terms" ng-model="CreateAccount.terms_" required />
-                            <span>Agree to Biba <a target="_blank" ng-href="{{RelayUrl+'/terms'}}">Terms of Use »</a></span>
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <input class="btn btn-primary" type="submit" value="Create Account" ng-click="OnCreateAccount()" />
-                        <input class="btn btn-danger" type="reset" value="Reset" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-    <form name="SignInForm">
-        <table>
-            <caption>Sign In</caption>
-            <tbody>
-                <tr>
-                    <th><label for="siEmail">E-mail</label></th>
-                    <td><input id="siEmail" type="email" name="Email" ng-model="SignIn.email" required /></td>
-                </tr>
-                <tr>
-                    <th><label for="siPassword">Password</label></th>
-                    <td><input id="siPassword" type="password" name="Password" ng-model="SignIn.password" required /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <input class="btn btn-primary" type="submit" value="Sign In" ng-click="OnSignIn()" />
-                        <input class="btn btn-danger" type="reset" value="Reset" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
+    <fieldset>
+        <legend>Create Account</legend>
+        <form name="CreateAccountForm">
+            <table>
+                <caption>New to Biba?</caption>
+                <tbody>
+                    <tr>
+                        <th><label for="caFirstName">First name</label></th>
+                        <td><input id="caFirstName" type="text" name="FirstName" ng-model="CreateAccount.first_name" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="caLastName">Last name</label></th>
+                        <td><input id="caLastName" type="text" name="LastName" ng-model="CreateAccount.last_name" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="caEmail">E-mail</label></th>
+                        <td><input id="caEmail" type="email" name="Email" ng-model="CreateAccount.email" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="caPassword">Password</label></th>
+                        <td><input id="caPassword" type="password" name="Password" ng-model="CreateAccount.password" required /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>
+                                <input type="checkbox" name="Terms" ng-model="CreateAccount.terms_" required />
+                                <span>Agree to Biba <a target="_blank" ng-href="{{RelayUrl+'/terms'}}">Terms of Use »</a></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input class="btn btn-primary" type="submit" value="Create Account" ng-click="OnCreateAccount()" />
+                            <input class="btn btn-danger" type="reset" value="Reset" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </fieldset>
+    <fieldset>
+        <legend>Sign In</legend>
+        <form name="SignInForm">
+            <table>
+                <caption>Existing Users</caption>
+                <tbody>
+                    <tr>
+                        <th><label for="siEmail">E-mail</label></th>
+                        <td><input id="siEmail" type="email" name="Email" ng-model="SignIn.email" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="siPassword">Password</label></th>
+                        <td><input id="siPassword" type="password" name="Password" ng-model="SignIn.password" required /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input class="btn btn-primary" type="submit" value="Sign In" ng-click="OnSignIn()" />
+                            <input class="btn btn-danger" type="reset" value="Reset" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </fieldset>
 </section>
