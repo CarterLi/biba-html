@@ -33,6 +33,22 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload'])
             });
         }
     }))
+    .directive('autofocus', ()=> {
+        return {
+            restrict: 'A', // only activate on element attribute
+            link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
+                $elem.focus();
+            }
+        };
+    })
+    .directive('autoscrollintoview', ($timeout: ng.ITimeoutService) => {
+        return {
+            restrict: 'A', // only activate on element attribute
+            link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+                $timeout(()=> $elem[0].scrollIntoView(true));
+            }
+        };
+    })
     .config(($httpProvider: ng.IHttpProvider, $stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
         window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
 

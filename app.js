@@ -197,6 +197,22 @@ angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji',
             });
         }
     });
+}).directive('autofocus', function () {
+    return {
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $elem.focus();
+        }
+    };
+}).directive('autoscrollintoview', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $timeout(function () {
+                return $elem[0].scrollIntoView(true);
+            });
+        }
+    };
 }).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
     window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
 
