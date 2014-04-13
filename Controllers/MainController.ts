@@ -13,7 +13,7 @@ module Controllers {
             if (session && session.id) {
                 Managers.UserManager.Session = new Models.Profile(session);
             } else {
-                $state.go("Login");
+                $state.go("Account");
                 return;
             }
         }

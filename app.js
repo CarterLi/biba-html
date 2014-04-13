@@ -83,20 +83,38 @@
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
-    function LoginController($scope, $state, $http) {
-        $scope.Submit = function () {
+    function AccountController($scope, $state, $http) {
+        $scope.RelayUrl = Managers.Constants.RelayUrl;
+
+        var doSignIn = function (account) {
             $http({
                 method: 'POST',
                 url: Managers.Constants.RelayUrl + "/sessions",
-                headers: { Authorization: "Basic " + btoa($scope.UserName + ":" + $scope.Password) }
+                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
             }).success(function (session) {
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
                 Managers.UserManager.Session = new Models.Profile(session);
                 $state.go("Main");
             });
         };
+
+        $scope.OnSignIn = function () {
+            if ($scope.SignInForm.$valid) {
+                doSignIn($scope.SignIn);
+            }
+        };
+
+        $scope.OnCreateAccount = function () {
+            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
+                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
+                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
+                    doSignIn($scope.CreateAccount);
+                }).error(function (err) {
+                });
+            }
+        };
     }
-    Controllers.LoginController = LoginController;
+    Controllers.AccountController = AccountController;
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
@@ -106,7 +124,7 @@ var Controllers;
             if (session && session.id) {
                 Managers.UserManager.Session = new Models.Profile(session);
             } else {
-                $state.go("Login");
+                $state.go("Account");
                 return;
             }
         }
@@ -166,7 +184,7 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
+angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
     return ({
         restrict: 'E',
         template: '<span>{{html}}</span>',
@@ -184,10 +202,10 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
 
     $httpProvider.defaults.headers.common.Accept = "application/json";
     $urlRouterProvider.otherwise('/');
-    $stateProvider.state('Login', {
-        url: '/Login',
-        controller: 'Controllers.LoginController',
-        templateUrl: 'Views/Login.html'
+    $stateProvider.state('Account', {
+        url: '/Account',
+        controller: 'Controllers.AccountController',
+        templateUrl: 'Views/Account.html'
     }).state('Main', {
         url: '/',
         controller: 'Controllers.MainController',

@@ -1,6 +1,6 @@
-﻿#login table {
+﻿#account table {
     margin: 0 auto;
 }
-#login table [colspan] {
+#account table [colspan] {
     text-align: center;
 }
