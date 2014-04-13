@@ -6,7 +6,7 @@
             <label><i ng-bind="msg.Profile.FullName"></i> says: </label>
             <div>
                 <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" title="Click to download" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename+' ( '+msg.Attachment.Filesize+' )'}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><span ng-if="!msg.Raw().attachment_only" emoji autolink autoscrollintoview ng-bind="msg.Content"></span></pre>
-                <img ng-if="msg.Attachment.Raw().preview" ng-src="{{msg.Attachment.Raw().preview}}" />
+                <img ng-if="msg.Attachment.Raw().preview" ng-click="Preview(msg.Attachment)" ng-src="{{msg.Attachment.Raw().preview}}" />
             </div>
         </li>
     </ul>

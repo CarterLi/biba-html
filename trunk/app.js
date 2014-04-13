@@ -1,6 +1,6 @@
 ﻿var Controllers;
 (function (Controllers) {
-    function ConversationController($scope, $http, $upload, $state, $stateParams) {
+    function ConversationController($scope, $http, $upload, $state, $stateParams, $modal) {
         var convId = parseInt($stateParams['convId'], 10);
         if ('Conversations' in $scope.$parent) {
             $scope.Conversation = $scope.$parent.Conversations.filter(function (x) {
@@ -49,6 +49,16 @@
                 }
                 $event.preventDefault();
             }
+        };
+
+        $scope.Preview = function (attachment) {
+            $modal.open({
+                templateUrl: 'Views/ImagePreviewer.html',
+                scope: $scope,
+                controller: function ($scope) {
+                    $scope.Attachment = attachment;
+                }
+            });
         };
 
         $scope.Send = function () {
@@ -184,7 +194,7 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'angularFileUpload']).directive('emoji', function () {
+angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
     return ({
         priority: 10,
         restrict: 'A',
