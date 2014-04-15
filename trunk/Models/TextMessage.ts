@@ -38,13 +38,18 @@
             return this.Profile.IsCurrentUser;
         }
 
-        attachment: Attachment;
+        get State(): string {
+            var state = this.Model.state;
+            return state ? this.Model.state[0].toUpperCase() + this.Model.state.substr(1) : "Sending";
+        }
+
+        private _attachment: Attachment;
         get Attachment(): Attachment {
-            if (this.attachment === undefined) {
-                this.attachment = this.Model.attachment ? new Attachment(this.Model.attachment) : null;
+            if (this._attachment === undefined) {
+                this._attachment = this.Model.attachment ? new Attachment(this.Model.attachment) : null;
             }
 
-            return this.attachment;
+            return this._attachment;
         }
 
     }

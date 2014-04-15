@@ -1263,7 +1263,7 @@
     <Content Include="External\autolink-js\autolink.coffee" />
     <Content Include="External\autolink-js\autolink.map" />
     <Content Include="External\autolink-js\LICENSE" />
-    <None Include="Styles\Conversation.scss" />
+    <Content Include="Styles\Conversation.css" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
