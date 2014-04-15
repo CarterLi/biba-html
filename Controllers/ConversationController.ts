@@ -94,6 +94,7 @@ module Controllers {
                 profile: Managers.UserManager.Session.Raw()
             });
             var idx = $scope.Messages.push(msg) - 1;
+            var file = $scope.Attachment;
 
             $upload.upload({
                 url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
@@ -102,7 +103,11 @@ module Controllers {
                     "text_message[content]": msg.Content
                 },
                 fileFormDataName: "text_message[attachment]",
-                file: $scope.Attachment
+                file: file
+            }).progress(($event: ProgressEvent)=> {
+                if (file) {
+                    msg.Raw().state = 'Sending ' + ($event.loaded / $event.total * 100).toFixed() + '%';
+                }
             }).success((data: Models.IRawTextMessage)=> {
                 // file is uploaded successfully
                 $scope.Messages[idx] = new Models.TextMessage(data);

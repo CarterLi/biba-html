@@ -71,6 +71,7 @@
                 profile: Managers.UserManager.Session.Raw()
             });
             var idx = $scope.Messages.push(msg) - 1;
+            var file = $scope.Attachment;
 
             $upload.upload({
                 url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
@@ -79,7 +80,11 @@
                     "text_message[content]": msg.Content
                 },
                 fileFormDataName: "text_message[attachment]",
-                file: $scope.Attachment
+                file: file
+            }).progress(function ($event) {
+                if (file) {
+                    msg.Raw().state = 'Sending ' + ($event.loaded / $event.total * 100).toFixed() + '%';
+                }
             }).success(function (data) {
                 $scope.Messages[idx] = new Models.TextMessage(data);
             });
@@ -550,13 +555,22 @@ var Models;
             configurable: true
         });
 
+        Object.defineProperty(TextMessage.prototype, "State", {
+            get: function () {
+                var state = this.Model.state;
+                return state ? this.Model.state[0].toUpperCase() + this.Model.state.substr(1) : "Sending";
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         Object.defineProperty(TextMessage.prototype, "Attachment", {
             get: function () {
-                if (this.attachment === undefined) {
-                    this.attachment = this.Model.attachment ? new Models.Attachment(this.Model.attachment) : null;
+                if (this._attachment === undefined) {
+                    this._attachment = this.Model.attachment ? new Models.Attachment(this.Model.attachment) : null;
                 }
 
-                return this.attachment;
+                return this._attachment;
             },
             enumerable: true,
             configurable: true
