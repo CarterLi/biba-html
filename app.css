@@ -72,18 +72,11 @@ div.floatingBarsG > div {
     background-color: #FFFFFF;
     width: 6px;
     height: 16px;
-    -webkit-border-radius: 6px 6px 0 0;
-    -webkit-transform: scale(0.4);
-    -webkit-animation-name: fadeG;
-    -webkit-animation-duration: 1.04s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-direction: linear;
     border-radius: 6px 6px 0 0;
+    -webkit-transform: scale(0.4);
     transform: scale(0.4);
-    animation-name: fadeG;
-    animation-duration: 1.04s;
-    animation-iteration-count: infinite;
-    animation-direction: linear;
+    -webkit-animation: fadeG 1.04s linear infinite;
+    animation: fadeG 1.04s linear infinite;
 }
 
 div.floatingBarsG > div:nth-child(1) {
@@ -125,9 +118,9 @@ div.floatingBarsG > div:nth-child(4) {
 div.floatingBarsG > div:nth-child(5) {
     right: 0;
     top: 19px;
-    -webkit-animation-delay: 0.9099999999999999s;
+    -webkit-animation-delay: 0.91s;
     -webkit-transform: rotate(90deg);
-    animation-delay: 0.9099999999999999s;
+    animation-delay: 0.91s;
     transform: rotate(90deg);
 }
 
@@ -143,9 +136,9 @@ div.floatingBarsG > div:nth-child(6) {
 div.floatingBarsG > div:nth-child(7) {
     bottom: 0;
     left: 17px;
-    -webkit-animation-delay: 1.1700000000000002s;
+    -webkit-animation-delay: 1.17s;
     -webkit-transform: rotate(180deg);
-    animation-delay: 1.1700000000000002s;
+    animation-delay: 1.17s;
     transform: rotate(180deg);
 }
 
