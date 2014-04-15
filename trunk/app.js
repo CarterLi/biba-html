@@ -80,8 +80,6 @@
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: $scope.Attachment
-            }).progress(function (evt) {
-                console.log('percent: ' + (100.0 * evt.loaded / evt.total));
             }).success(function (data) {
                 $scope.Messages[idx] = new Models.TextMessage(data);
             });

@@ -1200,9 +1200,7 @@
     <Content Include="External\socket.io\test\support\server.js" />
     <Content Include="External\socket.io\test\url.js" />
     <Content Include="Images\attachment-icon.png" />
-    <Content Include="Images\loading.gif" />
     <Content Include="index.html" />
-    <Content Include="Styles\Conversation.css" />
     <Content Include="Styles\Account.css" />
     <Content Include="Styles\Home.css" />
     <Content Include="Views\Conversation.html" />
@@ -1265,6 +1263,7 @@
     <Content Include="External\autolink-js\autolink.coffee" />
     <Content Include="External\autolink-js\autolink.map" />
     <Content Include="External\autolink-js\LICENSE" />
+    <None Include="Styles\Conversation.scss" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

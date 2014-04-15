@@ -103,8 +103,6 @@ module Controllers {
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: $scope.Attachment
-            }).progress((evt: ProgressEvent)=> {
-                console.log('percent: ' + (100.0 * evt.loaded / evt.total));
             }).success((data: Models.IRawTextMessage)=> {
                 // file is uploaded successfully
                 $scope.Messages[idx] = new Models.TextMessage(data);
