@@ -32,7 +32,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
         priority: 5,
         restrict: 'A',
         link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
-            $scope.$watch($attrs['ngBind'], ()=> $elem.html($elem.text()['autoLink']({ target: "_blank" })));
+            $scope.$watch($attrs['ngBind'], ()=> $elem.html($elem.html()['autoLink']({ target: "_blank" })));
         }
     }))
     .directive('autofocus', ()=> {
