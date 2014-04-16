@@ -213,7 +213,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
         restrict: 'A',
         link: function ($scope, $elem, $attrs) {
             $scope.$watch($attrs['ngBind'], function () {
-                return $elem.html($elem.text()['autoLink']({ target: "_blank" }));
+                return $elem.html($elem.html()['autoLink']({ target: "_blank" }));
             });
         }
     });
