@@ -1,0 +1,236 @@
+﻿#ImagePreviewer {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.8);
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: .5s all;
+}
+
+#ImagePreviewer:not(.show) {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+		
+#ImagePreviewer > div.wrapper {
+	width: 100%;
+	height: 100%;
+	display: table;
+}
+
+#ImagePreviewer div.dialog-body {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle
+}
+#ImagePreviewer .img-wrapper {
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+}
+#ImagePreviewer img {
+    max-width: 800px;
+    max-height: 600px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 6px;
+			
+	transition: all .7s;
+}
+#ImagePreviewer div.dialog-body.loading {
+    width: 50px;
+    height: 50px;
+}
+#ImagePreviewer div.dialog-body.loading img {
+	opacity: 0;
+	max-width: 50px;
+	max-height: 50px;
+}
+#ImagePreviewer div.dialog-body > div.circle {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+
+    transition: all .7s;
+}
+#ImagePreviewer div.dialog-body:not(.loading) > div.circle {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 0;
+}
+#ImagePreviewer div.dialog-body div.desc-wrapper {
+	margin-top: 12px;
+	transition: all .3s .7s;
+}
+#ImagePreviewer div.dialog-body.loading div.desc-wrapper {
+	opacity: 0;
+	margin-top: -28px;
+    pointer-events: none;
+}
+#ImagePreviewer div.dialog-body div.desc-wrapper > a.desc {
+	display: inline-block;
+	padding: 0 10px;
+	background: black;
+	border: 2px white solid;
+	border-radius: 999px;
+	font: 12px Helvetica;
+	font-weight: bold;
+	color: white;
+	line-height: 22px;
+    text-decoration: none;
+	box-shadow: 0 4px 2px rgba(0, 0, 0, 0.5);
+}
+#ImagePreviewer div.close-button {
+	position: absolute;
+	right: -7px;
+	top: -7px;
+    cursor: pointer;
+			
+	transition: all .3s .7s;
+}
+#ImagePreviewer div.dialog-body.loading div.close-button {
+	opacity: 0;
+    pointer-events: none;
+}
+
+div.spn-pulse {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+div.spn-pulse::before, div.spn-pulse::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+div.spn-pulse::before {
+    background-color: transparent;
+    border: 5px solid rgba(255,255,255,0.9);
+    opacity: .9;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-radius: 50px;
+    box-shadow: 0 0 35px white;
+    -webkit-animation: spinPulse 1s infinite ease-in-out;
+    animation: spinPulse 1s infinite ease-in-out;
+}
+div.spn-pulse::after {
+    background-color: transparent;
+    border: 5px solid rgba(255,255,255,0.9);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-radius: 50px;
+    box-shadow: 0 0 15px white;
+    margin: 10px;
+    -webkit-animation: spinoffPulse 1s infinite linear;
+    animation: spinoffPulse 1s infinite linear;
+}
+
+@-webkit-keyframes spinPulse {
+    from {
+        -webkit-transform: rotate(160deg);
+        opacity: 0;
+        box-shadow: 0 0 1px white;
+    }
+
+    50% {
+        -webkit-transform: rotate(145deg);
+        opacity: 1;
+    }
+
+    to {
+        -webkit-transform: rotate(-320deg);
+        opacity: 0;
+    }
+}
+
+@keyframes spinPulse {
+    from {
+        -webkit-transform: rotate(160deg);
+        transform: rotate(160deg);
+        opacity: 0;
+        box-shadow: 0 0 1px white;
+    }
+
+    50% {
+        -webkit-transform: rotate(145deg);
+        transform: rotate(145deg);
+        opacity: 1;
+    }
+
+    to {
+        -webkit-transform: rotate(-320deg);
+        transform: rotate(-320deg);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes spinoffPulse {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spinoffPulse {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+div.X {
+	box-shadow: 0 0 10px black;
+	border: 2px white solid;
+	position: relative;
+	border-radius: 50%;
+	background: black;
+	width: 18px;
+	height: 18px;
+}
+div.X::before,
+div.X::after {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	display: block;
+	content: " ";
+	font-size: 0;
+	width: 2px;
+	height: 12px;
+	background-color: white;
+	border-radius: 100px;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+div.X::after {
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}

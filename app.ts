@@ -44,12 +44,28 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             }
         };
     })
-    .directive('autoscrollintoview', () => {
+    .directive('autoscrollintoview', ()=> {
         return {
             priority: 500,
             restrict: 'A', // only activate on element attribute
             link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
                 $scope.$watch($attrs['ngBind'], ()=> $elem[0].scrollIntoView(true));
+            }
+        };
+    })
+    .directive('imagepreviewer', ()=> {
+        return {
+            restrict: 'E',
+            templateUrl: 'Views/ImagePreviewer.html',
+            scope: { Attachment: "=attachment" },
+            controller: Controllers.ImagePreviewerController,
+            link: ($scope: Controllers.IImagePreviewerScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+                $elem.find("img").load(event=> {
+                    if ($scope.Attachment) {
+                        // User might have closed the previewer
+                        $scope.$apply('IsLoaded = true');
+                    }
+                });
             }
         };
     })
@@ -60,17 +76,17 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
         $urlRouterProvider.otherwise('/');
         $stateProvider.state('Account', {
             url: '/Account',
-            controller: 'Controllers.AccountController',
+            controller: Controllers.AccountController,
             templateUrl: 'Views/Account.html'
         }).state('Home', {
             url: '/',
-            controller: 'Controllers.HomeController',
+            controller: Controllers.HomeController,
             templateUrl: 'Views/Home.html'
         }).state('Home.TextConversation', {
             url: 'TextConversations/:convId',
             views: {
                 subView: {
-                    controller: 'Controllers.ConversationController',
+                    controller: Controllers.ConversationController,
                     templateUrl: 'Views/Conversation.html'
                 }
             }
