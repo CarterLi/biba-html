@@ -52,13 +52,7 @@
         };
 
         $scope.Preview = function (attachment) {
-            $modal.open({
-                templateUrl: 'Views/ImagePreviewer.html',
-                scope: $scope,
-                controller: function ($scope) {
-                    $scope.Attachment = attachment;
-                }
-            });
+            $scope.AttachmentToPreview = attachment;
         };
 
         $scope.Send = function () {
@@ -152,6 +146,18 @@ var Controllers;
     }
     Controllers.HomeController = HomeController;
 })(Controllers || (Controllers = {}));
+var Controllers;
+(function (Controllers) {
+    function ImagePreviewerController($scope) {
+        $scope.Close = function ($event) {
+            if (!$event || $event.target.classList.contains("dialog-body")) {
+                $scope.IsLoaded = false;
+                $scope.Attachment = null;
+            }
+        };
+    }
+    Controllers.ImagePreviewerController = ImagePreviewerController;
+})(Controllers || (Controllers = {}));
 var Managers;
 (function (Managers) {
     var Ajax = (function () {
@@ -235,6 +241,20 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             });
         }
     };
+}).directive('imagepreviewer', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'Views/ImagePreviewer.html',
+        scope: { Attachment: "=attachment" },
+        controller: Controllers.ImagePreviewerController,
+        link: function ($scope, $elem, $attrs) {
+            $elem.find("img").load(function (event) {
+                if ($scope.Attachment) {
+                    $scope.$apply('IsLoaded = true');
+                }
+            });
+        }
+    };
 }).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
     window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
 
@@ -242,17 +262,17 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
     $urlRouterProvider.otherwise('/');
     $stateProvider.state('Account', {
         url: '/Account',
-        controller: 'Controllers.AccountController',
+        controller: Controllers.AccountController,
         templateUrl: 'Views/Account.html'
     }).state('Home', {
         url: '/',
-        controller: 'Controllers.HomeController',
+        controller: Controllers.HomeController,
         templateUrl: 'Views/Home.html'
     }).state('Home.TextConversation', {
         url: 'TextConversations/:convId',
         views: {
             subView: {
-                controller: 'Controllers.ConversationController',
+                controller: Controllers.ConversationController,
                 templateUrl: 'Views/Conversation.html'
             }
         }

@@ -8,6 +8,7 @@ module Controllers {
         Conversation: Models.TextConversation;
         ChatInput: string;
         Attachment: File;
+        AttachmentToPreview: Models.Attachment;
 
         convForm: ng.IFormController;
 
@@ -74,13 +75,7 @@ module Controllers {
         };
 
         $scope.Preview = attachment=> {
-            $modal.open({
-                templateUrl: 'Views/ImagePreviewer.html',
-                scope: $scope,
-                controller: ($scope: any)=> {
-                    $scope.Attachment = attachment;
-                }
-            });
+            $scope.AttachmentToPreview = attachment;
         };
 
         $scope.Send = () => {

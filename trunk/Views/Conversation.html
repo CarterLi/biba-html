@@ -1,5 +1,8 @@
 ﻿<section id="conversation">
     <link type="text/css" rel="stylesheet" href="Styles/Conversation.css" />
+    
+    <imagepreviewer attachment="AttachmentToPreview" />
+
     <h2 ng-bind="Conversation.Receiver.FullName"></h2>
     <ul class="messages">
         <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}">
