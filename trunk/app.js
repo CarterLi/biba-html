@@ -152,6 +152,7 @@ var Controllers;
         $scope.Close = function ($event) {
             if (!$event || $event.target.classList.contains("dialog-body")) {
                 $scope.IsLoaded = false;
+                $scope.FileName = $scope.Attachment.Raw().filename;
                 $scope.Attachment = null;
             }
         };
