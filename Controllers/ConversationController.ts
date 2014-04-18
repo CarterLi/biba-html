@@ -24,8 +24,7 @@ module Controllers {
                                            $http: ng.IHttpService,
                                            $upload: any,
                                            $state: ng.ui.IStateService,
-                                           $stateParams: ng.ui.IStateParamsService,
-                                           $modal: ng.ui.bootstrap.IModalService) {
+                                           $stateParams: ng.ui.IStateParamsService) {
         var convId: number = parseInt($stateParams['convId'], 10);
         if ('Conversations' in $scope.$parent) {
             $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.filter(x=> x.Id === convId)[0];
