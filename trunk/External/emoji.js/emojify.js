@@ -90,10 +90,10 @@
             /* Given a match in a node, replace the text with an image */
             function insertEmojicon(node, match, emojiName) {
                 var emojiImg = document.createElement('img');
-                emojiImg.setAttribute('title', ':' + emojiName + ':');
+                emojiImg.setAttribute('title', match[0]);
+                emojiImg.setAttribute('alt', match[0]);
                 emojiImg.setAttribute('class', 'emoji');
                 emojiImg.setAttribute('src', defaultConfig.img_dir + '/' + emojiName + '.png');
-                emojiImg.setAttribute('align', 'absmiddle');
                 node.splitText(match.index);
                 node.nextSibling.nodeValue = node.nextSibling.nodeValue.substr(match[0].length, node.nextSibling.nodeValue.length);
                 emojiImg.appendChild(node.splitText(match.index));
