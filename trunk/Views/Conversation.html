@@ -5,13 +5,23 @@
 
     <h2 ng-bind="Conversation.Receiver.FullName"></h2>
     <ul class="messages">
-        <li ng-repeat="msg in Messages" ng-class="{sending: msg.IsNew}">
+        <li ng-class="{show: HasMoreMessages}">
+            <a ng-show="!IsLoadingMessages" href="javascript:;" ng-click="LoadHistory()"><img src="Images/Time-Machine-icon.png" /> <span ng-bind="HasMoreMessages?'Show More...':'No more messages'"></span></a>
+            <ul ng-show="IsLoadingMessages" class="clearfix">
+                <li class="barlittle" />
+                <li class="barlittle" />
+                <li class="barlittle" />
+                <li class="barlittle" />
+                <li class="barlittle" />
+            </ul>
+        </li>
+        <li ng-repeat="msg in Messages | orderBy : 'Id'" ng-class="{sending: msg.IsNew}">
             <div class="clearfix">
                 <span class="profile"><i ng-bind="msg.Profile.FullName"></i> says:</span>
-                <span class="state">{{'( '+msg.State+' )'}}</span>
+                <span class="state" ng-bind="'( '+msg.State+' )'"></span>
             </div>
             <div>
-                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" title="Click to download" download="{{msg.Attachment.Raw().filename}}">{{msg.Attachment.Raw().filename+' ( '+msg.Attachment.Filesize+' )'}}</a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><span ng-if="!msg.Raw().attachment_only" emoji autolink autoscrollintoview ng-bind="msg.Content"></span></pre>
+                <pre><a ng-if="msg.Attachment" ng-href="{{msg.Attachment.Url}}" title="Click to download" download="{{msg.Attachment.Raw().filename}}" ng-bind="msg.Attachment.Raw().filename+' ( '+msg.Attachment.Filesize+' )'"></a><br ng-if="msg.Attachment&&!msg.Raw().attachment_only" /><span ng-if="!msg.Raw().attachment_only" emoji autolink autoscrollintoview ng-bind="msg.Content"></span></pre>
                 <img ng-if="msg.Attachment.Raw().preview" ng-click="Preview(msg.Attachment)" ng-src="{{msg.Attachment.Raw().preview}}" />
             </div>
         </li>

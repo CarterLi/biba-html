@@ -1200,6 +1200,7 @@
     <Content Include="External\socket.io\test\support\server.js" />
     <Content Include="External\socket.io\test\url.js" />
     <Content Include="Images\attachment-icon.png" />
+    <Content Include="Images\Time-Machine-icon.png" />
     <Content Include="index.html" />
     <Content Include="Styles\Account.css" />
     <Content Include="Styles\Home.css" />
@@ -1215,6 +1216,7 @@
     <TypeScriptCompile Include="Controllers\AccountController.ts" />
     <TypeScriptCompile Include="Controllers\HomeController.ts" />
     <TypeScriptCompile Include="Controllers\ImagePreviewerController.ts" />
+    <TypeScriptCompile Include="Extensions\ArrayExtension.ts" />
     <TypeScriptCompile Include="External\angular-ui-bootstrap\angular-ui-bootstrap.d.ts" />
     <TypeScriptCompile Include="External\angular-ui\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-animate.d.ts" />
