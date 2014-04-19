@@ -5,7 +5,7 @@
             <li class="nav-header">Messages</li>
             <li ui-sref-active="active" ng-repeat="conv in Conversations">
                 <a ui-sref="Home.TextConversation({convId:conv.Id})">
-                    <useravatar profile="conv.Receiver" hide-email />
+                    <user-avatar profile="conv.Receiver" hide-email />
                 </a>
             </li>
         </ul>

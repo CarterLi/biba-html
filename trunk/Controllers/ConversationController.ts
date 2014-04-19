@@ -49,7 +49,7 @@ module Controllers {
                 $scope.Messages = data.map(x=> new Models.TextMessage(x));
                 $scope.IsLoadingMessages = false;
             });
-
+        
         $scope.FileSelected = $files=> {
             if ($files.length > 1) {
                 alert("Only one file is allowed");
@@ -132,6 +132,8 @@ module Controllers {
             }).success((data: Models.IRawTextMessage)=> {
                 // file is uploaded successfully
                 $scope.Messages[idx] = new Models.TextMessage(data);
+            }).error(()=> {
+                msg.Raw().state = 'Error';
             });
             $scope.ChatInput = "";
             $scope.Attachment = null;
