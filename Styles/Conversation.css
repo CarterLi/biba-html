@@ -57,6 +57,9 @@
     transform: scaleY(0);
     transition: all .5s .5s;
 }
+#conversation ul.messages > li.sending {
+    cursor: progress;
+}
 #conversation ul.messages > li > div:first-child > span {
     float: left;
 }
