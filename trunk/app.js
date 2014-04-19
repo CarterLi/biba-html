@@ -501,21 +501,25 @@ var Models;
 
         Object.defineProperty(Profile.prototype, "Availability", {
             get: function () {
-                switch (this.Model.presence_dot) {
-                    case 0:
-                        return "None";
-                    case 1:
-                        return "Unknown";
-                    case 2:
-                        return "Available";
-                    case 3:
-                        return "MayBeAway";
-                    case 4:
-                        return "Busy";
-                    case 5:
-                        return "Phone";
-                    default:
-                        return null;
+                if (this.IsRegistered) {
+                    switch (this.Model.presence_dot) {
+                        case 0:
+                            return "None";
+                        case 1:
+                            return "Unknown";
+                        case 2:
+                            return "Available";
+                        case 3:
+                            return "MayBeAway";
+                        case 4:
+                            return "Busy";
+                        case 5:
+                            return "Phone";
+                        default:
+                            return null;
+                    }
+                } else {
+                    return "Unregistered";
                 }
             },
             enumerable: true,

@@ -76,6 +76,11 @@
     max-width: 150px;
     align-self: flex-start;
     margin: 0 0 10px;
+
+    cursor: pointer;
+    cursor: -webkit-zoom-in;
+    cursor: -moz-zoom-in;
+    cursor: zoom-in;
 }
 #conversation form[name=convForm] {
     display: flex;
