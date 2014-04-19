@@ -19,7 +19,37 @@
     padding-right: 2px;
 }
 #conversation ul.messages > li {
+    display: block;
     word-wrap: break-word;
+}
+#conversation ul.messages > li:first-child {
+    text-align: center;
+    height: 21px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+#conversation ul.messages > li:first-child > ul {
+    list-style: none;
+    text-align: center;
+    height: 100%;
+}
+#conversation ul.messages > li:first-child a span {
+    vertical-align: middle;
+}
+#conversation ul.messages > li:first-child:not(.show) a {
+    color: #6d6d6d !important;
+    text-decoration: none;
+}
+#conversation ul.messages > li:first-child:not(.show) {
+    pointer-events: none;
+    -webkit-transform-origin: top;
+    transform-origin: top;
+    height: 0;
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    transition: all .5s .5s;
 }
 #conversation ul.messages > li > div:first-child > span {
     float: left;
@@ -59,4 +89,71 @@
     flex: 1;
     margin: 0 10px;
     padding: 2px 6px;
+}
+
+.barlittle {
+    background-image: linear-gradient(45deg, #08C 25%, #CCC);
+    border-left: 1px solid #EEE;
+    border-top: 1px solid #EEE;
+    border-right: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+    width: 12px;
+    height: 12px;
+    opacity: 0.1;
+    display: inline-block;
+    -webkit-transform: scale(0.7);
+    transform: scale(0.7);
+    -webkit-animation: barlittle_move 1s infinite linear;
+    animation: barlittle_move 1s infinite linear;
+}
+
+.barlittle:nth-child(1) {
+    -webkit-animation-delay: .4s;
+    animation-delay: .4s;
+}
+
+.barlittle:nth-child(2) {
+    -webkit-animation-delay: .3s;
+    animation-delay: .3s;
+}
+
+.barlittle:nth-child(3) {
+    -webkit-animation-delay: .2s;
+    animation-delay: .2s;
+}
+
+.barlittle:nth-child(4) {
+    -webkit-animation-delay: .3s;
+    animation-delay: .3s;
+}
+
+.barlittle:nth-child(5){
+    -webkit-animation-delay: .4s;
+    animation-delay: .4s;
+}
+
+@-webkit-keyframes barlittle_move {
+    from {
+        -webkit-transform: scale(1.2);
+        opacity: 1;
+    }
+
+    to {
+        -webkit-transform: scale(0.7);
+        opacity: 0.1;
+    }
+}
+
+@keyframes barlittle_move {
+    from {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    to {
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
+        opacity: 0.1;
+    }
 }

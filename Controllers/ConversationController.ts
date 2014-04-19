@@ -1,6 +1,8 @@
 ﻿/// <reference path="../External/angularjs/angular.d.ts" />
 /// <reference path="../External/angular-ui/angular-ui-router.d.ts" />
-/// <reference path="../external/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
+/// <reference path="../External/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
+
+/// <reference path="../Extensions/ArrayExtension.ts" />
 
 module Controllers {
     export interface IConversationScope extends ng.IScope {
@@ -9,6 +11,8 @@ module Controllers {
         ChatInput: string;
         Attachment: File;
         AttachmentToPreview: Models.Attachment;
+        HasMoreMessages: boolean;
+        IsLoadingMessages: boolean;
 
         convForm: ng.IFormController;
 
@@ -17,6 +21,7 @@ module Controllers {
         KeyDown($event: JQueryKeyEventObject): void;
         KeyPress($event: JQueryKeyEventObject): void;
         Preview(attachment: Models.Attachment): void;
+        LoadHistory(): void;
         Send(): void;
     }
 
@@ -26,8 +31,10 @@ module Controllers {
                                            $state: ng.ui.IStateService,
                                            $stateParams: ng.ui.IStateParamsService) {
         var convId: number = parseInt($stateParams['convId'], 10);
+        var page: number = 1;
+
         if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.filter(x=> x.Id === convId)[0];
+            $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.first(x=> x.Id === convId);
         }
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(
             (data: Models.IRawTextConversation)=> {
@@ -37,6 +44,7 @@ module Controllers {
             });
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
             (data: Array<Models.IRawTextMessage>) => {
+                $scope.HasMoreMessages = data.length > 0;
                 $scope.Messages = data.map(x=> new Models.TextMessage(x));
             });
 
@@ -75,6 +83,23 @@ module Controllers {
 
         $scope.Preview = attachment=> {
             $scope.AttachmentToPreview = attachment;
+        };
+
+        $scope.LoadHistory = () => {
+            $scope.IsLoadingMessages = true;
+            $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages?page=" + (++page)).success(
+                (data: Array<Models.IRawTextMessage>) => {
+                    $scope.IsLoadingMessages = false;
+                    $scope.HasMoreMessages = data.length > 0;
+                    data.forEach(x=> {
+                        var idx = $scope.Messages.findFirstIndex(msg=> msg.Id === x.id);
+                        if (idx === -1) {
+                            $scope.Messages.push(new Models.TextMessage(x));
+                        } else {
+                            $scope.Messages[idx] = new Models.TextMessage(x);
+                        }
+                    });
+                });
         };
 
         $scope.Send = () => {

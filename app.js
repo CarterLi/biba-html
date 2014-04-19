@@ -1,121 +1,36 @@
-﻿angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
-    return ({
-        priority: 10,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $scope.$watch($attrs['ngBind'], function () {
-                return window['emojify'].run($elem[0]);
-            });
-        }
-    });
-}).directive('autolink', function () {
-    return ({
-        priority: 5,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $scope.$watch($attrs['ngBind'], function () {
-                return $elem.html($elem.html()['autoLink']({ target: "_blank" }));
-            });
-        }
-    });
-}).directive('autofocus', function () {
-    return {
-        priority: 500,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $elem.focus();
-        }
-    };
-}).directive('autoscrollintoview', function () {
-    return {
-        priority: 500,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $scope.$watch($attrs['ngBind'], function () {
-                return $elem[0].scrollIntoView(true);
-            });
-        }
-    };
-}).directive('imagepreviewer', function () {
-    return {
-        restrict: 'E',
-        templateUrl: 'Views/ImagePreviewer.html',
-        scope: { Attachment: "=attachment" },
-        controller: Controllers.ImagePreviewerController,
-        link: function ($scope, $elem, $attrs) {
-            $elem.find("img").load(function (event) {
-                if ($scope.Attachment) {
-                    $scope.$apply('IsLoaded = true');
-                }
-            });
-        }
-    };
-}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+﻿var _this = this;
+Array.prototype.first = function () {
+    return _this[0];
+};
 
-    $httpProvider.defaults.headers.common.Accept = "application/json";
-    $urlRouterProvider.otherwise('/');
-    $stateProvider.state('Account', {
-        url: '/Account',
-        controller: Controllers.AccountController,
-        templateUrl: 'Views/Account.html'
-    }).state('Home', {
-        url: '/',
-        controller: Controllers.HomeController,
-        templateUrl: 'Views/Home.html'
-    }).state('Home.TextConversation', {
-        url: 'TextConversations/:convId',
-        views: {
-            subView: {
-                controller: Controllers.ConversationController,
-                templateUrl: 'Views/Conversation.html'
-            }
+Array.prototype.first = function (callbackfn) {
+    for (var i = 0; i < _this.length; ++i) {
+        var value = _this[i];
+        if (callbackfn(value, i, _this)) {
+            return value;
         }
-    });
-});
-var Controllers;
-(function (Controllers) {
-    function AccountController($scope, $state, $http) {
-        $scope.RelayUrl = Managers.Constants.RelayUrl;
-
-        var doSignIn = function (account) {
-            $http({
-                method: 'POST',
-                url: Managers.Constants.RelayUrl + "/sessions",
-                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
-            }).success(function (session) {
-                window.sessionStorage.setItem("Session", JSON.stringify(session));
-                Managers.UserManager.Session = new Models.Profile(session);
-                $state.go("Home");
-            });
-        };
-
-        $scope.OnSignIn = function () {
-            if ($scope.SignInForm.$valid) {
-                doSignIn($scope.SignIn);
-            }
-        };
-
-        $scope.OnCreateAccount = function () {
-            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
-                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
-                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
-                    doSignIn($scope.CreateAccount);
-                }).error(function (err) {
-                });
-            }
-        };
     }
-    Controllers.AccountController = AccountController;
-})(Controllers || (Controllers = {}));
+    return undefined;
+};
+
+Array.prototype.findFirstIndex = function (callbackfn) {
+    for (var i = 0; i < _this.length; ++i) {
+        if (callbackfn(_this[i], i, _this)) {
+            return i;
+        }
+    }
+    return -1;
+};
 var Controllers;
 (function (Controllers) {
     function ConversationController($scope, $http, $upload, $state, $stateParams) {
         var convId = parseInt($stateParams['convId'], 10);
+        var page = 1;
+
         if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = $scope.$parent.Conversations.filter(function (x) {
+            $scope.Conversation = $scope.$parent.Conversations.first(function (x) {
                 return x.Id === convId;
-            })[0];
+            });
         }
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(function (data) {
             $scope.Conversation = new Models.TextConversation(data);
@@ -123,6 +38,7 @@ var Controllers;
             $state.go('Home');
         });
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
+            $scope.HasMoreMessages = data.length > 0;
             $scope.Messages = data.map(function (x) {
                 return new Models.TextMessage(x);
             });
@@ -165,6 +81,24 @@ var Controllers;
             $scope.AttachmentToPreview = attachment;
         };
 
+        $scope.LoadHistory = function () {
+            $scope.IsLoadingMessages = true;
+            $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages?page=" + (++page)).success(function (data) {
+                $scope.IsLoadingMessages = false;
+                $scope.HasMoreMessages = data.length > 0;
+                data.forEach(function (x) {
+                    var idx = $scope.Messages.findFirstIndex(function (msg) {
+                        return msg.Id === x.id;
+                    });
+                    if (idx === -1) {
+                        $scope.Messages.push(new Models.TextMessage(x));
+                    } else {
+                        $scope.Messages[idx] = new Models.TextMessage(x);
+                    }
+                });
+            });
+        };
+
         $scope.Send = function () {
             var msg = new Models.TextMessage({
                 client_uuid: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -197,6 +131,41 @@ var Controllers;
         };
     }
     Controllers.ConversationController = ConversationController;
+})(Controllers || (Controllers = {}));
+var Controllers;
+(function (Controllers) {
+    function AccountController($scope, $state, $http) {
+        $scope.RelayUrl = Managers.Constants.RelayUrl;
+
+        var doSignIn = function (account) {
+            $http({
+                method: 'POST',
+                url: Managers.Constants.RelayUrl + "/sessions",
+                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
+            }).success(function (session) {
+                window.sessionStorage.setItem("Session", JSON.stringify(session));
+                Managers.UserManager.Session = new Models.Profile(session);
+                $state.go("Home");
+            });
+        };
+
+        $scope.OnSignIn = function () {
+            if ($scope.SignInForm.$valid) {
+                doSignIn($scope.SignIn);
+            }
+        };
+
+        $scope.OnCreateAccount = function () {
+            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
+                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
+                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
+                    doSignIn($scope.CreateAccount);
+                }).error(function (err) {
+                });
+            }
+        };
+    }
+    Controllers.AccountController = AccountController;
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
@@ -279,6 +248,81 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
+angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
+    return ({
+        priority: 10,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $scope.$watch($attrs['ngBind'], function () {
+                return window['emojify'].run($elem[0]);
+            });
+        }
+    });
+}).directive('autolink', function () {
+    return ({
+        priority: 5,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $scope.$watch($attrs['ngBind'], function () {
+                return $elem.html($elem.html()['autoLink']({ target: "_blank" }));
+            });
+        }
+    });
+}).directive('autofocus', function () {
+    return {
+        priority: 500,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $elem.focus();
+        }
+    };
+}).directive('autoscrollintoview', function () {
+    return {
+        priority: 500,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $scope.$watch($attrs['ngBind'], function () {
+                return $elem[0].scrollIntoView(true);
+            });
+        }
+    };
+}).directive('imagepreviewer', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'Views/ImagePreviewer.html',
+        scope: { Attachment: "=attachment" },
+        controller: Controllers.ImagePreviewerController,
+        link: function ($scope, $elem, $attrs) {
+            $elem.find("img").load(function (event) {
+                if ($scope.Attachment) {
+                    $scope.$apply('IsLoaded = true');
+                }
+            });
+        }
+    };
+}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+
+    $httpProvider.defaults.headers.common.Accept = "application/json";
+    $urlRouterProvider.otherwise('/');
+    $stateProvider.state('Account', {
+        url: '/Account',
+        controller: Controllers.AccountController,
+        templateUrl: 'Views/Account.html'
+    }).state('Home', {
+        url: '/',
+        controller: Controllers.HomeController,
+        templateUrl: 'Views/Home.html'
+    }).state('Home.TextConversation', {
+        url: 'TextConversations/:convId',
+        views: {
+            subView: {
+                controller: Controllers.ConversationController,
+                templateUrl: 'Views/Conversation.html'
+            }
+        }
+    });
+});
 var Managers;
 (function (Managers) {
     Managers.Constants = {
