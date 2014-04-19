@@ -26,6 +26,7 @@ var Controllers;
     function ConversationController($scope, $http, $upload, $state, $stateParams) {
         var convId = parseInt($stateParams['convId'], 10);
         var page = 1;
+        $scope.IsLoadingMessages = true;
 
         if ('Conversations' in $scope.$parent) {
             $scope.Conversation = $scope.$parent.Conversations.first(function (x) {
@@ -42,6 +43,7 @@ var Controllers;
             $scope.Messages = data.map(function (x) {
                 return new Models.TextMessage(x);
             });
+            $scope.IsLoadingMessages = false;
         });
 
         $scope.FileSelected = function ($files) {
