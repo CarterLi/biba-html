@@ -32,6 +32,7 @@ module Controllers {
                                            $stateParams: ng.ui.IStateParamsService) {
         var convId: number = parseInt($stateParams['convId'], 10);
         var page: number = 1;
+        $scope.IsLoadingMessages = true;
 
         if ('Conversations' in $scope.$parent) {
             $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.first(x=> x.Id === convId);
@@ -46,6 +47,7 @@ module Controllers {
             (data: Array<Models.IRawTextMessage>) => {
                 $scope.HasMoreMessages = data.length > 0;
                 $scope.Messages = data.map(x=> new Models.TextMessage(x));
+                $scope.IsLoadingMessages = false;
             });
 
         $scope.FileSelected = $files=> {

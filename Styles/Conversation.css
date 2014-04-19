@@ -8,6 +8,9 @@
     top: 0;
     bottom: 0;
 }
+#conversation.busy {
+    cursor: wait;
+}
 #conversation ul.messages {
     flex: 1;
     overflow: hidden;
