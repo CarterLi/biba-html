@@ -32,6 +32,9 @@ body {
 header {
     margin-bottom: 10px !important;
 }
+header .btn {
+    float: right;
+}
 footer {
     margin-top: 5px;
     text-align: center;
