@@ -2,9 +2,11 @@
     <link rel="stylesheet" type="text/css" href="Styles/Home.css" />
     <aside class="pa-sidebar well well-small">
         <ul class="left nav nav-list">
-            <li class="nav-header">Conversations</li>
+            <li class="nav-header">Messages</li>
             <li ui-sref-active="active" ng-repeat="conv in Conversations">
-                <a ui-sref="Home.TextConversation({convId:conv.Id})" ng-bind="conv.Receiver.FullName"></a>
+                <a ui-sref="Home.TextConversation({convId:conv.Id})">
+                    <useravatar profile="conv.Receiver" hide-email />
+                </a>
             </li>
         </ul>
     </aside>

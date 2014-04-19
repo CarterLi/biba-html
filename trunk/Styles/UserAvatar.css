@@ -1,0 +1,58 @@
+﻿section.user-avatar {
+    display: flex;
+    flex-direction: row;
+}
+section.user-avatar > div.left {
+    position: relative;
+    width: 20px;
+}
+section.user-avatar > div.left div {
+    position: absolute;
+    left: 2px;
+    top: calc(50% - 7px);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: white 2px solid;
+    background: #E6E6E6;
+}
+section.user-avatar > div.left div[data-presence='Available'] {
+    background: green;
+}
+section.user-avatar > div.left div[data-presence='Busy'] {
+    background: darkred;
+}
+section.user-avatar > div.left div[data-presence='MayBeAway'] {
+    background: #FBB03B;
+}
+section.user-avatar > div.left div[data-presence='Phone'] {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB/UlEQVR42n2TOcsaQRiAxyNEIkgiKdwsfG6ZVkUkrT/Bysb7ALHyvq+/IIKksRJBwRt7G4Oo8NmmM2QTTYqgIMHglXeGrOwQ2IGHOXbfZ2bed1eGRG273brlcrkJSbT7/f6s0+kawlwmDCqVyttAIPBTvLbZbEiv1+uRTPZYvrfbbSYSifygBOVymfX7/fx6vUbH4xHvhG63G+kF1Go1slgsqNPpcNFo9AslKJVKrM/n48PhMLpcLiT4er0+wHNMq9VC3W6Xi8VitKBYLBKB0+l8BIgD8fh8PqPxeIx6vR4Xj8dpQaFQYL1eL2+z2R5BAvhEOBj30+kU9ft9LpFI0IJ8Ps96PB7earUK2X6cQJyP2WyGBoMBl0wmaUEul2PdbjdvNpulqojm8zkaDodcKpWiBdlslghMJsnPAC0WCyJIp9O0IJPJsC6XizcajZKC5XKJRqMRB+/TAjCyUAHeYDBIClarFa4EByemBXAnIggGg5KCer1OTgBJpwWQVdbhcPDilxuNBlIoFAiuRklwFaDs/+Xgnd1u/ybMcclCoRBSKpWoVqtRgslk8gRX+EoE1WpVrdVqGdjpDcMwH1Uq1XtYl+Nnh8OB/EQajYY4gdvpdPq82+2C8FH92u/3W1mz2eTgwQeAAV4Dr4CXwIt/ItxuwBn4A/wG9sB34NNfKBId8J1u7y8AAAAASUVORK5CYII=');
+    border-radius: 0;
+    border: 0;
+    left: 1px;
+    top: calc(50% - 8px);
+    height: 16px;
+    width: 16px;
+}
+useravatar:not([hide-email]) section.user-avatar > div.left div {
+    top: calc(25% - 7px);
+}
+useravatar:not([hide-email]) section.user-avatar > div.left div[data-presence='Phone'] {
+    top: calc(25% - 8px);
+}
+section.user-avatar > div.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+section.user-avatar > div.right > div.fullname {
+    font: 14px "Segoe UI SemiBold";
+    flex: 1;
+}
+section.user-avatar > div.right > div.email {
+    font: 14px "Segoe UI";
+    flex: 1;
+}
+useravatar[hide-email] section.user-avatar > div.right > div.email {
+    display: none;
+}

@@ -1205,10 +1205,12 @@
     <Content Include="Styles\Account.css" />
     <Content Include="Styles\Home.css" />
     <Content Include="Styles\ImagePreviewer.css" />
+    <Content Include="Styles\UserAvatar.css" />
     <Content Include="Views\Conversation.html" />
     <Content Include="Views\Account.html" />
     <Content Include="Views\Home.html" />
     <Content Include="Views\ImagePreviewer.html" />
+    <Content Include="Views\UserAvatar.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
