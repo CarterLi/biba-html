@@ -356,6 +356,12 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             }
         }
     });
+}).controller('AppController', function ($scope, $state) {
+    $scope['Logout'] = function () {
+        window.sessionStorage.removeItem("Session");
+        Managers.UserManager.Session = null;
+        $state.go("Account");
+    };
 });
 var Managers;
 (function (Managers) {

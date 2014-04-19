@@ -22,6 +22,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+#home > .pa-sidebar > .left > li.nav-header {
+    overflow: visible;
+}
+#home > .pa-sidebar > .left > li.nav-header > .btn {
+    float: right;
+    margin-right: -25px;
+    margin-top: -2px;
+}
 #home > .right {
     margin-left: 10px;
     flex: 1;

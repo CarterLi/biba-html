@@ -42,11 +42,12 @@
 
         <script type="text/javascript" src="app.js"></script>
     </head>
-    <body>
+    <body ng-controller="AppController">
         <header class="navbar navbar-static-top">
             <div class="navbar-inner">
                 <div class="container">
                     <a class="brand" ui-sref="Home" ui-sref-opts="{reload: true}">Biba</a>
+                    <input type="button" class="btn" value="Logout" ng-click="Logout()"/>
                 </div>
             </div>
         </header>
