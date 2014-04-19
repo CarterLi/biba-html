@@ -3,7 +3,7 @@
     
     <imagepreviewer attachment="AttachmentToPreview" />
 
-    <h2 ng-bind="Conversation.Receiver.FullName"></h2>
+    <h3><span ng-bind="Conversation.Receiver.FullName"></span></h3>
     <ul class="messages">
         <li ng-class="{show: HasMoreMessages}">
             <a ng-show="!IsLoadingMessages" href="javascript:;" ng-click="LoadHistory()"><img src="Images/Time-Machine-icon.png" /> <span ng-bind="HasMoreMessages?'Show More...':'No more messages'"></span></a>

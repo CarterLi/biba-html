@@ -11,6 +11,9 @@
 #conversation.busy {
     cursor: wait;
 }
+#conversation h3 {
+    margin-left: 10px;
+}
 #conversation ul.messages {
     flex: 1;
     overflow: hidden;

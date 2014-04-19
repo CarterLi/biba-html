@@ -33,6 +33,7 @@
 #ImagePreviewer .img-wrapper {
 	position: relative;
 	display: inline-block;
+    z-index: 1;
 }
 #ImagePreviewer img {
     max-width: 800px;
@@ -70,14 +71,12 @@
     opacity: 0;
 }
 #ImagePreviewer div.dialog-body div.desc-wrapper {
-    position: relative;
-    z-index: -1;
-	top: 12px;
+	margin-top: 12px;
 	transition: all .3s .7s;
 }
 #ImagePreviewer div.dialog-body.loading div.desc-wrapper {
 	opacity: 0;
-	top: -28px;
+	margin-top: -28px;
     pointer-events: none;
 
     transition-delay: 0;
@@ -123,24 +122,20 @@ div.spn-pulse::before, div.spn-pulse::after {
     right: 0;
     top: 0;
     bottom: 0;
-}
-div.spn-pulse::before {
+
     background-color: transparent;
     border: 5px solid rgba(255,255,255,0.9);
     opacity: .9;
-    border-right: 5px solid transparent;
     border-left: 5px solid transparent;
-    border-radius: 50px;
+    border-right: 5px solid transparent;
+    border-radius: 50%;
+}
+div.spn-pulse::before {
     box-shadow: 0 0 35px white;
     -webkit-animation: spinPulse 1s infinite ease-in-out;
     animation: spinPulse 1s infinite ease-in-out;
 }
 div.spn-pulse::after {
-    background-color: transparent;
-    border: 5px solid rgba(255,255,255,0.9);
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-radius: 50px;
     box-shadow: 0 0 15px white;
     margin: 10px;
     -webkit-animation: spinoffPulse 1s infinite linear;
