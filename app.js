@@ -302,6 +302,14 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             });
         }
     };
+}).directive('useravatar', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'Views/UserAvatar.html',
+        scope: {
+            Profile: "=profile"
+        }
+    };
 }).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
     window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
 

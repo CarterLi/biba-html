@@ -38,6 +38,9 @@ footer {
     font-size: small;
     font-style: italic;
 }
+footer hr {
+    margin: 0 1px 0 0;
+}
 img.emoji {
     height: 20px;
     vertical-align: text-bottom;

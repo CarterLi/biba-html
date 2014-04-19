@@ -21,17 +21,17 @@
 /// <reference path="External/angular-ui/angular-ui-router.d.ts" />
 
 angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
-    .directive('emoji', () => ({
+    .directive('emoji', ()=> ({
         priority: 10,
         restrict: 'A',
-        link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+        link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
             $scope.$watch($attrs['ngBind'], ()=> window['emojify'].run($elem[0]));
         }
     }))
-    .directive('autolink', () => ({
+    .directive('autolink', ()=> ({
         priority: 5,
         restrict: 'A',
-        link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+        link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
             $scope.$watch($attrs['ngBind'], ()=> $elem.html($elem.html()['autoLink']({ target: "_blank" })));
         }
     }))
@@ -48,7 +48,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
         return {
             priority: 500,
             restrict: 'A', // only activate on element attribute
-            link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+            link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
                 $scope.$watch($attrs['ngBind'], ()=> $elem[0].scrollIntoView(true));
             }
         };
@@ -59,7 +59,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             templateUrl: 'Views/ImagePreviewer.html',
             scope: { Attachment: "=attachment" },
             controller: Controllers.ImagePreviewerController,
-            link: ($scope: Controllers.IImagePreviewerScope, $elem: JQuery, $attrs: ng.IAttributes) => {
+            link: ($scope: Controllers.IImagePreviewerScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
                 $elem.find("img").load(event=> {
                     if ($scope.Attachment) {
                         // User might have closed the previewer
@@ -67,6 +67,15 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
                     }
                 });
             }
+        };
+    })
+    .directive('useravatar', ()=> {
+        return {
+            restrict: 'E',
+            templateUrl: 'Views/UserAvatar.html',
+            scope: {
+                Profile: "=profile"
+            },
         };
     })
     .config(($httpProvider: ng.IHttpProvider, $stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
