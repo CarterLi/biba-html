@@ -127,6 +127,8 @@ var Controllers;
                 }
             }).success(function (data) {
                 $scope.Messages[idx] = new Models.TextMessage(data);
+            }).error(function () {
+                msg.Raw().state = 'Error';
             });
             $scope.ChatInput = "";
             $scope.Attachment = null;
@@ -275,7 +277,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
         priority: 500,
         restrict: 'A',
         link: function ($scope, $elem, $attrs) {
-            $elem.focus();
+            $elem[0].focus();
         }
     };
 }).directive('autoscrollintoview', function () {
@@ -288,7 +290,29 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             });
         }
     };
-}).directive('imagepreviewer', function () {
+}).directive('contenteditable', function () {
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function (scope, element, attrs, ngModel) {
+            if (!ngModel)
+                return;
+
+            ngModel.$render = function () {
+                element.html(ngModel.$viewValue || '');
+            };
+
+            element.on('blur keyup change', function () {
+                scope.$apply(read);
+            });
+            read();
+
+            function read() {
+                ngModel.$setViewValue(element[0].innerText);
+            }
+        }
+    };
+}).directive('imagePreviewer', function () {
     return {
         restrict: 'E',
         templateUrl: 'Views/ImagePreviewer.html',
@@ -302,7 +326,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             });
         }
     };
-}).directive('useravatar', function () {
+}).directive('userAvatar', function () {
     return {
         restrict: 'E',
         templateUrl: 'Views/UserAvatar.html',

@@ -40,7 +40,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             priority: 500,
             restrict: 'A', // only activate on element attribute
             link: ($scope: ng.IScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
-                $elem.focus();
+                $elem[0].focus();
             }
         };
     })
@@ -53,7 +53,33 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             }
         };
     })
-    .directive('imagepreviewer', ()=> {
+    .directive('contenteditable', ()=> {
+        return {
+            restrict: 'A', // only activate on element attribute
+            require: '?ngModel', // get a hold of NgModelController
+            link: (scope: ng.IScope, element: JQuery, attrs: ng.IAttributes, ngModel: ng.INgModelController)=> {
+                if (!ngModel) return; // do nothing if no ng-model
+
+                // Specify how UI should be updated
+                ngModel.$render = ()=> {
+                    element.html(ngModel.$viewValue || '');
+                };
+
+                // Listen for change events to enable binding
+                element.on('blur keyup change', ()=> {
+                    scope.$apply(read);
+                });
+                read(); // initialize
+
+                // Write data to the model
+                function read() {
+                    ngModel.$setViewValue(element[0].innerText);
+                }
+
+            }
+        };
+    })
+    .directive('imagePreviewer', ()=> {
         return {
             restrict: 'E',
             templateUrl: 'Views/ImagePreviewer.html',
@@ -69,7 +95,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             }
         };
     })
-    .directive('useravatar', ()=> {
+    .directive('userAvatar', ()=> {
         return {
             restrict: 'E',
             templateUrl: 'Views/UserAvatar.html',

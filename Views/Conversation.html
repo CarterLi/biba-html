@@ -1,7 +1,7 @@
 ﻿<section id="conversation" ng-class="{busy: IsLoadingMessages}">
     <link type="text/css" rel="stylesheet" href="Styles/Conversation.css" />
     
-    <imagepreviewer attachment="AttachmentToPreview" />
+    <image-previewer attachment="AttachmentToPreview"></image-previewer>
 
     <h3><span ng-bind="Conversation.Receiver.FullName"></span></h3>
     <ul class="messages">
@@ -15,7 +15,7 @@
                 <li class="barlittle" />
             </ul>
         </li>
-        <li ng-repeat="msg in Messages | orderBy : 'Id'" ng-class="{sending: msg.IsNew}">
+        <li ng-repeat="msg in Messages | orderBy : 'Id'" ng-class="{sending: msg.IsNew && msg.State!='Error'}">
             <div class="clearfix">
                 <span class="profile"><i ng-bind="msg.Profile.FullName"></i> says:</span>
                 <span class="state" ng-bind="'( '+msg.State+' )'"></span>
@@ -32,7 +32,7 @@
             <span ng-show="Attachment" ng-bind="Attachment.name"></span>
         </button>
         <input id="inputFile" type="file" ng-file-select="FileSelected($files)" hidden />
-        <textarea autofocus ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" rows="1" required></textarea>
+        <div class="textarea" contenteditable strip-br replace-br autofocus ng-file-drop="FileSelected($files)" ng-model="ChatInput" ng-keypress="KeyPress($event)" ng-keydown="KeyDown($event)" required></div>
         <button class="btn btn-primary btn-small" type="submit" ng-click="Send()" ng-disabled="convForm.$invalid && !Attachment">Send</button>
     </form>
 </section>
