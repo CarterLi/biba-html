@@ -5,6 +5,7 @@ module Controllers {
 
     export interface IHomeScope extends ng.IScope {
         Conversations: Array<Models.TextConversation>;
+        Contacts: Array<Models.Profile>;
     }
 
     export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
@@ -23,6 +24,12 @@ module Controllers {
                 $scope.Conversations = data
                     .map(x=> new Models.TextConversation(x))
                     .filter(x=> !x.IsGroupChat);
+            });
+
+        $http.get(Managers.Constants.RelayUrl + "/profiles/0/contacts").success(
+            (data: Array<Models.IRawProfile>) => {
+                $scope.Contacts = data
+                    .map(x=> new Models.Profile(x));
             });
     }
 }

@@ -191,6 +191,12 @@ var Controllers;
                 return !x.IsGroupChat;
             });
         });
+
+        $http.get(Managers.Constants.RelayUrl + "/profiles/0/contacts").success(function (data) {
+            $scope.Contacts = data.map(function (x) {
+                return new Models.Profile(x);
+            });
+        });
     }
     Controllers.HomeController = HomeController;
 })(Controllers || (Controllers = {}));
