@@ -16,13 +16,7 @@
 }
 #conversation ul.messages {
     flex: 1;
-    overflow: hidden;
     margin-right: 25px;
-}
-#conversation ul.messages:hover {
-    overflow-y: auto;
-    /* Chrome bug */
-    padding-right: 2px;
 }
 #conversation ul.messages > li {
     display: block;

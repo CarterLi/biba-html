@@ -28,6 +28,7 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
+    overflow: hidden;
 }
 header {
     margin-bottom: 10px !important;
@@ -62,4 +63,32 @@ img.emoji {
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+ul.scroll {
+    overflow-y: scroll;
+}
+ul.scroll.auto-scroll {
+    overflow-y: hidden;
+    padding-right: 1px;
+}
+ul.scroll.auto-scroll:hover {
+    overflow-y: auto;
+}
+ul.scroll::-webkit-scrollbar {
+    width: 14px;
+}
+ul.scroll::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+ul.scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+ul.scroll::-webkit-scrollbar-thumb:hover {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+}
+ul.scroll::-webkit-scrollbar-thumb:active {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
 }

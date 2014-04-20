@@ -1,4 +1,7 @@
-﻿section.user-avatar {
+﻿user-avatar {
+    display: block;
+}
+section.user-avatar {
     display: flex;
     flex-direction: row;
 }
@@ -51,13 +54,17 @@ section.user-avatar > div.right {
     display: flex;
     flex-direction: column;
 }
+section.user-avatar > div.right > div {
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 section.user-avatar > div.right > div.fullname {
     font: 14px "Segoe UI SemiBold";
-    flex: 1;
 }
 section.user-avatar > div.right > div.email {
     font: 14px "Segoe UI";
-    flex: 1;
 }
 user-avatar[hide-email] section.user-avatar > div.right > div.email {
     display: none;
