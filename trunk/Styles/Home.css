@@ -57,12 +57,12 @@
 }
 #newMessage ~ .btn ~ .popover .popover-content > ul {
     list-style: none;
-    margin: 0;
+    margin: 10px 0 0 0;
     max-height: 400px;
     transition: .005s .5s margin ease-in, .2s .505s max-height ease-out;
 }
-#newMessage ~ .btn ~ .popover .popover-content > ul:not(:empty) {
-    margin-top: 10px;
+#newMessage ~ .btn ~ .popover .popover-content > ul:empty {
+    display: none;
 }
 #newMessage:not(:checked) ~ .btn ~ .popover .popover-content > ul {
     max-height: 0;

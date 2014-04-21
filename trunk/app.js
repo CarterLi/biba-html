@@ -1,26 +1,30 @@
-﻿var _this = this;
-Array.prototype.first = function () {
-    return _this[0];
-};
+﻿if (typeof Array.prototype.first != "function") {
+    Array.prototype.first = function (callbackfn) {
+        if (callbackfn) {
+            for (var i = 0; i < this.length; ++i) {
+                var value = this[i];
+                if (callbackfn(value, i, this)) {
+                    return value;
+                }
+            }
 
-Array.prototype.first = function (callbackfn) {
-    for (var i = 0; i < _this.length; ++i) {
-        var value = _this[i];
-        if (callbackfn(value, i, _this)) {
-            return value;
+            return undefined;
+        } else {
+            return this[0];
         }
-    }
-    return undefined;
-};
+    };
+}
 
-Array.prototype.findFirstIndex = function (callbackfn) {
-    for (var i = 0; i < _this.length; ++i) {
-        if (callbackfn(_this[i], i, _this)) {
-            return i;
+if (typeof Array.prototype.findFirstIndex != "function") {
+    Array.prototype.findFirstIndex = function (callbackfn) {
+        for (var i = 0; i < this.length; ++i) {
+            if (callbackfn(this[i], i, this)) {
+                return i;
+            }
         }
-    }
-    return -1;
-};
+        return -1;
+    };
+}
 var Controllers;
 (function (Controllers) {
     function ConversationController($scope, $http, $upload, $state, $stateParams) {
@@ -173,7 +177,7 @@ var Controllers;
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
-    function HomeController($scope, $state, $http) {
+    function HomeController($scope, $state, $http, $timeout) {
         if (!Managers.UserManager.Session) {
             var session = JSON.parse(window.sessionStorage.getItem("Session"));
             if (session && session.id) {
@@ -197,6 +201,25 @@ var Controllers;
                 return new Models.Profile(x);
             });
         });
+
+        (function () {
+            var filterTextTimeout;
+            var tempFilterText;
+
+            $scope.$watch('ContactsFilterText', function (val) {
+                if (filterTextTimeout)
+                    $timeout.cancel(filterTextTimeout);
+
+                tempFilterText = val;
+                filterTextTimeout = $timeout(function () {
+                    $scope.DoContactsFilterText = tempFilterText;
+                }, 400);
+            });
+        })();
+
+        $scope.ContactsFilterPredicate = function (contact) {
+            return !$scope.ContactsFilterText || contact.FullName.startsWithIgnoreCase($scope.DoContactsFilterText) || (contact.Raw().last_name && contact.Raw().last_name.startsWithIgnoreCase($scope.DoContactsFilterText)) || contact.Email.startsWithIgnoreCase($scope.DoContactsFilterText) || contact.EmailDomain.startsWithIgnoreCase($scope.DoContactsFilterText);
+        };
     }
     Controllers.HomeController = HomeController;
 })(Controllers || (Controllers = {}));
@@ -213,6 +236,29 @@ var Controllers;
     }
     Controllers.ImagePreviewerController = ImagePreviewerController;
 })(Controllers || (Controllers = {}));
+if (typeof String.prototype.startsWith != 'function') {
+    String.prototype.startsWith = function (str) {
+        return this.slice(0, str.length) === str;
+    };
+}
+
+if (typeof String.prototype.startsWithIgnoreCase != 'function') {
+    String.prototype.startsWithIgnoreCase = function (str) {
+        return this.slice(0, str.length).toUpperCase() === str.toUpperCase();
+    };
+}
+
+if (typeof String.prototype.endsWith != 'function') {
+    String.prototype.endsWith = function (str) {
+        return this.slice(-str.length) === str;
+    };
+}
+
+if (typeof String.prototype.endsWithIgnoreCase != 'function') {
+    String.prototype.endsWithIgnoreCase = function (str) {
+        return this.slice(-str.length).toUpperCase() === str.toUpperCase();
+    };
+}
 var Managers;
 (function (Managers) {
     var Ajax = (function () {
@@ -514,6 +560,17 @@ var Models;
         Object.defineProperty(Profile.prototype, "Email", {
             get: function () {
                 return this.Model.email;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Profile.prototype, "EmailDomain", {
+            get: function () {
+                if (this._emailDomain === undefined) {
+                    this._emailDomain = this.Email.split('@')[1];
+                }
+                return this._emailDomain;
             },
             enumerable: true,
             configurable: true

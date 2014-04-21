@@ -12,10 +12,12 @@
                 <div class="popover-inner">
                     <h3 class="popover-title">Contacts</h3>
                     <div class="popover-content">
-                        <input type="search" ng-model="ContactsFilter" placeholder="Filter your contacts"/>
-                        <ul class="scroll"><li ng-repeat="profile in Contacts | filter:ContactsFilter">
-                                <user-avatar profile="profile" />
-                        </li></ul>
+                        <input type="search" ng-model="ContactsFilterText" placeholder="Filter your contacts" />
+                        <ul class="scroll"><!--
+                         --><li ng-repeat="contact in Contacts | filter:ContactsFilterPredicate">
+                                <user-avatar profile="contact" />
+                            </li><!--
+                     --></ul>
                     </div>
                 </div>
             </div>

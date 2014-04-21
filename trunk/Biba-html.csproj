@@ -1219,6 +1219,7 @@
     <TypeScriptCompile Include="Controllers\HomeController.ts" />
     <TypeScriptCompile Include="Controllers\ImagePreviewerController.ts" />
     <TypeScriptCompile Include="Extensions\ArrayExtension.ts" />
+    <TypeScriptCompile Include="Extensions\StringExtensions.ts" />
     <TypeScriptCompile Include="External\angular-ui-bootstrap\angular-ui-bootstrap.d.ts" />
     <TypeScriptCompile Include="External\angular-ui\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="External\angularjs\angular-animate.d.ts" />
@@ -1291,7 +1292,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1165</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

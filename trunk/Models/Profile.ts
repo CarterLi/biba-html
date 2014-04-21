@@ -2,6 +2,8 @@
 
     export interface IRawProfile extends IRawBibaModel {
         email: string;
+        first_name: string;
+        last_name: string;
         full_name: string;
         "registered?": boolean;
         presence_dot: number;
@@ -23,6 +25,15 @@
 
         get Email(): string {
             return this.Model.email;
+        }
+
+        private _emailDomain: string;
+
+        get EmailDomain(): string {
+            if (this._emailDomain === undefined) {
+                this._emailDomain = this.Email.split('@')[1];
+            }
+            return this._emailDomain;
         }
 
         get FullName(): string {
