@@ -8,8 +8,10 @@ module Controllers {
         Contacts: Array<Models.Profile>;
         ContactsFilterText: string;
         DoContactsFilterText: string;
+        IsNewConversationOpen: boolean;
 
-        ContactsFilterPredicate: (contact: Models.Profile)=> boolean;
+        ContactsFilterPredicate(contact: Models.Profile): boolean;
+        OpenConversation(contact: Models.Profile): void;
     }
 
     export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService, $timeout: ng.ITimeoutService) {
@@ -47,16 +49,27 @@ module Controllers {
                 tempFilterText = val;
                 filterTextTimeout = $timeout(() => {
                     $scope.DoContactsFilterText = tempFilterText;
-                }, 400); // delay 250 ms
+                }, 400); // delay 400 ms
             });
         })();
 
         $scope.ContactsFilterPredicate = contact=> {
-            return !$scope.ContactsFilterText
+            return !$scope.DoContactsFilterText
                 || contact.FullName.startsWithIgnoreCase($scope.DoContactsFilterText)
                 || (contact.Raw().last_name && contact.Raw().last_name.startsWithIgnoreCase($scope.DoContactsFilterText))
                 || contact.Email.startsWithIgnoreCase($scope.DoContactsFilterText)
                 || contact.EmailDomain.startsWithIgnoreCase($scope.DoContactsFilterText);
+        };
+
+        $scope.OpenConversation = contact=> {
+            var conv = $scope.Conversations.first(x=> x.Receiver.Id === contact.Id);
+            if (conv) {
+                $state.go("Home.TextConversation", {
+                    convId: conv.Id
+                });
+                $scope.IsNewConversationOpen = false;
+                $scope.ContactsFilterText = '';
+            }
         };
     }
 }

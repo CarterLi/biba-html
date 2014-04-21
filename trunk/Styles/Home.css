@@ -5,9 +5,8 @@
     height: 100%;
 }
 #home > .pa-sidebar {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    max-height: 100%;
+    align-self: flex-start;
 }
 #home > .pa-sidebar > div.nav-header {
     position: relative;
@@ -82,7 +81,6 @@
     background-color: #F5F5F5;
 }
 #home > .pa-sidebar > .left {
-    height: 100%;
     width: 260px;
     position: relative;
 }
