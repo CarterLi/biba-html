@@ -4,7 +4,7 @@
         <div class="nav-header clearfix">
             <span>Messages</span>
 
-            <input id="newMessage" type="checkbox" hidden />
+            <input id="newMessage" type="checkbox" ng-model="IsNewConversationOpen" hidden />
             <label for="newMessage" class="btn btn-mini">New</label>
             <div class="popover right fade in">
                 <div class="arrow"></div>
@@ -14,7 +14,7 @@
                     <div class="popover-content">
                         <input type="search" ng-model="ContactsFilterText" placeholder="Filter your contacts" />
                         <ul class="scroll"><!--
-                         --><li ng-repeat="contact in Contacts | filter:ContactsFilterPredicate">
+                         --><li ng-repeat="contact in Contacts | filter:ContactsFilterPredicate" ng-click="OpenConversation(contact)">
                                 <user-avatar profile="contact" />
                             </li><!--
                      --></ul>
@@ -23,7 +23,7 @@
             </div>
         </div>
         <ul class="left nav nav-list scroll auto-scroll">
-            <li ui-sref-active="active" ng-repeat="conv in Conversations">
+            <li ui-sref-active="active" ng-repeat="conv in Conversations | limitTo: 10">
                 <a ui-sref="Home.TextConversation({convId:conv.Id})">
                     <user-avatar profile="conv.Receiver" hide-email />
                 </a>

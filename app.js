@@ -218,7 +218,20 @@ var Controllers;
         })();
 
         $scope.ContactsFilterPredicate = function (contact) {
-            return !$scope.ContactsFilterText || contact.FullName.startsWithIgnoreCase($scope.DoContactsFilterText) || (contact.Raw().last_name && contact.Raw().last_name.startsWithIgnoreCase($scope.DoContactsFilterText)) || contact.Email.startsWithIgnoreCase($scope.DoContactsFilterText) || contact.EmailDomain.startsWithIgnoreCase($scope.DoContactsFilterText);
+            return !$scope.DoContactsFilterText || contact.FullName.startsWithIgnoreCase($scope.DoContactsFilterText) || (contact.Raw().last_name && contact.Raw().last_name.startsWithIgnoreCase($scope.DoContactsFilterText)) || contact.Email.startsWithIgnoreCase($scope.DoContactsFilterText) || contact.EmailDomain.startsWithIgnoreCase($scope.DoContactsFilterText);
+        };
+
+        $scope.OpenConversation = function (contact) {
+            var conv = $scope.Conversations.first(function (x) {
+                return x.Receiver.Id === contact.Id;
+            });
+            if (conv) {
+                $state.go("Home.TextConversation", {
+                    convId: conv.Id
+                });
+                $scope.IsNewConversationOpen = false;
+                $scope.ContactsFilterText = '';
+            }
         };
     }
     Controllers.HomeController = HomeController;
