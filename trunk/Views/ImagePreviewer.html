@@ -4,7 +4,7 @@
         <div class="dialog-body" ng-class="{loading: !IsLoaded}">
             <div class="img-wrapper">
                 <img ng-src="{{Attachment.Url}}" />
-                <div class="close-button"><div class="X" ng-click="Close()"></div></div>
+                <div class="X close-button" ng-click="Close()"></div>
             </div>
             <div class="circle"><div class="spn-pulse"></div></div>
             <div class="desc-wrapper"><a class="desc" title="Download" ng-href="{{Attachment.Url}}" ng-bind="Attachment.Raw().filename || FileName" download="{{Attachment.Raw().filename}}"></a></div>

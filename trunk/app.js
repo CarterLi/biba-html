@@ -249,6 +249,10 @@ var Controllers;
             $scope.IsNewConversationOpen = false;
         };
 
+        $scope.CloseConversation = function (conv) {
+            $scope.ActiveConversations.splice($scope.ActiveConversations.indexOf(conv), 1);
+        };
+
         $scope.IsNewConversationOpenChanged = function () {
             if ($scope.IsNewConversationOpen) {
                 $("#newMessage + .pop-over input[type=search]").focus();
