@@ -33,7 +33,7 @@ var Controllers;
         $scope.IsLoadingMessages = true;
 
         if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = $scope.$parent.Conversations.first(function (x) {
+            $scope.Conversation = $scope.$parent.ActiveConversations.first(function (x) {
                 return x.Id === convId;
             });
         }
@@ -178,6 +178,8 @@ var Controllers;
 var Controllers;
 (function (Controllers) {
     function HomeController($scope, $state, $http, $timeout) {
+        var conversations;
+
         if (!Managers.UserManager.Session) {
             var session = JSON.parse(window.sessionStorage.getItem("Session"));
             if (session && session.id) {
@@ -189,11 +191,12 @@ var Controllers;
         }
 
         $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(function (data) {
-            $scope.Conversations = data.map(function (x) {
+            conversations = data.map(function (x) {
                 return new Models.TextConversation(x);
             }).filter(function (x) {
                 return !x.IsGroupChat;
             });
+            $scope.ActiveConversations = conversations.slice(0, 10);
         });
 
         $http.get(Managers.Constants.RelayUrl + "/profiles/0/contacts").success(function (data) {
@@ -222,14 +225,34 @@ var Controllers;
         };
 
         $scope.OpenConversation = function (contact) {
-            var conv = $scope.Conversations.first(function (x) {
+            var conv = conversations.first(function (x) {
                 return x.Receiver.Id === contact.Id;
             });
             if (conv) {
-                $state.go("Home.TextConversation", {
-                    convId: conv.Id
+                conv.UpdatedAt = new Date();
+                if ($scope.ActiveConversations.first(function (x) {
+                    return x.Id === conv.Id;
+                }) === undefined) {
+                    $scope.ActiveConversations.push(conv);
+                }
+            } else {
+                conv = new Models.TextConversation({
+                    profiles: [Managers.UserManager.Session.Raw(), contact.Raw()],
+                    updated_at: new Date().toISOString()
                 });
-                $scope.IsNewConversationOpen = false;
+                console.log(conv.Receiver);
+                $scope.ActiveConversations.push(conv);
+            }
+            $state.go("Home.TextConversation", {
+                convId: conv.Id
+            });
+            $scope.IsNewConversationOpen = false;
+        };
+
+        $scope.IsNewConversationOpenChanged = function () {
+            if ($scope.IsNewConversationOpen) {
+                $("#newMessage + .pop-over input[type=search]").focus();
+            } else {
                 $scope.ContactsFilterText = '';
             }
         };
@@ -530,9 +553,13 @@ var Models;
             get: function () {
                 return new Date(this.model.updated_at);
             },
+            set: function (value) {
+                this.model.updated_at = value.toISOString();
+            },
             enumerable: true,
             configurable: true
         });
+
 
         Object.defineProperty(BibaModel.prototype, "IsNew", {
             get: function () {

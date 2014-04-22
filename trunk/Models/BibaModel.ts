@@ -32,6 +32,10 @@
             return new Date(this.model.updated_at);
         }
 
+        set UpdatedAt(value: Date) {
+            this.model.updated_at = value.toISOString();
+        }
+
         get IsNew(): boolean {
             return !this.Id;
         }
