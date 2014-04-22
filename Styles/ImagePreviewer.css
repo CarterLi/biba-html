@@ -98,7 +98,7 @@
 	position: absolute;
 	right: -7px;
 	top: -7px;
-    cursor: pointer;
+	box-shadow: 0 0 10px black;
 
 	transition: all .3s .7s;
 }
@@ -201,36 +201,4 @@ div.spn-pulse::after {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
-}
-
-div.X {
-	box-shadow: 0 0 10px black;
-	border: 2px white solid;
-	position: relative;
-	border-radius: 50%;
-	background: black;
-	width: 18px;
-	height: 18px;
-}
-div.X::before,
-div.X::after {
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	margin: auto;
-	display: block;
-	content: " ";
-	font-size: 0;
-	width: 2px;
-	height: 12px;
-	background-color: white;
-	border-radius: 100px;
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-}
-div.X::after {
-	-webkit-transform: rotate(-45deg);
-	transform: rotate(-45deg);
 }

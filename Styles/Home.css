@@ -89,9 +89,42 @@
 #home > .pa-sidebar > .left > li {
     padding: 0 5px;
     width: 230px;
+    display: flex;
+    flex-direction: row;
+}
+#home > .pa-sidebar > .left > li:hover {
+    background-color: #EEE;
+}
+#home > .pa-sidebar > .left > li.active {
+    background-color: #08C !important;
+}
+#home > .pa-sidebar > .left > li > a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+}
+#home > .pa-sidebar > .left > li > div {
+    position: relative;
+    width: 18px;
+}
+#home > .pa-sidebar > .left > li > div > div {
+	position: absolute;
+    left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+    margin: auto;
+    background: none;
+    border: none;
+}
+#home > .pa-sidebar > .left > li:not(.active) > div > div::before,
+#home > .pa-sidebar > .left > li:not(.active) > div > div::after {
+    background: black;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+#home > .pa-sidebar > .left > li:not(:hover) > div > div {
+    display: none;
 }
 #home > .right {
     margin-left: 10px;

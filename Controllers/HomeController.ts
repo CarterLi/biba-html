@@ -13,6 +13,7 @@ module Controllers {
         ContactsFilterPredicate(contact: Models.Profile): boolean;
         IsNewConversationOpenChanged(): void;
         OpenConversation(contact: Models.Profile): void;
+        CloseConversation(conv: Models.TextConversation): void;
     }
 
     export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService, $timeout: ng.ITimeoutService) {
@@ -84,6 +85,10 @@ module Controllers {
                 convId: conv.Id
             });
             $scope.IsNewConversationOpen = false;
+        };
+
+        $scope.CloseConversation = conv=> {
+            $scope.ActiveConversations.splice($scope.ActiveConversations.indexOf(conv), 1);
         };
 
         $scope.IsNewConversationOpenChanged = ()=> {
