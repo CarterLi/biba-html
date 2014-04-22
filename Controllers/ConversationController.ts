@@ -35,7 +35,7 @@ module Controllers {
         $scope.IsLoadingMessages = true;
 
         if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = (<IHomeScope>$scope.$parent).Conversations.first(x=> x.Id === convId);
+            $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Id === convId);
         }
         $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(
             (data: Models.IRawTextConversation)=> {

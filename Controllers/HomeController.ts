@@ -4,17 +4,20 @@
 module Controllers {
 
     export interface IHomeScope extends ng.IScope {
-        Conversations: Array<Models.TextConversation>;
+        ActiveConversations: Array<Models.TextConversation>;
         Contacts: Array<Models.Profile>;
         ContactsFilterText: string;
         DoContactsFilterText: string;
         IsNewConversationOpen: boolean;
 
         ContactsFilterPredicate(contact: Models.Profile): boolean;
+        IsNewConversationOpenChanged(): void;
         OpenConversation(contact: Models.Profile): void;
     }
 
     export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService, $timeout: ng.ITimeoutService) {
+        var conversations: Array<Models.TextConversation>;
+
         if (!Managers.UserManager.Session) {
             var session: Models.IRawProfile = JSON.parse(window.sessionStorage.getItem("Session"));
             if (session && session.id) {
@@ -27,9 +30,10 @@ module Controllers {
 
         $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(
             (data: Array<Models.IRawTextConversation>)=> {
-                $scope.Conversations = data
+                conversations = data
                     .map(x=> new Models.TextConversation(x))
                     .filter(x=> !x.IsGroupChat);
+                $scope.ActiveConversations = conversations.slice(0, 10);
             });
 
         $http.get(Managers.Constants.RelayUrl + "/profiles/0/contacts").success(
@@ -62,12 +66,30 @@ module Controllers {
         };
 
         $scope.OpenConversation = contact=> {
-            var conv = $scope.Conversations.first(x=> x.Receiver.Id === contact.Id);
+            var conv = conversations.first(x=> x.Receiver.Id === contact.Id);
             if (conv) {
-                $state.go("Home.TextConversation", {
-                    convId: conv.Id
+                conv.UpdatedAt = new Date();
+                if ($scope.ActiveConversations.first(x=> x.Id === conv.Id) === undefined) {
+                    $scope.ActiveConversations.push(conv);
+                }
+            } else {
+                conv = new Models.TextConversation(<Models.IRawTextConversation>{
+                    profiles: [Managers.UserManager.Session.Raw(), contact.Raw()],
+                    updated_at: new Date().toISOString()
                 });
-                $scope.IsNewConversationOpen = false;
+                console.log(conv.Receiver);
+                $scope.ActiveConversations.push(conv);
+            }
+            $state.go("Home.TextConversation", {
+                convId: conv.Id
+            });
+            $scope.IsNewConversationOpen = false;
+        };
+
+        $scope.IsNewConversationOpenChanged = ()=> {
+            if ($scope.IsNewConversationOpen) {
+                $("#newMessage + .pop-over input[type=search]").focus();
+            } else {
                 $scope.ContactsFilterText = '';
             }
         };

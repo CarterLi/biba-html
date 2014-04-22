@@ -4,8 +4,8 @@
         <div class="nav-header clearfix">
             <span>Messages</span>
 
-            <input id="newMessage" type="checkbox" ng-model="IsNewConversationOpen" hidden />
-            <label for="newMessage" class="btn btn-mini">New</label>
+            <input id="newMessage" type="checkbox" ng-model="IsNewConversationOpen" ng-change="IsNewConversationOpenChanged()" ng-disabled="!ActiveConversations || !Contacts" hidden />
+            <label for="newMessage" class="btn btn-mini" ng-class="{disabled: !ActiveConversations || !Contacts}">New</label>
             <div class="popover right fade in">
                 <div class="arrow"></div>
 
@@ -23,7 +23,7 @@
             </div>
         </div>
         <ul class="left nav nav-list scroll auto-scroll">
-            <li ui-sref-active="active" ng-repeat="conv in Conversations | limitTo: 10">
+            <li ui-sref-active="active" ng-repeat="conv in ActiveConversations | orderBy: 'UpdatedAt':true">
                 <a ui-sref="Home.TextConversation({convId:conv.Id})">
                     <user-avatar profile="conv.Receiver" hide-email />
                 </a>
