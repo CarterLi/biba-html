@@ -93,6 +93,18 @@ ul.scroll::-webkit-scrollbar-thumb:active {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
 }
 
+[draggable=true] {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    -webkit-user-drag: element;
+}
+[draggable=true] * {
+    -webkit-user-drag: none;
+}
+
 div.X {
     cursor: pointer;
 	border: 2px white solid;

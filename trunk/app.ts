@@ -66,8 +66,8 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
                 };
 
                 // Listen for change events to enable binding
-                element.on('blur keyup change', ()=> {
-                    scope.$apply(read);
+                ['blur', 'keyup', 'change'].forEach(x=> {
+                    element[0].addEventListener(x, ()=> scope.$apply(read));
                 });
                 read(); // initialize
 
@@ -79,6 +79,40 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             }
         };
     })
+    .directive('draggable', ()=> {
+        return {
+            restrict: 'A',
+            link: (scope: any, element: JQuery, attrs: ng.IAttributes) => {
+                if (element[0].draggable && scope.MoveItem) {
+                    element[0].addEventListener('dragstart', ev=> {
+                        ev.dataTransfer.effectAllowed = 'move';
+                        ev.dataTransfer.setData('index', (<number>scope.$index).toString());
+                    });
+                    element[0].addEventListener('dragover', ev=> {
+                        ev.preventDefault();
+                        ev.dataTransfer.dropEffect = 'move';
+
+                        return false;
+                    });
+                    element[0].addEventListener('dragenter', ev=> function () {
+                        this.classList.add('over');
+                    });
+                    element[0].addEventListener('dragleave', ev=> function () {
+                        this.classList.remove('over');
+                    });
+                    element[0].addEventListener('drop', ev=> {
+                        var oldIndex = parseInt(ev.dataTransfer.getData('index'));
+                        var newIndex;
+                        var elem = <HTMLElement>ev.target;
+                        for (; elem.tagName !== "LI"; elem = elem.parentElement);
+                        for (newIndex = 0; elem = <HTMLElement>elem.previousElementSibling; ++newIndex);
+                        scope.MoveItem(oldIndex, newIndex);
+                        ev.preventDefault();
+                    });
+                }
+            }
+        };
+    })
     .directive('imagePreviewer', ()=> {
         return {
             restrict: 'E',
@@ -86,7 +120,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             scope: { Attachment: "=attachment" },
             controller: Controllers.ImagePreviewerController,
             link: ($scope: Controllers.IImagePreviewerScope, $elem: JQuery, $attrs: ng.IAttributes)=> {
-                $elem.find("img").load(event=> {
+                $elem[0].querySelector("img").addEventListener('load', event=> {
                     if ($scope.Attachment) {
                         // User might have closed the previewer
                         $scope.$apply('IsLoaded = true');

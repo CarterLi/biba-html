@@ -1,4 +1,193 @@
-﻿if (typeof Array.prototype.first != "function") {
+﻿var _this = this;
+angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
+    return ({
+        priority: 10,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $scope.$watch($attrs['ngBind'], function () {
+                return window['emojify'].run($elem[0]);
+            });
+        }
+    });
+}).directive('autolink', function () {
+    return ({
+        priority: 5,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $scope.$watch($attrs['ngBind'], function () {
+                return $elem.html($elem.html()['autoLink']({ target: "_blank" }));
+            });
+        }
+    });
+}).directive('autofocus', function () {
+    return {
+        priority: 500,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $elem[0].focus();
+        }
+    };
+}).directive('autoscrollintoview', function () {
+    return {
+        priority: 500,
+        restrict: 'A',
+        link: function ($scope, $elem, $attrs) {
+            $scope.$watch($attrs['ngBind'], function () {
+                return $elem[0].scrollIntoView(true);
+            });
+        }
+    };
+}).directive('contenteditable', function () {
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function (scope, element, attrs, ngModel) {
+            if (!ngModel)
+                return;
+
+            ngModel.$render = function () {
+                element.html(ngModel.$viewValue || '');
+            };
+
+            ['blur', 'keyup', 'change'].forEach(function (x) {
+                element[0].addEventListener(x, function () {
+                    return scope.$apply(read);
+                });
+            });
+            read();
+
+            function read() {
+                ngModel.$setViewValue(element[0].innerText);
+            }
+        }
+    };
+}).directive('draggable', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            if (element[0].draggable && scope.MoveItem) {
+                element[0].addEventListener('dragstart', function (ev) {
+                    ev.dataTransfer.effectAllowed = 'move';
+                    ev.dataTransfer.setData('index', scope.$index.toString());
+                    _this.classList.add("dragging");
+                });
+                element[0].addEventListener('dragover', function (ev) {
+                    ev.preventDefault();
+                    ev.dataTransfer.dropEffect = 'move';
+
+                    return false;
+                });
+                element[0].addEventListener('dragenter', function (ev) {
+                    return function () {
+                        this.classList.add('over');
+                    };
+                });
+                element[0].addEventListener('dragleave', function (ev) {
+                    return function () {
+                        this.classList.remove('over');
+                    };
+                });
+                element[0].addEventListener('drop', function (ev) {
+                    var oldIndex = parseInt(ev.dataTransfer.getData('index'));
+                    var newIndex;
+                    var elem = ev.target;
+                    for (; elem.tagName !== "LI"; elem = elem.parentElement)
+                        ;
+                    for (newIndex = 0; elem = elem.previousElementSibling; ++newIndex)
+                        ;
+                    scope.MoveItem(oldIndex, newIndex);
+                    ev.preventDefault();
+                });
+            }
+        }
+    };
+}).directive('imagePreviewer', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'Views/ImagePreviewer.html',
+        scope: { Attachment: "=attachment" },
+        controller: Controllers.ImagePreviewerController,
+        link: function ($scope, $elem, $attrs) {
+            $elem[0].querySelector("img").addEventListener('load', function (event) {
+                if ($scope.Attachment) {
+                    $scope.$apply('IsLoaded = true');
+                }
+            });
+        }
+    };
+}).directive('userAvatar', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'Views/UserAvatar.html',
+        scope: {
+            Profile: "=profile"
+        }
+    };
+}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
+
+    $httpProvider.defaults.headers.common.Accept = "application/json";
+    $urlRouterProvider.otherwise('/');
+    $stateProvider.state('Account', {
+        url: '/Account',
+        controller: Controllers.AccountController,
+        templateUrl: 'Views/Account.html'
+    }).state('Home', {
+        url: '/',
+        controller: Controllers.HomeController,
+        templateUrl: 'Views/Home.html'
+    }).state('Home.TextConversation', {
+        url: 'TextConversations/:convId',
+        views: {
+            subView: {
+                controller: Controllers.ConversationController,
+                templateUrl: 'Views/Conversation.html'
+            }
+        }
+    });
+}).controller('AppController', function ($scope, $state) {
+    $scope['Logout'] = function () {
+        window.sessionStorage.removeItem("Session");
+        Managers.UserManager.Session = null;
+        $state.go("Account");
+    };
+});
+var Controllers;
+(function (Controllers) {
+    function AccountController($scope, $state, $http) {
+        $scope.RelayUrl = Managers.Constants.RelayUrl;
+
+        var doSignIn = function (account) {
+            $http({
+                method: 'POST',
+                url: Managers.Constants.RelayUrl + "/sessions",
+                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
+            }).success(function (session) {
+                window.sessionStorage.setItem("Session", JSON.stringify(session));
+                Managers.UserManager.Session = new Models.Profile(session);
+                $state.go("Home");
+            });
+        };
+
+        $scope.OnSignIn = function () {
+            if ($scope.SignInForm.$valid) {
+                doSignIn($scope.SignIn);
+            }
+        };
+
+        $scope.OnCreateAccount = function () {
+            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
+                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
+                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
+                    doSignIn($scope.CreateAccount);
+                }).error(function (err) {
+                });
+            }
+        };
+    }
+    Controllers.AccountController = AccountController;
+})(Controllers || (Controllers = {}));
+if (typeof Array.prototype.first != "function") {
     Array.prototype.first = function (callbackfn) {
         if (callbackfn) {
             for (var i = 0; i < this.length; ++i) {
@@ -142,41 +331,6 @@ var Controllers;
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
-    function AccountController($scope, $state, $http) {
-        $scope.RelayUrl = Managers.Constants.RelayUrl;
-
-        var doSignIn = function (account) {
-            $http({
-                method: 'POST',
-                url: Managers.Constants.RelayUrl + "/sessions",
-                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
-            }).success(function (session) {
-                window.sessionStorage.setItem("Session", JSON.stringify(session));
-                Managers.UserManager.Session = new Models.Profile(session);
-                $state.go("Home");
-            });
-        };
-
-        $scope.OnSignIn = function () {
-            if ($scope.SignInForm.$valid) {
-                doSignIn($scope.SignIn);
-            }
-        };
-
-        $scope.OnCreateAccount = function () {
-            if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
-                $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
-                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
-                    doSignIn($scope.CreateAccount);
-                }).error(function (err) {
-                });
-            }
-        };
-    }
-    Controllers.AccountController = AccountController;
-})(Controllers || (Controllers = {}));
-var Controllers;
-(function (Controllers) {
     function HomeController($scope, $state, $http, $timeout) {
         var conversations;
 
@@ -230,10 +384,11 @@ var Controllers;
             });
             if (conv) {
                 conv.UpdatedAt = new Date();
+
                 if ($scope.ActiveConversations.first(function (x) {
                     return x.Id === conv.Id;
                 }) === undefined) {
-                    $scope.ActiveConversations.push(conv);
+                    $scope.ActiveConversations.unshift(conv);
                 }
             } else {
                 conv = new Models.TextConversation({
@@ -241,7 +396,7 @@ var Controllers;
                     updated_at: new Date().toISOString()
                 });
                 console.log(conv.Receiver);
-                $scope.ActiveConversations.push(conv);
+                $scope.ActiveConversations.unshift(conv);
             }
             $state.go("Home.TextConversation", {
                 convId: conv.Id
@@ -249,8 +404,8 @@ var Controllers;
             $scope.IsNewConversationOpen = false;
         };
 
-        $scope.CloseConversation = function (conv) {
-            $scope.ActiveConversations.splice($scope.ActiveConversations.indexOf(conv), 1);
+        $scope.CloseConversation = function (index) {
+            $scope.ActiveConversations.splice(index, 1);
         };
 
         $scope.IsNewConversationOpenChanged = function () {
@@ -259,6 +414,16 @@ var Controllers;
             } else {
                 $scope.ContactsFilterText = '';
             }
+        };
+
+        $scope.MoveItem = function (from, to) {
+            if (from === to)
+                return;
+            var old = $scope.ActiveConversations[from];
+            $scope.ActiveConversations.splice(from, 1);
+            $timeout(function () {
+                return $scope.ActiveConversations.splice(to, 0, old);
+            });
         };
     }
     Controllers.HomeController = HomeController;
@@ -344,117 +509,6 @@ var Managers;
     })();
     Managers.Ajax = Ajax;
 })(Managers || (Managers = {}));
-angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
-    return ({
-        priority: 10,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $scope.$watch($attrs['ngBind'], function () {
-                return window['emojify'].run($elem[0]);
-            });
-        }
-    });
-}).directive('autolink', function () {
-    return ({
-        priority: 5,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $scope.$watch($attrs['ngBind'], function () {
-                return $elem.html($elem.html()['autoLink']({ target: "_blank" }));
-            });
-        }
-    });
-}).directive('autofocus', function () {
-    return {
-        priority: 500,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $elem[0].focus();
-        }
-    };
-}).directive('autoscrollintoview', function () {
-    return {
-        priority: 500,
-        restrict: 'A',
-        link: function ($scope, $elem, $attrs) {
-            $scope.$watch($attrs['ngBind'], function () {
-                return $elem[0].scrollIntoView(true);
-            });
-        }
-    };
-}).directive('contenteditable', function () {
-    return {
-        restrict: 'A',
-        require: '?ngModel',
-        link: function (scope, element, attrs, ngModel) {
-            if (!ngModel)
-                return;
-
-            ngModel.$render = function () {
-                element.html(ngModel.$viewValue || '');
-            };
-
-            element.on('blur keyup change', function () {
-                scope.$apply(read);
-            });
-            read();
-
-            function read() {
-                ngModel.$setViewValue(element[0].innerText);
-            }
-        }
-    };
-}).directive('imagePreviewer', function () {
-    return {
-        restrict: 'E',
-        templateUrl: 'Views/ImagePreviewer.html',
-        scope: { Attachment: "=attachment" },
-        controller: Controllers.ImagePreviewerController,
-        link: function ($scope, $elem, $attrs) {
-            $elem.find("img").load(function (event) {
-                if ($scope.Attachment) {
-                    $scope.$apply('IsLoaded = true');
-                }
-            });
-        }
-    };
-}).directive('userAvatar', function () {
-    return {
-        restrict: 'E',
-        templateUrl: 'Views/UserAvatar.html',
-        scope: {
-            Profile: "=profile"
-        }
-    };
-}).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-    window['emojify'].setConfig({ img_dir: "External/emoji.js/images/emoji" });
-
-    $httpProvider.defaults.headers.common.Accept = "application/json";
-    $urlRouterProvider.otherwise('/');
-    $stateProvider.state('Account', {
-        url: '/Account',
-        controller: Controllers.AccountController,
-        templateUrl: 'Views/Account.html'
-    }).state('Home', {
-        url: '/',
-        controller: Controllers.HomeController,
-        templateUrl: 'Views/Home.html'
-    }).state('Home.TextConversation', {
-        url: 'TextConversations/:convId',
-        views: {
-            subView: {
-                controller: Controllers.ConversationController,
-                templateUrl: 'Views/Conversation.html'
-            }
-        }
-    });
-}).controller('AppController', function ($scope, $state) {
-    $scope['Logout'] = function () {
-        window.sessionStorage.removeItem("Session");
-        Managers.UserManager.Session = null;
-        $state.go("Account");
-    };
-});
 var Managers;
 (function (Managers) {
     Managers.Constants = {
