@@ -13,7 +13,8 @@ module Controllers {
         ContactsFilterPredicate(contact: Models.Profile): boolean;
         IsNewConversationOpenChanged(): void;
         OpenConversation(contact: Models.Profile): void;
-        CloseConversation(conv: Models.TextConversation): void;
+        CloseConversation(index: number): void;
+        MoveItem(from: number, to: number): void;
     }
 
     export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService, $timeout: ng.ITimeoutService) {
@@ -70,8 +71,9 @@ module Controllers {
             var conv = conversations.first(x=> x.Receiver.Id === contact.Id);
             if (conv) {
                 conv.UpdatedAt = new Date();
+
                 if ($scope.ActiveConversations.first(x=> x.Id === conv.Id) === undefined) {
-                    $scope.ActiveConversations.push(conv);
+                    $scope.ActiveConversations.unshift(conv);
                 }
             } else {
                 conv = new Models.TextConversation(<Models.IRawTextConversation>{
@@ -79,7 +81,7 @@ module Controllers {
                     updated_at: new Date().toISOString()
                 });
                 console.log(conv.Receiver);
-                $scope.ActiveConversations.push(conv);
+                $scope.ActiveConversations.unshift(conv);
             }
             $state.go("Home.TextConversation", {
                 convId: conv.Id
@@ -87,8 +89,8 @@ module Controllers {
             $scope.IsNewConversationOpen = false;
         };
 
-        $scope.CloseConversation = conv=> {
-            $scope.ActiveConversations.splice($scope.ActiveConversations.indexOf(conv), 1);
+        $scope.CloseConversation = index=> {
+            $scope.ActiveConversations.splice(index, 1);
         };
 
         $scope.IsNewConversationOpenChanged = ()=> {
@@ -97,6 +99,14 @@ module Controllers {
             } else {
                 $scope.ContactsFilterText = '';
             }
+        };
+
+        $scope.MoveItem = (from, to)=> {
+            if (from === to)
+                return;
+            var old = $scope.ActiveConversations[from];
+            $scope.ActiveConversations.splice(from, 1);
+            $timeout(()=> $scope.ActiveConversations.splice(to, 0, old));
         };
     }
 }
