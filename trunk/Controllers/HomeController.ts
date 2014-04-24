@@ -90,7 +90,10 @@ module Controllers {
         };
 
         $scope.CloseConversation = index=> {
-            $scope.ActiveConversations.splice(index, 1);
+            var conv = $scope.ActiveConversations.splice(index, 1).first();
+            if ($state.current.name === "Home.TextConversation" && $state.params['convId'] == conv.Id) {
+                $state.go('Home');
+            } 
         };
 
         $scope.IsNewConversationOpenChanged = ()=> {
