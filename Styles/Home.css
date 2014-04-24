@@ -110,6 +110,8 @@
     background-color: #08C !important;
 }
 #home > .pa-sidebar > .left > li > a {
+    margin: 0 1px 0 0;
+    padding: 3px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -120,7 +122,7 @@
     position: relative;
     width: 18px;
 }
-#home > .pa-sidebar > .left > li > div > div {
+#home > .pa-sidebar > .left > li > div > .X {
 	position: absolute;
     left: 0;
 	right: 0;
@@ -130,10 +132,18 @@
     background: none;
     border: none;
 }
-#home > .pa-sidebar > .left > li:not(.active) > div > div::before,
-#home > .pa-sidebar > .left > li:not(.active) > div > div::after {
-    background: black;
+#home > .pa-sidebar > .left > li > div > .X:active::before,
+#home > .pa-sidebar > .left > li > div > .X:active::after {
+    opacity: .7;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+#home > .pa-sidebar > .left > li:not(.active) > div > .X::before,
+#home > .pa-sidebar > .left > li:not(.active) > div > .X::after {
+    background: #08C;
+}
+#home > .pa-sidebar > .left > li:not(.active) > div > .X:hover::before,
+#home > .pa-sidebar > .left > li:not(.active) > div > .X:hover::after {
+    background: black;
 }
 #home > .pa-sidebar > .left > li:not(:hover) > div {
     display: none;

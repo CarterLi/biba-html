@@ -133,6 +133,6 @@ div.X::after {
 	transform: rotate(45deg);
 }
 div.X::after {
-	-webkit-transform: rotate(-45deg);
-	transform: rotate(-45deg);
+	width: 12px;
+	height: 2px;
 }
