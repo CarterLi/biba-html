@@ -4,6 +4,9 @@
 
     overflow-y: auto;
 }
+#account label {
+    display: inline-block;
+}
 #account > fieldset {
     flex: 1;
     padding: 10px 20px;

@@ -56,6 +56,15 @@
                     </tr>
                     <tr>
                         <td colspan="2">
+                            <label>
+                                <input type="checkbox" name="AutoSignIn" ng-model="SignIn.auto_signin" required />
+                                <span>Remember me</span><!--
+                         --></label><!--
+                         --><span>· <a ng-href="{{RelayUrl+'/signin#password-reset-modal'}}">Forgot your password?</a></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
                             <input class="btn btn-primary" type="submit" value="Sign In" ng-click="OnSignIn()" />
                             <input class="btn btn-danger" type="reset" value="Reset" />
                         </td>

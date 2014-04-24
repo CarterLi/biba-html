@@ -182,18 +182,11 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
     })
     .run(($rootScope: IBibaRootScope, $state: ng.ui.IStateService) => {
         $rootScope.RelayUrl = "https://stage.biba.com";
-
-        var session: Models.IRawProfile = JSON.parse(window.sessionStorage.getItem("Session"));
-        if (session && session.id) {
-            $rootScope.Session = new Models.Profile(session);
-        } else {
-            $state.go("Account");
-            return;
-        }
     })
     .controller('AppController', ($rootScope: IBibaRootScope, $scope: ng.IScope, $state: ng.ui.IStateService)=> {
         $scope['Logout'] = () => {
             window.sessionStorage.removeItem("Session");
+            window.localStorage.removeItem("LoginInfo");
             $rootScope.Session = null;
             $state.go("Account");
         };

@@ -18,25 +18,33 @@ module Controllers {
     }
 
     export function HomeController($scope: IHomeScope,
-                                   $rootScope: IBibaRootScope,
-                                   $state: ng.ui.IStateService,
-                                   $http: ng.IHttpService,
-                                   $timeout: ng.ITimeoutService) {
+        $rootScope: IBibaRootScope,
+        $state: ng.ui.IStateService,
+        $http: ng.IHttpService,
+        $timeout: ng.ITimeoutService) {
         var conversations: Array<Models.TextConversation>;
 
+        var session: Models.IRawProfile = JSON.parse(window.sessionStorage.getItem("Session"));
+        if (session && session.id) {
+            $rootScope.Session = new Models.Profile(session);
+        } else {
+            $state.go("Account");
+            return;
+        }
+
         $http.get($rootScope.RelayUrl + "/text_conversations").success(
-            (data: Array<Models.IRawTextConversation>)=> {
-                conversations = data
-                    .map(x=> new Models.TextConversation(x))
-                    .filter(x=> !x.IsGroupChat);
-                $scope.ActiveConversations = conversations.slice(0, 10);
-            });
+        (data: Array<Models.IRawTextConversation>)=> {
+            conversations = data
+                .map(x=> new Models.TextConversation(x))
+                .filter(x=> !x.IsGroupChat);
+            $scope.ActiveConversations = conversations.slice(0, 10);
+        });
 
         $http.get($rootScope.RelayUrl + "/profiles/0/contacts").success(
-            (data: Array<Models.IRawProfile>) => {
-                $scope.Contacts = data
-                    .map(x=> new Models.Profile(x));
-            });
+        (data: Array<Models.IRawProfile>)=> {
+            $scope.Contacts = data
+                .map(x=> new Models.Profile(x));
+        });
 
         (()=> {
             var filterTextTimeout: ng.IPromise<any>;
@@ -47,7 +55,7 @@ module Controllers {
                     $timeout.cancel(filterTextTimeout);
 
                 tempFilterText = val;
-                filterTextTimeout = $timeout(() => {
+                filterTextTimeout = $timeout(()=> {
                     $scope.DoContactsFilterText = tempFilterText;
                 }, 400); // delay 400 ms
             });
@@ -87,7 +95,7 @@ module Controllers {
             var conv = $scope.ActiveConversations.splice(index, 1).first();
             if ($state.current.name === "Home.TextConversation" && $state.params['convId'] == conv.Id) {
                 $state.go('Home');
-            } 
+            }
         };
 
         $scope.IsNewConversationOpenChanged = ()=> {
@@ -106,4 +114,5 @@ module Controllers {
             $timeout(()=> $scope.ActiveConversations.splice(to, 0, old));
         };
     }
+
 }

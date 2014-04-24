@@ -143,13 +143,14 @@ var Controllers;
 var Controllers;
 (function (Controllers) {
     function AccountController($rootScope, $scope, $state, $http) {
-        var doSignIn = function (account) {
+        var doSignIn = function (authorization) {
             $http({
                 method: 'POST',
                 url: $rootScope.RelayUrl + "/sessions",
-                headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
+                headers: { Authorization: "Basic " + authorization }
             }).success(function (session) {
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
+                window.localStorage.setItem("LoginInfo", authorization);
                 $rootScope.Session = new Models.Profile(session);
                 $state.go("Home");
             });
@@ -157,7 +158,7 @@ var Controllers;
 
         $scope.OnSignIn = function () {
             if ($scope.SignInForm.$valid) {
-                doSignIn($scope.SignIn);
+                doSignIn(btoa($scope.SignIn.email + ":" + $scope.SignIn.password));
             }
         };
 
@@ -165,11 +166,17 @@ var Controllers;
             if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
                 $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
                 $http.post($rootScope.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
-                    doSignIn($scope.CreateAccount);
+                    doSignIn(btoa($scope.CreateAccount.email + ":" + $scope.CreateAccount.password));
                 }).error(function (err) {
                 });
             }
         };
+
+        (function () {
+            var authorization = window.localStorage.getItem("LoginInfo");
+            if (authorization)
+                doSignIn(authorization);
+        })();
     }
     Controllers.AccountController = AccountController;
 })(Controllers || (Controllers = {}));
@@ -177,6 +184,14 @@ var Controllers;
 (function (Controllers) {
     function HomeController($scope, $rootScope, $state, $http, $timeout) {
         var conversations;
+
+        var session = JSON.parse(window.sessionStorage.getItem("Session"));
+        if (session && session.id) {
+            $rootScope.Session = new Models.Profile(session);
+        } else {
+            $state.go("Account");
+            return;
+        }
 
         $http.get($rootScope.RelayUrl + "/text_conversations").success(function (data) {
             conversations = data.map(function (x) {
@@ -459,17 +474,10 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
     });
 }).run(function ($rootScope, $state) {
     $rootScope.RelayUrl = "https://stage.biba.com";
-
-    var session = JSON.parse(window.sessionStorage.getItem("Session"));
-    if (session && session.id) {
-        $rootScope.Session = new Models.Profile(session);
-    } else {
-        $state.go("Account");
-        return;
-    }
 }).controller('AppController', function ($rootScope, $scope, $state) {
     $scope['Logout'] = function () {
         window.sessionStorage.removeItem("Session");
+        window.localStorage.removeItem("LoginInfo");
         $rootScope.Session = null;
         $state.go("Account");
     };
