@@ -20,6 +20,11 @@
 /// <reference path="External/angularjs/angular.d.ts" />
 /// <reference path="External/angular-ui/angular-ui-router.d.ts" />
 
+interface IBibaRootScope extends ng.IScope {
+    Session: Models.Profile;
+    RelayUrl: string;
+}
+
 angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
     .directive('emoji', ()=> ({
         priority: 10,
@@ -175,10 +180,26 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             }
         });
     })
-    .controller('AppController', ($scope: ng.IScope, $state: ng.ui.IStateService)=> {
+    .run(($rootScope: IBibaRootScope, $state: ng.ui.IStateService) => {
+        $rootScope.RelayUrl = "https://stage.biba.com";
+
+        var session: Models.IRawProfile = JSON.parse(window.sessionStorage.getItem("Session"));
+        if (session && session.id) {
+            $rootScope.Session = new Models.Profile(session);
+        } else {
+            $state.go("Account");
+            return;
+        }
+    })
+    .controller('AppController', ($rootScope: IBibaRootScope, $scope: ng.IScope, $state: ng.ui.IStateService)=> {
         $scope['Logout'] = () => {
             window.sessionStorage.removeItem("Session");
-            Managers.UserManager.Session = null;
+            $rootScope.Session = null;
             $state.go("Account");
         };
-});
+    });
+
+// Use RootScopeService if possible
+function getRootScope(): IBibaRootScope {
+    return <IBibaRootScope>angular.element(':root').scope();
+}

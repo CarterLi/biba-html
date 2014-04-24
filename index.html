@@ -47,7 +47,7 @@
             <div class="navbar-inner">
                 <div class="container">
                     <a class="brand" ui-sref="Home" ui-sref-opts="{reload: true}">Biba</a>
-                    <input type="button" class="btn" value="Logout" ng-click="Logout()"/>
+                    <input ng-show="Session" type="button" class="btn" value="Logout" ng-click="Logout()"/>
                 </div>
             </div>
         </header>

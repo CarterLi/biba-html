@@ -26,6 +26,7 @@ module Controllers {
     }
 
     export function ConversationController($scope: IConversationScope,
+                                           $rootScope: IBibaRootScope,
                                            $http: ng.IHttpService,
                                            $upload: any,
                                            $state: ng.ui.IStateService,
@@ -37,13 +38,13 @@ module Controllers {
         if ('Conversations' in $scope.$parent) {
             $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Id === convId);
         }
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(
+        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(
             (data: Models.IRawTextConversation)=> {
                 $scope.Conversation = new Models.TextConversation(data);
             }).error(e=> {
                 $state.go('Home');
             });
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
+        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
             (data: Array<Models.IRawTextMessage>) => {
                 $scope.HasMoreMessages = data.length > 0;
                 $scope.Messages = data.map(x=> new Models.TextMessage(x));
@@ -89,7 +90,7 @@ module Controllers {
 
         $scope.LoadHistory = () => {
             $scope.IsLoadingMessages = true;
-            $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages?page=" + (++page)).success(
+            $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages?page=" + (++page)).success(
                 (data: Array<Models.IRawTextMessage>) => {
                     $scope.IsLoadingMessages = false;
                     $scope.HasMoreMessages = data.length > 0;
@@ -112,13 +113,13 @@ module Controllers {
                     return v.toString(16);
                 }),
                 content: $scope.ChatInput || '',
-                profile: Managers.UserManager.Session.Raw()
+                profile: $rootScope.Session.Raw()
             });
             var idx = $scope.Messages.push(msg) - 1;
             var file = $scope.Attachment;
 
             $upload.upload({
-                url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
+                url: $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages",
                 data: {
                     "text_message[client_uuid]": msg.Raw().client_uuid,
                     "text_message[content]": msg.Content

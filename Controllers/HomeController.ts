@@ -17,20 +17,14 @@ module Controllers {
         MoveItem(from: number, to: number): void;
     }
 
-    export function HomeController($scope: IHomeScope, $state: ng.ui.IStateService, $http: ng.IHttpService, $timeout: ng.ITimeoutService) {
+    export function HomeController($scope: IHomeScope,
+                                   $rootScope: IBibaRootScope,
+                                   $state: ng.ui.IStateService,
+                                   $http: ng.IHttpService,
+                                   $timeout: ng.ITimeoutService) {
         var conversations: Array<Models.TextConversation>;
 
-        if (!Managers.UserManager.Session) {
-            var session: Models.IRawProfile = JSON.parse(window.sessionStorage.getItem("Session"));
-            if (session && session.id) {
-                Managers.UserManager.Session = new Models.Profile(session);
-            } else {
-                $state.go("Account");
-                return;
-            }
-        }
-
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(
+        $http.get($rootScope.RelayUrl + "/text_conversations").success(
             (data: Array<Models.IRawTextConversation>)=> {
                 conversations = data
                     .map(x=> new Models.TextConversation(x))
@@ -38,7 +32,7 @@ module Controllers {
                 $scope.ActiveConversations = conversations.slice(0, 10);
             });
 
-        $http.get(Managers.Constants.RelayUrl + "/profiles/0/contacts").success(
+        $http.get($rootScope.RelayUrl + "/profiles/0/contacts").success(
             (data: Array<Models.IRawProfile>) => {
                 $scope.Contacts = data
                     .map(x=> new Models.Profile(x));
@@ -77,7 +71,7 @@ module Controllers {
                 }
             } else {
                 conv = new Models.TextConversation(<Models.IRawTextConversation>{
-                    profiles: [Managers.UserManager.Session.Raw(), contact.Raw()],
+                    profiles: [$rootScope.Session.Raw(), contact.Raw()],
                     updated_at: new Date().toISOString()
                 });
                 console.log(conv.Receiver);
