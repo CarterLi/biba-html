@@ -68,7 +68,8 @@
         }
 
         get IsCurrentUser(): boolean {
-            return this.Id === Managers.UserManager.Session.Id;
+            var session = getRootScope().Session;
+            return session && this.Id === session.Id;
         }
 
     }

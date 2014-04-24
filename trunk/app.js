@@ -27,7 +27,7 @@ if (typeof Array.prototype.findFirstIndex != "function") {
 }
 var Controllers;
 (function (Controllers) {
-    function ConversationController($scope, $http, $upload, $state, $stateParams) {
+    function ConversationController($scope, $rootScope, $http, $upload, $state, $stateParams) {
         var convId = parseInt($stateParams['convId'], 10);
         var page = 1;
         $scope.IsLoadingMessages = true;
@@ -37,12 +37,12 @@ var Controllers;
                 return x.Id === convId;
             });
         }
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId).success(function (data) {
+        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(function (data) {
             $scope.Conversation = new Models.TextConversation(data);
         }).error(function (e) {
             $state.go('Home');
         });
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
+        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
             $scope.HasMoreMessages = data.length > 0;
             $scope.Messages = data.map(function (x) {
                 return new Models.TextMessage(x);
@@ -89,7 +89,7 @@ var Controllers;
 
         $scope.LoadHistory = function () {
             $scope.IsLoadingMessages = true;
-            $http.get(Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages?page=" + (++page)).success(function (data) {
+            $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages?page=" + (++page)).success(function (data) {
                 $scope.IsLoadingMessages = false;
                 $scope.HasMoreMessages = data.length > 0;
                 data.forEach(function (x) {
@@ -112,13 +112,13 @@ var Controllers;
                     return v.toString(16);
                 }),
                 content: $scope.ChatInput || '',
-                profile: Managers.UserManager.Session.Raw()
+                profile: $rootScope.Session.Raw()
             });
             var idx = $scope.Messages.push(msg) - 1;
             var file = $scope.Attachment;
 
             $upload.upload({
-                url: Managers.Constants.RelayUrl + "/text_conversations/" + convId + "/text_messages",
+                url: $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages",
                 data: {
                     "text_message[client_uuid]": msg.Raw().client_uuid,
                     "text_message[content]": msg.Content
@@ -142,17 +142,15 @@ var Controllers;
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
-    function AccountController($scope, $state, $http) {
-        $scope.RelayUrl = Managers.Constants.RelayUrl;
-
+    function AccountController($rootScope, $scope, $state, $http) {
         var doSignIn = function (account) {
             $http({
                 method: 'POST',
-                url: Managers.Constants.RelayUrl + "/sessions",
+                url: $rootScope.RelayUrl + "/sessions",
                 headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
             }).success(function (session) {
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
-                Managers.UserManager.Session = new Models.Profile(session);
+                $rootScope.Session = new Models.Profile(session);
                 $state.go("Home");
             });
         };
@@ -166,7 +164,7 @@ var Controllers;
         $scope.OnCreateAccount = function () {
             if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
                 $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
-                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
+                $http.post($rootScope.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(function () {
                     doSignIn($scope.CreateAccount);
                 }).error(function (err) {
                 });
@@ -177,20 +175,10 @@ var Controllers;
 })(Controllers || (Controllers = {}));
 var Controllers;
 (function (Controllers) {
-    function HomeController($scope, $state, $http, $timeout) {
+    function HomeController($scope, $rootScope, $state, $http, $timeout) {
         var conversations;
 
-        if (!Managers.UserManager.Session) {
-            var session = JSON.parse(window.sessionStorage.getItem("Session"));
-            if (session && session.id) {
-                Managers.UserManager.Session = new Models.Profile(session);
-            } else {
-                $state.go("Account");
-                return;
-            }
-        }
-
-        $http.get(Managers.Constants.RelayUrl + "/text_conversations").success(function (data) {
+        $http.get($rootScope.RelayUrl + "/text_conversations").success(function (data) {
             conversations = data.map(function (x) {
                 return new Models.TextConversation(x);
             }).filter(function (x) {
@@ -199,7 +187,7 @@ var Controllers;
             $scope.ActiveConversations = conversations.slice(0, 10);
         });
 
-        $http.get(Managers.Constants.RelayUrl + "/profiles/0/contacts").success(function (data) {
+        $http.get($rootScope.RelayUrl + "/profiles/0/contacts").success(function (data) {
             $scope.Contacts = data.map(function (x) {
                 return new Models.Profile(x);
             });
@@ -238,7 +226,7 @@ var Controllers;
                 }
             } else {
                 conv = new Models.TextConversation({
-                    profiles: [Managers.UserManager.Session.Raw(), contact.Raw()],
+                    profiles: [$rootScope.Session.Raw(), contact.Raw()],
                     updated_at: new Date().toISOString()
                 });
                 console.log(conv.Receiver);
@@ -313,51 +301,7 @@ if (typeof String.prototype.endsWithIgnoreCase != 'function') {
         return this.slice(-str.length).toUpperCase() === str.toUpperCase();
     };
 }
-var Managers;
-(function (Managers) {
-    var Ajax = (function () {
-        function Ajax() {
-        }
-        Ajax.GenerateAuthorization = function (user, pass) {
-            this.authorization = btoa(user + ":" + pass);
-        };
 
-        Ajax.SendRequest = function (url, method, ok, err) {
-            var xhr = new XMLHttpRequest();
-            xhr.open(method, url, true);
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('Authorization', 'Basic ' + this.authorization);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    if (xhr.status >= 200 && xhr.status < 400) {
-                        if (ok) {
-                            ok(xhr.responseText);
-                        }
-                    } else {
-                        if (err) {
-                            err(xhr.status, xhr.responseText);
-                        }
-                    }
-                }
-            };
-            xhr.send();
-        };
-
-        Ajax.Get = function (url, ok, err) {
-            this.SendRequest(Managers.Constants.RelayUrl + url, "GET", function (text) {
-                return ok(JSON.parse(text));
-            }, err);
-        };
-
-        Ajax.Post = function (url, ok, err) {
-            this.SendRequest(Managers.Constants.RelayUrl + url, "POST", function (text) {
-                return ok(JSON.parse(text));
-            }, err);
-        };
-        return Ajax;
-    })();
-    Managers.Ajax = Ajax;
-})(Managers || (Managers = {}));
 angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).directive('emoji', function () {
     return ({
         priority: 10,
@@ -513,39 +457,27 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             }
         }
     });
-}).controller('AppController', function ($scope, $state) {
+}).run(function ($rootScope, $state) {
+    $rootScope.RelayUrl = "https://stage.biba.com";
+
+    var session = JSON.parse(window.sessionStorage.getItem("Session"));
+    if (session && session.id) {
+        $rootScope.Session = new Models.Profile(session);
+    } else {
+        $state.go("Account");
+        return;
+    }
+}).controller('AppController', function ($rootScope, $scope, $state) {
     $scope['Logout'] = function () {
         window.sessionStorage.removeItem("Session");
-        Managers.UserManager.Session = null;
+        $rootScope.Session = null;
         $state.go("Account");
     };
 });
-var Managers;
-(function (Managers) {
-    Managers.Constants = {
-        "RelayUrl": "https://stage.biba.com"
-    };
-})(Managers || (Managers = {}));
-var Managers;
-(function (Managers) {
-    var UserManager = (function () {
-        function UserManager() {
-        }
-        UserManager.Login = function (user, pass, ok) {
-            var _this = this;
-            Managers.Ajax.GenerateAuthorization(user, pass);
-            Managers.Ajax.Post("/sessions", function (session) {
-                console.log("Login successfully");
-                _this.Session = new Models.Profile(session);
-                ok();
-            }, function (err) {
-                console.log("Error login..." + err);
-            });
-        };
-        return UserManager;
-    })();
-    Managers.UserManager = UserManager;
-})(Managers || (Managers = {}));
+
+function getRootScope() {
+    return angular.element(':root').scope();
+}
 var Models;
 (function (Models) {
     var Attachment = (function () {
@@ -566,7 +498,7 @@ var Models;
 
         Object.defineProperty(Attachment.prototype, "Url", {
             get: function () {
-                return Managers.Constants.RelayUrl + this.model.url;
+                return getRootScope().RelayUrl + this.model.url;
             },
             enumerable: true,
             configurable: true
@@ -730,7 +662,8 @@ var Models;
 
         Object.defineProperty(Profile.prototype, "IsCurrentUser", {
             get: function () {
-                return this.Id === Managers.UserManager.Session.Id;
+                var session = getRootScope().Session;
+                return session && this.Id === session.Id;
             },
             enumerable: true,
             configurable: true

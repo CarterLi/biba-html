@@ -1233,10 +1233,7 @@
     <TypeScriptCompile Include="External\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="External\jQuery\jquery.d.ts" />
     <TypeScriptCompile Include="External\socket.io\socket.io-client.d.ts" />
-    <TypeScriptCompile Include="Managers\Ajax.ts" />
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="Managers\Constants.ts" />
-    <TypeScriptCompile Include="Managers\UserManager.ts" />
     <TypeScriptCompile Include="Models\Account.ts" />
     <TypeScriptCompile Include="Models\Attachment.ts" />
     <TypeScriptCompile Include="Models\BibaModel.ts" />
@@ -1278,7 +1275,9 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Managers\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

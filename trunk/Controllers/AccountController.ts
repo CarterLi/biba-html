@@ -15,17 +15,18 @@ module Controllers {
         CreateAccountForm: ng.IFormController;
     }
 
-    export function AccountController($scope: IAccountScope, $state: ng.ui.IStateService, $http: ng.IHttpService) {
-        $scope.RelayUrl = Managers.Constants.RelayUrl;
-
+    export function AccountController($rootScope: IBibaRootScope,
+                                      $scope: IAccountScope,
+                                      $state: ng.ui.IStateService,
+                                      $http: ng.IHttpService) {
         var doSignIn = (account: Models.IRawAccount) => {
             $http({
                 method: 'POST',
-                url: Managers.Constants.RelayUrl + "/sessions",
+                url: $rootScope.RelayUrl + "/sessions",
                 headers: { Authorization: "Basic " + btoa(account.email + ":" + account.password) }
             }).success((session: Models.IRawProfile) => {
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
-                Managers.UserManager.Session = new Models.Profile(session);
+                $rootScope.Session = new Models.Profile(session);
                 $state.go("Home");
 
                 //io.connect("https://push-stage.biba.com/socket.io/1/websocket/1")
@@ -50,7 +51,7 @@ module Controllers {
         $scope.OnCreateAccount = () => {
             if ($scope.CreateAccountForm.$valid && $scope.CreateAccount.terms_) {
                 $scope.CreateAccount.terms = $scope.CreateAccount.terms_ ? '1' : '0';
-                $http.post(Managers.Constants.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(()=> {
+                $http.post($rootScope.RelayUrl + "/signups", { signup: $scope.CreateAccount }).success(()=> {
                     doSignIn($scope.CreateAccount);
                 }).error(err=> {
                     

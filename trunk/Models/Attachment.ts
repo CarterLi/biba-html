@@ -21,7 +21,7 @@
         }
 
         get Url(): string {
-            return Managers.Constants.RelayUrl + this.model.url;
+            return getRootScope().RelayUrl + this.model.url;
         }
 
         get Filesize(): string {
