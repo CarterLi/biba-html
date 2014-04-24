@@ -85,12 +85,23 @@
     height: 100%;
     width: 260px;
     position: relative;
+    padding-top: 2px;
 }
 #home > .pa-sidebar > .left > li {
     padding: 0 5px;
     width: 230px;
     display: flex;
     flex-direction: row;
+    transition: opacity 0.2s ease-out;
+}
+#home > .pa-sidebar > .left > li.dragging {
+    opacity: 0.5;
+}
+#home > .pa-sidebar > .left > li.dragover {
+    outline: 2px dashed #000;
+}
+#home > .pa-sidebar > .left.dragging > li > * {
+    pointer-events: none;
 }
 #home > .pa-sidebar > .left > li:hover {
     background-color: #EEE;
@@ -103,6 +114,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
+    background: none !important;
 }
 #home > .pa-sidebar > .left > li > div {
     position: relative;
@@ -123,7 +135,7 @@
     background: black;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
-#home > .pa-sidebar > .left > li:not(:hover) > div > div {
+#home > .pa-sidebar > .left > li:not(:hover) > div {
     display: none;
 }
 #home > .right {

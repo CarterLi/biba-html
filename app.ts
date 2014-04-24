@@ -83,28 +83,42 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
         return {
             restrict: 'A',
             link: (scope: any, element: JQuery, attrs: ng.IAttributes) => {
+                var draggingElem: HTMLLIElement;
                 if (element[0].draggable && scope.MoveItem) {
-                    element[0].addEventListener('dragstart', ev=> {
+                    element[0].addEventListener('dragstart', function (ev) {
                         ev.dataTransfer.effectAllowed = 'move';
-                        ev.dataTransfer.setData('index', (<number>scope.$index).toString());
+                        ev.dataTransfer.setData('text/x-index', (<number>scope.$index).toString());
+                        this.classList.add("dragging");
+                        this.parentElement.classList.add("dragging");
+                        draggingElem = this;
                     });
-                    element[0].addEventListener('dragover', ev=> {
+                    element[0].addEventListener('dragover', function (ev) {
                         ev.preventDefault();
                         ev.dataTransfer.dropEffect = 'move';
 
                         return false;
                     });
-                    element[0].addEventListener('dragenter', ev=> function () {
-                        this.classList.add('over');
+                    element[0].addEventListener('dragenter', function (ev) {
+                        if (this.tagName === 'LI')
+                            this.classList.add('dragover');
+                        console.log('dragenter');
                     });
-                    element[0].addEventListener('dragleave', ev=> function () {
-                        this.classList.remove('over');
+                    element[0].addEventListener('dragleave', function (ev) {
+                        if (this.tagName === 'LI')
+                            this.classList.remove('dragover');
+                        console.log('dragleave');
+                    });
+                    element[0].addEventListener('dragend', function () {
+                        draggingElem.classList.remove('dragging');
+                        draggingElem.parentElement.classList.remove('dragging');
+                        draggingElem = undefined;
                     });
                     element[0].addEventListener('drop', ev=> {
-                        var oldIndex = parseInt(ev.dataTransfer.getData('index'));
+                        var oldIndex = parseInt(ev.dataTransfer.getData('text/x-index'));
                         var newIndex;
                         var elem = <HTMLElement>ev.target;
                         for (; elem.tagName !== "LI"; elem = elem.parentElement);
+                        elem.classList.remove('dragover');
                         for (newIndex = 0; elem = <HTMLElement>elem.previousElementSibling; ++newIndex);
                         scope.MoveItem(oldIndex, newIndex);
                         ev.preventDefault();
