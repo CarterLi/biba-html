@@ -4,6 +4,6 @@
     </div>
     <div class="right">
         <div class="fullname" ng-bind="Profile.FullName"></div>
-        <div class="email" ng-bind="Profile.Email"></div>
+        <div ng-if="!HideEmail" class="email" ng-bind="Profile.Email"></div>
     </div>
 </section>

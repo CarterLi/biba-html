@@ -447,7 +447,8 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
         restrict: 'E',
         templateUrl: 'Views/UserAvatar.html',
         scope: {
-            Profile: "=profile"
+            Profile: "=profile",
+            HideEmail: "=hideEmail"
         }
     };
 }).config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
