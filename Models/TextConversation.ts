@@ -4,7 +4,7 @@
 module Models {
 
     export interface IRawTextConversation extends IRawBibaModel {
-        text_messages_attributes: Array<IRawTextMessage>;
+        text_messages: Array<IRawTextMessage>;
         last_message: IRawTextMessage;
         profiles: Array<IRawProfile>;
         unread_counts: Object;

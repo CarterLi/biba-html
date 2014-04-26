@@ -23,7 +23,10 @@
         </div>
         <ul class="left nav nav-list scroll auto-scroll">
             <li draggable="true" ui-sref-active="active" ng-repeat="conv in ActiveConversations">
-                <a ui-sref="Home.TextConversation({convId:conv.Id})">
+                <a ng-if="!conv.IsNew" ui-sref="Home.TextConversation({convId:conv.Id})">
+                    <user-avatar profile="conv.Receiver" hide-email="true" />
+                </a>
+                <a ng-if="conv.IsNew" ui-sref="Home.NewTextConversation({userId:conv.Receiver.Id})">
                     <user-avatar profile="conv.Receiver" hide-email="true" />
                 </a>
                 <div><div class="X" ng-click="CloseConversation($index)"></div></div>

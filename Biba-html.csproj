@@ -1218,7 +1218,7 @@
     <TypeScriptCompile Include="Controllers\AccountController.ts" />
     <TypeScriptCompile Include="Controllers\HomeController.ts" />
     <TypeScriptCompile Include="Controllers\ImagePreviewerController.ts" />
-    <TypeScriptCompile Include="Extensions\ArrayExtension.ts" />
+    <TypeScriptCompile Include="Extensions\ArrayExtensions.ts" />
     <TypeScriptCompile Include="Extensions\StringExtensions.ts" />
     <TypeScriptCompile Include="External\angular-ui-bootstrap\angular-ui-bootstrap.d.ts" />
     <TypeScriptCompile Include="External\angular-ui\angular-ui-router.d.ts" />

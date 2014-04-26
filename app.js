@@ -28,28 +28,44 @@ if (typeof Array.prototype.findFirstIndex != "function") {
 var Controllers;
 (function (Controllers) {
     function ConversationController($scope, $rootScope, $http, $upload, $state, $stateParams) {
-        var convId = parseInt($stateParams['convId'], 10);
         var page = 1;
-        $scope.IsLoadingMessages = true;
+        var convId;
 
-        if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = $scope.$parent.ActiveConversations.first(function (x) {
-                return x.Id === convId;
-            });
-        }
-        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(function (data) {
-            $scope.Conversation = new Models.TextConversation(data);
-        }).error(function (e) {
-            $state.go('Home');
-        });
-        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
-            $scope.HasMoreMessages = data.length > 0;
-            $scope.Messages = data.map(function (x) {
-                return new Models.TextMessage(x);
-            });
-            $scope.IsLoadingMessages = false;
-        });
+        (function () {
+            if ($state.current.name === "Home.TextConversation") {
+                convId = parseInt($stateParams['convId'], 10);
+                $scope.IsLoadingMessages = true;
 
+                if ('ActiveConversations' in $scope.$parent) {
+                    $scope.Conversation = $scope.$parent.ActiveConversations.first(function (x) {
+                        return x.Id === convId;
+                    });
+                }
+
+                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(function (data) {
+                    $scope.Conversation = new Models.TextConversation(data);
+                }).error(function (e) {
+                    $state.go('Home');
+                });
+                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
+                    $scope.HasMoreMessages = data.length > 0;
+                    $scope.Messages = data.map(function (x) {
+                        return new Models.TextMessage(x);
+                    });
+                    $scope.IsLoadingMessages = false;
+                });
+            } else {
+                $scope.HasMoreMessages = false;
+                $scope.Messages = [];
+                var userId = parseInt($stateParams['userId'], 10);
+
+                if ('ActiveConversations' in $scope.$parent) {
+                    $scope.Conversation = $scope.$parent.ActiveConversations.first(function (x) {
+                        return x.Receiver.Id === userId;
+                    });
+                }
+            }
+        })();
         $scope.FileSelected = function ($files) {
             if ($files.length > 1) {
                 alert("Only one file is allowed");
@@ -118,10 +134,14 @@ var Controllers;
             var file = $scope.Attachment;
 
             $upload.upload({
-                url: $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages",
-                data: {
+                url: !$scope.Conversation.IsNew ? $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages" : $rootScope.RelayUrl + "/text_conversations",
+                data: !$scope.Conversation.IsNew ? {
                     "text_message[client_uuid]": msg.Raw().client_uuid,
                     "text_message[content]": msg.Content
+                } : {
+                    "text_conversation[profiles_text_conversations_attributes][][profile_id]": $scope.Conversation.Receiver.Id,
+                    "text_conversation[text_messages_attributes][][client_uuid]": msg.Raw().client_uuid,
+                    "text_conversation[text_messages_attributes][][content]": msg.Content
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: file
@@ -130,7 +150,14 @@ var Controllers;
                     msg.Raw().state = 'Sending ' + ($event.loaded / $event.total * 100).toFixed() + '%';
                 }
             }).success(function (data) {
-                $scope.Messages[idx] = new Models.TextMessage(data);
+                if (!$scope.Conversation.IsNew) {
+                    $scope.Messages[idx] = new Models.TextMessage(data);
+                } else {
+                    $scope.Conversation = new Models.TextConversation(data);
+                    $scope.Messages = data.text_messages.map(function (x) {
+                        return new Models.TextMessage(x);
+                    });
+                }
             }).error(function () {
                 msg.Raw().state = 'Error';
             });
@@ -239,17 +266,19 @@ var Controllers;
                 }) === undefined) {
                     $scope.ActiveConversations.unshift(conv);
                 }
+                $state.go("Home.TextConversation", {
+                    convId: conv.Id
+                });
             } else {
                 conv = new Models.TextConversation({
                     profiles: [$rootScope.Session.Raw(), contact.Raw()],
                     updated_at: new Date().toISOString()
                 });
-                console.log(conv.Receiver);
                 $scope.ActiveConversations.unshift(conv);
+                $state.go("Home.NewTextConversation", {
+                    userId: contact.Id
+                });
             }
-            $state.go("Home.TextConversation", {
-                convId: conv.Id
-            });
             $scope.IsNewConversationOpen = false;
         };
 
@@ -466,6 +495,14 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
         templateUrl: 'Views/Home.html'
     }).state('Home.TextConversation', {
         url: 'TextConversations/:convId',
+        views: {
+            subView: {
+                controller: Controllers.ConversationController,
+                templateUrl: 'Views/Conversation.html'
+            }
+        }
+    }).state('Home.NewTextConversation', {
+        url: 'NewTextConversation/:userId',
         views: {
             subView: {
                 controller: Controllers.ConversationController,
