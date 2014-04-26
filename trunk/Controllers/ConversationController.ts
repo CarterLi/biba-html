@@ -2,7 +2,7 @@
 /// <reference path="../External/angular-ui/angular-ui-router.d.ts" />
 /// <reference path="../External/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
 
-/// <reference path="../Extensions/ArrayExtension.ts" />
+/// <reference path="../Extensions/ArrayExtensions.ts" />
 
 module Controllers {
     export interface IConversationScope extends ng.IScope {
@@ -31,26 +31,40 @@ module Controllers {
                                            $upload: any,
                                            $state: ng.ui.IStateService,
                                            $stateParams: ng.ui.IStateParamsService) {
-        var convId: number = parseInt($stateParams['convId'], 10);
         var page: number = 1;
-        $scope.IsLoadingMessages = true;
+        var convId: number;
 
-        if ('Conversations' in $scope.$parent) {
-            $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Id === convId);
-        }
-        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(
-            (data: Models.IRawTextConversation)=> {
-                $scope.Conversation = new Models.TextConversation(data);
-            }).error(e=> {
-                $state.go('Home');
-            });
-        $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
-            (data: Array<Models.IRawTextMessage>) => {
-                $scope.HasMoreMessages = data.length > 0;
-                $scope.Messages = data.map(x=> new Models.TextMessage(x));
-                $scope.IsLoadingMessages = false;
-            });
-        
+        (()=> {
+            if ($state.current.name === "Home.TextConversation") {
+                convId = parseInt($stateParams['convId'], 10);
+                $scope.IsLoadingMessages = true;
+
+                if ('ActiveConversations' in $scope.$parent) {
+                    $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Id === convId);
+                }
+
+                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(
+                (data: Models.IRawTextConversation)=> {
+                    $scope.Conversation = new Models.TextConversation(data);
+                }).error(e=> {
+                    $state.go('Home');
+                });
+                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
+                (data: Array<Models.IRawTextMessage>)=> {
+                    $scope.HasMoreMessages = data.length > 0;
+                    $scope.Messages = data.map(x=> new Models.TextMessage(x));
+                    $scope.IsLoadingMessages = false;
+                });
+            } else {
+                $scope.HasMoreMessages = false;
+                $scope.Messages = [];
+                var userId: number = parseInt($stateParams['userId'], 10);
+
+                if ('ActiveConversations' in $scope.$parent) {
+                    $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Receiver.Id === userId);
+                }
+            }
+        })();
         $scope.FileSelected = $files=> {
             if ($files.length > 1) {
                 alert("Only one file is allowed");
@@ -119,10 +133,16 @@ module Controllers {
             var file = $scope.Attachment;
 
             $upload.upload({
-                url: $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages",
-                data: {
+                url: !$scope.Conversation.IsNew
+                    ? $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages"
+                    : $rootScope.RelayUrl + "/text_conversations",
+                data: !$scope.Conversation.IsNew ? <any>{
                     "text_message[client_uuid]": msg.Raw().client_uuid,
                     "text_message[content]": msg.Content
+                } : <any>{
+                    "text_conversation[profiles_text_conversations_attributes][][profile_id]": $scope.Conversation.Receiver.Id,
+                    "text_conversation[text_messages_attributes][][client_uuid]": msg.Raw().client_uuid,
+                    "text_conversation[text_messages_attributes][][content]": msg.Content,
                 },
                 fileFormDataName: "text_message[attachment]",
                 file: file
@@ -130,9 +150,14 @@ module Controllers {
                 if (file) {
                     msg.Raw().state = 'Sending ' + ($event.loaded / $event.total * 100).toFixed() + '%';
                 }
-            }).success((data: Models.IRawTextMessage)=> {
+            }).success((data: Models.IRawBibaModel) => {
                 // file is uploaded successfully
-                $scope.Messages[idx] = new Models.TextMessage(data);
+                if (!$scope.Conversation.IsNew) {
+                    $scope.Messages[idx] = new Models.TextMessage(<Models.IRawTextMessage>data);
+                } else {
+                    $scope.Conversation = new Models.TextConversation(<Models.IRawTextConversation>data);
+                    $scope.Messages = (<Models.IRawTextConversation>data).text_messages.map(x=> new Models.TextMessage(x));
+                }
             }).error(()=> {
                 msg.Raw().state = 'Error';
             });

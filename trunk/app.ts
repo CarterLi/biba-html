@@ -179,6 +179,14 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
                     templateUrl: 'Views/Conversation.html'
                 }
             }
+        }).state('Home.NewTextConversation', {
+            url: 'NewTextConversation/:userId',
+            views: {
+                subView: {
+                    controller: Controllers.ConversationController,
+                    templateUrl: 'Views/Conversation.html'
+                }
+            }
         });
     })
     .run(($rootScope: IBibaRootScope, $state: ng.ui.IStateService) => {

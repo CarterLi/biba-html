@@ -77,17 +77,19 @@ module Controllers {
                 if ($scope.ActiveConversations.first(x=> x.Id === conv.Id) === undefined) {
                     $scope.ActiveConversations.unshift(conv);
                 }
+                $state.go("Home.TextConversation", {
+                    convId: conv.Id
+                });
             } else {
                 conv = new Models.TextConversation(<Models.IRawTextConversation>{
                     profiles: [$rootScope.Session.Raw(), contact.Raw()],
                     updated_at: new Date().toISOString()
                 });
-                console.log(conv.Receiver);
                 $scope.ActiveConversations.unshift(conv);
+                $state.go("Home.NewTextConversation", {
+                    userId: contact.Id
+                });
             }
-            $state.go("Home.TextConversation", {
-                convId: conv.Id
-            });
             $scope.IsNewConversationOpen = false;
         };
 
