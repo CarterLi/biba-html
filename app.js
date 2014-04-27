@@ -305,7 +305,7 @@ var Controllers;
 
         $scope.IsNewConversationOpenChanged = function () {
             if ($scope.IsNewConversationOpen) {
-                $("#newMessage + .pop-over input[type=search]").focus();
+                $("#newMessage ~ .popover input[type=search]").focus();
             } else {
                 $scope.ContactsFilterText = '';
             }
@@ -524,7 +524,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload']).di
             }
         }
     });
-}).run(function ($rootScope, $state) {
+}).run(function ($rootScope) {
     $rootScope.RelayUrl = "https://stage.biba.com";
 }).controller('AppController', function ($rootScope, $scope, $state) {
     $scope['Logout'] = function () {

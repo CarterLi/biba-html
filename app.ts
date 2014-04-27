@@ -189,7 +189,7 @@ angular.module("BibaApp", ['ui.router', 'ui.bootstrap', 'angularFileUpload'])
             }
         });
     })
-    .run(($rootScope: IBibaRootScope, $state: ng.ui.IStateService) => {
+    .run(($rootScope: IBibaRootScope) => {
         $rootScope.RelayUrl = "https://stage.biba.com";
     })
     .controller('AppController', ($rootScope: IBibaRootScope, $scope: ng.IScope, $state: ng.ui.IStateService)=> {
