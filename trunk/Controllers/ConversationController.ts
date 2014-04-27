@@ -37,31 +37,43 @@ module Controllers {
         (()=> {
             if ($state.current.name === "Home.TextConversation") {
                 convId = parseInt($stateParams['convId'], 10);
-                $scope.IsLoadingMessages = true;
+
+                var loadMessages = () => {
+                    $scope.IsLoadingMessages = true;
+                    $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
+                        (data: Array<Models.IRawTextMessage>) => {
+                            $scope.HasMoreMessages = data.length > 0;
+                            $scope.Messages = data.map(x=> new Models.TextMessage(x));
+                            $scope.IsLoadingMessages = false;
+                        });
+                };
 
                 if ('ActiveConversations' in $scope.$parent) {
                     $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Id === convId);
+                    if ($scope.Conversation.Raw().text_messages) {
+                        $scope.Messages = $scope.Conversation.Raw().text_messages.map(x=> new Models.TextMessage(x));
+                        $scope.Conversation.Raw().text_messages = undefined;
+                    } else {
+                        loadMessages();
+                    }
+                } else {
+                    $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(
+                        (data: Models.IRawTextConversation) => {
+                            $scope.Conversation = new Models.TextConversation(data);
+                        }).error(e=> {
+                            $state.go('Home');
+                        });
+                    loadMessages();
                 }
-
-                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(
-                (data: Models.IRawTextConversation)=> {
-                    $scope.Conversation = new Models.TextConversation(data);
-                }).error(e=> {
-                    $state.go('Home');
-                });
-                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(
-                (data: Array<Models.IRawTextMessage>)=> {
-                    $scope.HasMoreMessages = data.length > 0;
-                    $scope.Messages = data.map(x=> new Models.TextMessage(x));
-                    $scope.IsLoadingMessages = false;
-                });
             } else {
                 $scope.HasMoreMessages = false;
                 $scope.Messages = [];
-                var userId: number = parseInt($stateParams['userId'], 10);
 
                 if ('ActiveConversations' in $scope.$parent) {
+                    var userId: number = parseInt($stateParams['userId'], 10);
                     $scope.Conversation = (<IHomeScope>$scope.$parent).ActiveConversations.first(x=> x.Receiver.Id === userId);
+                } else {
+                    $state.go("Home");
                 }
             }
         })();
@@ -155,8 +167,10 @@ module Controllers {
                 if (!$scope.Conversation.IsNew) {
                     $scope.Messages[idx] = new Models.TextMessage(<Models.IRawTextMessage>data);
                 } else {
-                    $scope.Conversation = new Models.TextConversation(<Models.IRawTextConversation>data);
-                    $scope.Messages = (<Models.IRawTextConversation>data).text_messages.map(x=> new Models.TextMessage(x));
+                    $scope.Conversation.SetRaw(<Models.IRawTextConversation>data);
+                    $state.go("Home.TextConversation", {
+                        convId: data.id
+                    });
                 }
             }).error(()=> {
                 msg.Raw().state = 'Error';

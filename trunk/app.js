@@ -34,35 +34,49 @@ var Controllers;
         (function () {
             if ($state.current.name === "Home.TextConversation") {
                 convId = parseInt($stateParams['convId'], 10);
-                $scope.IsLoadingMessages = true;
+
+                var loadMessages = function () {
+                    $scope.IsLoadingMessages = true;
+                    $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
+                        $scope.HasMoreMessages = data.length > 0;
+                        $scope.Messages = data.map(function (x) {
+                            return new Models.TextMessage(x);
+                        });
+                        $scope.IsLoadingMessages = false;
+                    });
+                };
 
                 if ('ActiveConversations' in $scope.$parent) {
                     $scope.Conversation = $scope.$parent.ActiveConversations.first(function (x) {
                         return x.Id === convId;
                     });
-                }
-
-                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(function (data) {
-                    $scope.Conversation = new Models.TextConversation(data);
-                }).error(function (e) {
-                    $state.go('Home');
-                });
-                $http.get($rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages").success(function (data) {
-                    $scope.HasMoreMessages = data.length > 0;
-                    $scope.Messages = data.map(function (x) {
-                        return new Models.TextMessage(x);
+                    if ($scope.Conversation.Raw().text_messages) {
+                        $scope.Messages = $scope.Conversation.Raw().text_messages.map(function (x) {
+                            return new Models.TextMessage(x);
+                        });
+                        $scope.Conversation.Raw().text_messages = undefined;
+                    } else {
+                        loadMessages();
+                    }
+                } else {
+                    $http.get($rootScope.RelayUrl + "/text_conversations/" + convId).success(function (data) {
+                        $scope.Conversation = new Models.TextConversation(data);
+                    }).error(function (e) {
+                        $state.go('Home');
                     });
-                    $scope.IsLoadingMessages = false;
-                });
+                    loadMessages();
+                }
             } else {
                 $scope.HasMoreMessages = false;
                 $scope.Messages = [];
-                var userId = parseInt($stateParams['userId'], 10);
 
                 if ('ActiveConversations' in $scope.$parent) {
+                    var userId = parseInt($stateParams['userId'], 10);
                     $scope.Conversation = $scope.$parent.ActiveConversations.first(function (x) {
                         return x.Receiver.Id === userId;
                     });
+                } else {
+                    $state.go("Home");
                 }
             }
         })();
@@ -153,9 +167,9 @@ var Controllers;
                 if (!$scope.Conversation.IsNew) {
                     $scope.Messages[idx] = new Models.TextMessage(data);
                 } else {
-                    $scope.Conversation = new Models.TextConversation(data);
-                    $scope.Messages = data.text_messages.map(function (x) {
-                        return new Models.TextMessage(x);
+                    $scope.Conversation.SetRaw(data);
+                    $state.go("Home.TextConversation", {
+                        convId: data.id
                     });
                 }
             }).error(function () {
@@ -572,6 +586,10 @@ var Models;
             return this.model;
         };
 
+        BibaModel.prototype.SetRaw = function (model) {
+            this.model = model;
+        };
+
         Object.defineProperty(BibaModel.prototype, "Id", {
             get: function () {
                 return this.model.id;
@@ -636,17 +654,14 @@ var Models;
             return _super.prototype.Raw.call(this);
         };
 
-        Object.defineProperty(Profile.prototype, "Model", {
-            get: function () {
-                return this.Raw();
-            },
-            enumerable: true,
-            configurable: true
-        });
+        Profile.prototype.SetRaw = function (model) {
+            _super.prototype.SetRaw.call(this, model);
+            this._emailDomain = undefined;
+        };
 
         Object.defineProperty(Profile.prototype, "Email", {
             get: function () {
-                return this.Model.email;
+                return this.Raw().email;
             },
             enumerable: true,
             configurable: true
@@ -665,7 +680,7 @@ var Models;
 
         Object.defineProperty(Profile.prototype, "FullName", {
             get: function () {
-                return this.Model.full_name;
+                return this.Raw().full_name;
             },
             enumerable: true,
             configurable: true
@@ -673,7 +688,7 @@ var Models;
 
         Object.defineProperty(Profile.prototype, "IsRegistered", {
             get: function () {
-                return this.Model["registered?"];
+                return this.Raw()["registered?"];
             },
             enumerable: true,
             configurable: true
@@ -682,7 +697,7 @@ var Models;
         Object.defineProperty(Profile.prototype, "Availability", {
             get: function () {
                 if (this.IsRegistered) {
-                    switch (this.Model.presence_dot) {
+                    switch (this.Raw().presence_dot) {
                         case 0:
                             return "None";
                         case 1:
@@ -730,17 +745,14 @@ var Models;
             return _super.prototype.Raw.call(this);
         };
 
-        Object.defineProperty(TextConversation.prototype, "Model", {
-            get: function () {
-                return this.Raw();
-            },
-            enumerable: true,
-            configurable: true
-        });
+        TextConversation.prototype.SetRaw = function (model) {
+            _super.prototype.SetRaw.call(this, model);
+            this._profiles = undefined;
+        };
 
         Object.defineProperty(TextConversation.prototype, "IsGroupChat", {
             get: function () {
-                return this.Model.profiles.length > 2;
+                return this.Raw().profiles.length > 2;
             },
             enumerable: true,
             configurable: true
@@ -748,9 +760,12 @@ var Models;
 
         Object.defineProperty(TextConversation.prototype, "Profiles", {
             get: function () {
-                return this._profiles = this._profiles || this.Model.profiles.map(function (x) {
-                    return new Models.Profile(x);
-                });
+                if (this._profiles === undefined) {
+                    this._profiles = this.Raw().profiles.map(function (x) {
+                        return new Models.Profile(x);
+                    });
+                }
+                return this._profiles;
             },
             enumerable: true,
             configurable: true
@@ -783,17 +798,18 @@ var Models;
             return _super.prototype.Raw.call(this);
         };
 
-        Object.defineProperty(TextMessage.prototype, "Model", {
-            get: function () {
-                return this.Raw();
-            },
-            enumerable: true,
-            configurable: true
-        });
+        TextMessage.prototype.SetRaw = function (model) {
+            _super.prototype.SetRaw.call(this, model);
+            this._profile = undefined;
+            this._attachment = undefined;
+        };
 
         Object.defineProperty(TextMessage.prototype, "Profile", {
             get: function () {
-                return this._profile = this._profile || new Models.Profile(this.Model.profile);
+                if (this._profile === undefined) {
+                    this._profile = new Models.Profile(this.Raw().profile);
+                }
+                return this._profile;
             },
             enumerable: true,
             configurable: true
@@ -801,7 +817,7 @@ var Models;
 
         Object.defineProperty(TextMessage.prototype, "Content", {
             get: function () {
-                return this.Model.content;
+                return this.Raw().content;
             },
             enumerable: true,
             configurable: true
@@ -817,8 +833,8 @@ var Models;
 
         Object.defineProperty(TextMessage.prototype, "State", {
             get: function () {
-                var state = this.Model.state;
-                return state ? this.Model.state[0].toUpperCase() + this.Model.state.substr(1) : "Sending";
+                var state = this.Raw().state;
+                return state ? this.Raw().state[0].toUpperCase() + this.Raw().state.substr(1) : "Sending";
             },
             enumerable: true,
             configurable: true
@@ -827,7 +843,7 @@ var Models;
         Object.defineProperty(TextMessage.prototype, "Attachment", {
             get: function () {
                 if (this._attachment === undefined) {
-                    this._attachment = this.Model.attachment ? new Models.Attachment(this.Model.attachment) : null;
+                    this._attachment = this.Raw().attachment ? new Models.Attachment(this.Raw().attachment) : null;
                 }
 
                 return this._attachment;

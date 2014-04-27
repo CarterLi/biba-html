@@ -16,6 +16,10 @@
             return this.model;
         }
 
+        SetRaw(model: IRawBibaModel): void {
+            this.model = model;
+        }
+
         get Id(): number {
             return this.model.id;
         }
