@@ -20,18 +20,22 @@ module Models {
             return <IRawTextConversation>super.Raw();
         }
 
-        private get Model(): IRawTextConversation {
-            return this.Raw();
+        SetRaw(model: IRawTextConversation): void {
+            super.SetRaw(model);
+            this._profiles = undefined;
         }
 
         get IsGroupChat(): boolean {
-            return this.Model.profiles.length > 2;
+            return this.Raw().profiles.length > 2;
         }
 
         private _profiles: Array<Profile>;
 
         get Profiles(): Array<Profile> {
-            return this._profiles = this._profiles || this.Model.profiles.map(x=> new Profile(x));
+            if (this._profiles === undefined) {
+                this._profiles = this.Raw().profiles.map(x=> new Profile(x));
+            }
+            return this._profiles;
         }
 
         get Receiver(): Profile {

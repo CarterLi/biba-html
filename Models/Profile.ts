@@ -19,12 +19,13 @@
             return <IRawProfile>super.Raw();
         }
 
-        private get Model(): IRawProfile {
-            return this.Raw();
+        SetRaw(model: IRawProfile): void {
+            super.SetRaw(model);
+            this._emailDomain = undefined;
         }
 
         get Email(): string {
-            return this.Model.email;
+            return this.Raw().email;
         }
 
         private _emailDomain: string;
@@ -37,16 +38,16 @@
         }
 
         get FullName(): string {
-            return this.Model.full_name;
+            return this.Raw().full_name;
         }
 
         get IsRegistered(): boolean {
-            return this.Model["registered?"];
+            return this.Raw()["registered?"];
         }
 
         get Availability(): string {
             if (this.IsRegistered) {
-                switch (this.Model.presence_dot) {
+                switch (this.Raw().presence_dot) {
                 case 0:
                     return "None";
                 case 1:

@@ -21,17 +21,22 @@
             return <IRawTextMessage>super.Raw();
         }
 
-        private get Model(): IRawTextMessage {
-            return this.Raw();
+        SetRaw(model: IRawTextMessage): void {
+            super.SetRaw(model);
+            this._profile = undefined;
+            this._attachment = undefined;
         }
 
         private _profile: Profile;
         get Profile(): Profile {
-            return this._profile = this._profile || new Profile(this.Model.profile);
+            if (this._profile === undefined) {
+                this._profile = new Profile(this.Raw().profile);
+            }
+            return this._profile;
         }
 
         get Content(): string {
-            return this.Model.content;
+            return this.Raw().content;
         }
 
         get IsOwnMessage(): boolean {
@@ -39,14 +44,14 @@
         }
 
         get State(): string {
-            var state = this.Model.state;
-            return state ? this.Model.state[0].toUpperCase() + this.Model.state.substr(1) : "Sending";
+            var state = this.Raw().state;
+            return state ? this.Raw().state[0].toUpperCase() + this.Raw().state.substr(1) : "Sending";
         }
 
         private _attachment: Attachment;
         get Attachment(): Attachment {
             if (this._attachment === undefined) {
-                this._attachment = this.Model.attachment ? new Attachment(this.Model.attachment) : null;
+                this._attachment = this.Raw().attachment ? new Attachment(this.Raw().attachment) : null;
             }
 
             return this._attachment;
