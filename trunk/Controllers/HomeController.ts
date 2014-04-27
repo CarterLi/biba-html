@@ -102,7 +102,7 @@ module Controllers {
 
         $scope.IsNewConversationOpenChanged = ()=> {
             if ($scope.IsNewConversationOpen) {
-                $("#newMessage + .pop-over input[type=search]").focus();
+                $("#newMessage ~ .popover input[type=search]").focus();
             } else {
                 $scope.ContactsFilterText = '';
             }
