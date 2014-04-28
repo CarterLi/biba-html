@@ -185,15 +185,28 @@ var Controllers;
 (function (Controllers) {
     function AccountController($rootScope, $scope, $state, $http) {
         var doSignIn = function (authorization) {
+            var signInField = $("form[name=SignInForm]").parent()[0];
+            signInField.style.cursor = "wait";
+            signInField.disabled = true;
             $http({
                 method: 'POST',
                 url: $rootScope.RelayUrl + "/sessions",
                 headers: { Authorization: "Basic " + authorization }
             }).success(function (session) {
+                signInField.style.cursor = "";
+                signInField.disabled = false;
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
                 window.localStorage.setItem("LoginInfo", authorization);
                 $rootScope.Session = new Models.Profile(session);
                 $state.go("Home");
+            }).error(function (err) {
+                signInField.style.cursor = "";
+                signInField.disabled = false;
+                if (err.error === "Forbidden") {
+                    alert("Invalid email address or password");
+                    $("#siPassword").val("");
+                    $("#siEmail").focus().select();
+                }
             });
         };
 
