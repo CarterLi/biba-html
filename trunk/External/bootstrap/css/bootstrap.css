@@ -152,6 +152,10 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
+label:disabled {
+    cursor: not-allowed;
+}
+
 input[type="search"] {
   -webkit-box-sizing: content-box;
      -moz-box-sizing: content-box;
@@ -1438,6 +1442,7 @@ textarea.span1,
 }
 
 input[disabled],
+input:disabled,
 select[disabled],
 textarea[disabled],
 input[readonly],
@@ -1449,6 +1454,7 @@ textarea[readonly] {
 
 input[type="radio"][disabled],
 input[type="checkbox"][disabled],
+input[type="checkbox"]:disabled,
 input[type="radio"][readonly],
 input[type="checkbox"][readonly] {
   background-color: transparent;
@@ -3237,6 +3243,7 @@ button.close {
 .btn:active,
 .btn.active,
 .btn.disabled,
+.btn:disabled,
 .btn[disabled] {
   color: #333333;
   background-color: #e6e6e6;
@@ -3279,6 +3286,7 @@ button.close {
 }
 
 .btn.disabled,
+.btn:disabled,
 .btn[disabled] {
   cursor: default;
   background-image: none;
@@ -3379,6 +3387,7 @@ input[type="button"].btn-block {
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary.disabled,
+.btn-primary:disabled,
 .btn-primary[disabled] {
   color: #ffffff;
   background-color: #0044cc;
@@ -3412,6 +3421,7 @@ input[type="button"].btn-block {
 .btn-warning:active,
 .btn-warning.active,
 .btn-warning.disabled,
+.btn-warning:disabled,
 .btn-warning[disabled] {
   color: #ffffff;
   background-color: #f89406;
@@ -3445,6 +3455,7 @@ input[type="button"].btn-block {
 .btn-danger:active,
 .btn-danger.active,
 .btn-danger.disabled,
+.btn-danger:disabled,
 .btn-danger[disabled] {
   color: #ffffff;
   background-color: #bd362f;
@@ -3478,6 +3489,7 @@ input[type="button"].btn-block {
 .btn-success:active,
 .btn-success.active,
 .btn-success.disabled,
+.btn-success:disabled,
 .btn-success[disabled] {
   color: #ffffff;
   background-color: #51a351;
@@ -3511,6 +3523,7 @@ input[type="button"].btn-block {
 .btn-info:active,
 .btn-info.active,
 .btn-info.disabled,
+.btn-info:disabled,
 .btn-info[disabled] {
   color: #ffffff;
   background-color: #2f96b4;
@@ -3544,6 +3557,7 @@ input[type="button"].btn-block {
 .btn-inverse:active,
 .btn-inverse.active,
 .btn-inverse.disabled,
+.btn-inverse:disabled,
 .btn-inverse[disabled] {
   color: #ffffff;
   background-color: #222222;

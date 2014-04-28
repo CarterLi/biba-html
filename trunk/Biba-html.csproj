@@ -1237,6 +1237,7 @@
     <TypeScriptCompile Include="Models\Account.ts" />
     <TypeScriptCompile Include="Models\Attachment.ts" />
     <TypeScriptCompile Include="Models\BibaModel.ts" />
+    <TypeScriptCompile Include="Models\Device.ts" />
     <TypeScriptCompile Include="Models\Profile.ts" />
     <TypeScriptCompile Include="Models\TextConversation.ts" />
     <TypeScriptCompile Include="Models\TextMessage.ts" />

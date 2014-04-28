@@ -21,27 +21,49 @@ module Controllers {
         $state: ng.ui.IStateService,
         $http: ng.IHttpService) {
 
-        var doSignIn = (authorization: string)=> {
+        var doSignIn = (authorization: string) => {
+            var signInField = <HTMLFieldSetElement>$("form[name=SignInForm]").parent()[0];
+            signInField.style.cursor = "wait";
+            signInField.disabled = true;
             $http({
                 method: 'POST',
                 url: $rootScope.RelayUrl + "/sessions",
                 headers: { Authorization: "Basic " + authorization }
-            }).success((session: Models.IRawProfile)=> {
+            }).success((session: Models.IRawProfile) => {
+                signInField.style.cursor = "";
+                signInField.disabled = false;
                 window.sessionStorage.setItem("Session", JSON.stringify(session));
                 window.localStorage.setItem("LoginInfo", authorization);
                 $rootScope.Session = new Models.Profile(session);
                 $state.go("Home");
 
-                //io.connect("https://push-stage.biba.com/socket.io/1/websocket/1")
-                //    .on('connect', ()=> {
-                //        console.log('Connected!');
-                //    })
-                //    .on('error', (reason: any)=> {
-                //        console.error('Unable to connect Socket.IO', reason);
-                //    })
-                //    .on('message', (msg: any) => {
-                //        console.log(msg);
+                //$http.post($rootScope.RelayUrl + "/profiles/" + session.id + "/windows_devices", {
+                //    windows_device: {
+                //        enabled: true,
+                //        device_token: "0000000000000000000000000000000000000000"
+                //    }
+                //}).success((device: Models.IRawDevice) => {
+                //    var juggUrl = (device.juggernaut_secure ? "https" : "http") + "://" + device.juggernaut_host + ":" + device.juggernaut_port;
+                //    io.connect(juggUrl)
+                //        .on('connect', () => {
+                //            console.log('Connected!');
+                //        })
+                //        .on('error', (reason: any) => {
+                //            console.error('Unable to connect Socket.IO', reason);
+                //        })
+                //        .on('message', (msg: any) => {
+                //            console.log(msg);
+                //        });
                 //    });
+                //});
+            }).error(err=> {
+                signInField.style.cursor = "";
+                signInField.disabled = false;
+                if (err.error === "Forbidden") {
+                    alert("Invalid email address or password");
+                    $("#siPassword").val("");
+                    $("#siEmail").focus().select();
+                }
             });
         };
 

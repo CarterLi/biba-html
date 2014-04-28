@@ -49,6 +49,6 @@
 #account table input[type=checkbox] {
     margin: 0;
 }
-#account table [colspan] > :not(:first-child) {
+#account table [colspan] > input:not(:first-child) {
     margin-left: 5px;
 }
