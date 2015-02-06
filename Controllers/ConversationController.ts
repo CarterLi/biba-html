@@ -1,4 +1,5 @@
 ﻿/// <reference path="../External/angularjs/angular.d.ts" />
+/// <reference path="../External/angular-file-upload/angular-file-upload.d.ts" />
 /// <reference path="../External/angular-ui/angular-ui-router.d.ts" />
 /// <reference path="../External/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
 
@@ -28,7 +29,7 @@ module Controllers {
     export function ConversationController($scope: IConversationScope,
                                            $rootScope: IBibaRootScope,
                                            $http: ng.IHttpService,
-                                           $upload: any,
+                                           $upload: ng.angularFileUpload.IUploadService,
                                            $state: ng.ui.IStateService,
                                            $stateParams: ng.ui.IStateParamsService) {
         var page: number = 1;
@@ -145,10 +146,11 @@ module Controllers {
             var file = $scope.Attachment;
 
             $upload.upload({
+                method: 'POST',
                 url: !$scope.Conversation.IsNew
                     ? $rootScope.RelayUrl + "/text_conversations/" + convId + "/text_messages"
                     : $rootScope.RelayUrl + "/text_conversations",
-                data: !$scope.Conversation.IsNew ? <any>{
+                fields: !$scope.Conversation.IsNew ? <any>{
                     "text_message[client_uuid]": msg.Raw().client_uuid,
                     "text_message[content]": msg.Content
                 } : <any>{

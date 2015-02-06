@@ -1,6 +1,6 @@
 /**
- * @license AngularJS v1.2.16
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.4.0-beta.3
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
@@ -37,20 +37,18 @@ angular.module('ngCookies', ['ng']).
    * Requires the {@link ngCookies `ngCookies`} module to be installed.
    *
    * @example
-   <example>
-     <file name="index.html">
-       <script>
-         function ExampleController($cookies) {
-           // Retrieving a cookie
-           var favoriteCookie = $cookies.myFavorite;
-           // Setting a cookie
-           $cookies.myFavorite = 'oatmeal';
-         }
-       </script>
-     </file>
-   </example>
+   *
+   * ```js
+   * angular.module('cookiesExample', ['ngCookies'])
+   *   .controller('ExampleController', ['$cookies', function($cookies) {
+   *     // Retrieving a cookie
+   *     var favoriteCookie = $cookies.myFavorite;
+   *     // Setting a cookie
+   *     $cookies.myFavorite = 'oatmeal';
+   *   }]);
+   * ```
    */
-   factory('$cookies', ['$rootScope', '$browser', function ($rootScope, $browser) {
+   factory('$cookies', ['$rootScope', '$browser', function($rootScope, $browser) {
       var cookies = {},
           lastCookies = {},
           lastBrowserCookies,
@@ -97,7 +95,7 @@ angular.module('ngCookies', ['ng']).
         }
 
         //update all cookies updated in $cookies
-        for(name in cookies) {
+        for (name in cookies) {
           value = cookies[name];
           if (!angular.isString(value)) {
             value = '' + value;
@@ -110,7 +108,7 @@ angular.module('ngCookies', ['ng']).
         }
 
         //verify what was actually stored
-        if (updated){
+        if (updated) {
           updated = false;
           browserCookies = $browser.cookies();
 
@@ -143,6 +141,18 @@ angular.module('ngCookies', ['ng']).
    * Requires the {@link ngCookies `ngCookies`} module to be installed.
    *
    * @example
+   *
+   * ```js
+   * angular.module('cookieStoreExample', ['ngCookies'])
+   *   .controller('ExampleController', ['$cookieStore', function($cookieStore) {
+   *     // Put cookie
+   *     $cookieStore.put('myFavorite','oatmeal');
+   *     // Get cookie
+   *     var favoriteCookie = $cookieStore.get('myFavorite');
+   *     // Removing a cookie
+   *     $cookieStore.remove('myFavorite');
+   *   }]);
+   * ```
    */
    factory('$cookieStore', ['$cookies', function($cookies) {
 
@@ -155,7 +165,7 @@ angular.module('ngCookies', ['ng']).
          * Returns the value of given cookie key
          *
          * @param {string} key Id to use for lookup.
-         * @returns {Object} Deserialized cookie value.
+         * @returns {Object} Deserialized cookie value, undefined if the cookie does not exist.
          */
         get: function(key) {
           var value = $cookies[key];
